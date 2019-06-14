@@ -1,0 +1,137 @@
+Machine-level Assembler Version 6.1    Sun Mar 29 18:21:08 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.55 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;----------------------------
+               ; void f(int x)
+               ;----------------------------
+               
+0  *0    8005  @f$i:	ldc	5	; x = x + 5;
+1  *1    6001  	addr	1
+2  *2    5001  	str	1
+               
+3  *3    803B  	ldc	msg_x	; cout << "x = " << x << endl;
+4  *4    FFF7  	sout
+5  *5    4001  	ldr	1
+6  *6    FFFD  	dout
+7  *7    800A  	ldc	'\n'
+8  *8    FFFB  	aout
+               
+9  *9    F000  	ret		; return to the calling function	
+               
+               ;----------------------------
+               ; void f(int *p)
+               ;----------------------------
+               
+A  *10   8003  @f$pi:	ldc	3	; *p = 3;
+B  *11   F300  	push
+C  *12   4002  	ldr	2
+D  *13   F200  	sti
+               
+E  *14   F000  	ret		; return to the calling function
+               
+               ;----------------------------
+               ; void f(int *p, int x)
+               ;----------------------------
+               
+F  *15   4002  @f$pii:	ldr	2	; *p = x;
+10 *16   F300  	push
+11 *17   4002  	ldr	2
+12 *18   F200  	sti
+               
+13 *19   F000  	ret		; return to the calling function
+               
+               ;----------------------------
+               ; main()
+               ;----------------------------
+               
+14 *20   8040  main:	ldc	msg_g	; cout << "g = " << g << endl;
+15 *21   FFF7  	sout
+16 *22   003A  	ld	g
+17 *23   FFFD  	dout
+18 *24   800A  	ldc	'\n'
+19 *25   FFFB  	aout
+               
+1A *26   003A  	ld	g	; f(g);
+1B *27   F300  	push
+1C *28   E000  	call	@f$i
+1D *29   F601  	dloc	1
+               
+1E *30   8040  	ldc	msg_g	; cout << "g = " << g << endl;
+1F *31   FFF7  	sout
+20 *32   003A  	ld	g
+21 *33   FFFD  	dout
+22 *34   800A  	ldc	'\n'
+23 *35   FFFB  	aout
+               
+24 *36   803A  	ldc	g	; f(&g);
+25 *37   F300  	push
+26 *38   E00A  	call	@f$pi
+27 *39   F601  	dloc	1
+               	
+28 *40   8040  	ldc	msg_g	; cout << "g = " << g << endl;
+29 *41   FFF7  	sout
+2A *42   003A  	ld	g
+2B *43   FFFD  	dout
+2C *44   800A  	ldc	'\n'
+2D *45   FFFB  	aout
+               
+2E *46   8014  	ldc	20	; f(&g, 20);
+2F *47   F300  	push
+30 *48   803A  	ldc	g
+31 *49   F300  	push
+32 *50   E00F  	call	@f$pii
+               
+33 *51   8040  	ldc	msg_g	; cout << "g = " << g << endl;
+34 *52   FFF7  	sout
+35 *53   003A  	ld	g
+36 *54   FFFD  	dout
+37 *55   800A  	ldc	'\n'
+38 *56   FFFB  	aout
+               
+39 *57   FFFF  	halt		; end of the function
+               	end main
+               
+               ;GLOBAL FUNCTIONS
+               
+3A *58   0014  g:	dw	20	; int g = 20;
+3B *59   0078  msg_x:	dw	"x = "
+3C *60   0020
+3D *61   003D
+3E *62   0020
+3F *63   0000
+40 *64   0067  msg_g:	dw	"g = "
+41 *65   0020
+42 *66   003D
+43 *67   0020
+44 *68   0000
+               
+               
+               
+45 *69   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$i                      0           1C 
+ @f$pi                     A           26 
+ @f$pii                    F           32 
+ main                      14          3A 
+ g                         3A          16  1A  20  24  2A 
+                                       30  35 
+ msg_x                     3B          3  
+ msg_g                     40          14  1E  28  33 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

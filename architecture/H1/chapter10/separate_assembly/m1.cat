@@ -1,0 +1,12 @@
+cat file m1.cat
+0  *0    E000  main:	call	sub
+1  *1    1000  	st	total
+2  *2    FFFF  done:	halt
+3  *3    0011  x:	dw	17
+4  *4    ========= end of m1.mas =================================
+4  *4    0000  sub:	ld	x
+5  *5    2003  	add	y
+6  *6    F000  done:	ret
+7  *7    0022  y:	dw	34
+8  *8    0000  total:	dw	0
+9  *9    ========= end of m2.mas =================================

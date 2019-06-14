@@ -1,0 +1,137 @@
+Machine-level Assembler Version 6.1    Tue May 12 21:11:29 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;----------------------------------------------------------
+               ;10.56 Translate the next C program to assembly language. 
+               ;Assume that the program is in two files
+               ;
+               ;	// first file;
+               ;
+               ;	#include <iostream>
+               ;	using namespace std;
+               ;	static void f(int x)
+               ;	{
+               ;		cout << "x = " << x << endl;
+               ;	}
+               ;
+               ;	int main()
+               ;	{
+               ;		int a;
+               ;		int b = 1;
+               ;		f(b);
+               ;		g(&a);
+               ;		cout << "a = " << a << endl;
+               ;		return 0;
+               ;	}
+               ;
+               ;	// Second file:
+               ;	void g(int *p)
+               ;	{
+               ;		*p = 100;
+               ;		f();
+               ;	}
+               ;
+               ;	void f()
+               ;	{
+               ;   	cout << "hello\n";
+               ;	}
+               ;----------------------------------------------------------
+               
+               ;-------------------------------------
+               ; static void f(int x)
+               ;-------------------------------------
+               @f$i:
+0  *0    8007  	ldc		@msg	; cout << "x = " << x << endl;
+1  *1    FFF7  	sout
+2  *2    4001  	ldr		1
+3  *3    FFFD  	dout
+4  *4    800A  	ldc		'\n'
+5  *5    FFFB  	aout
+               	
+6  *6    F000  	ret
+               
+7  *7    0078  @msg:	dw		"x = "
+8  *8    0020
+9  *9    003D
+A  *10   0020
+B  *11   0000
+               
+               ;-------------------------------------
+               ; int main()
+               ;-------------------------------------
+               
+               main:
+C  *12   F501  	aloc	1	; int a;
+               
+D  *13   F501  	aloc	1	; int b = 1;
+E  *14   F700  	swap
+F  *15   102A  	st		@swap
+10 *16   F700  	swap
+11 *17   8001  	ldc		1
+12 *18   F300  	push
+13 *19   002A  	ld		@swap
+14 *20   F200  	sti
+               	
+15 *21   4000  	ldr		0	; f(b);
+16 *22   F300  	push
+17 *23   E000  	call	@f$i
+18 *24   F601  	dloc	1
+               	
+19 *25   F700  	swap		; g(&a);
+1A *26   102A  	st		@swap
+1B *27   F700  	swap
+1C *28   002A  	ld		@swap
+1D *29   202B  	add		@1
+1E *30   F300  	push
+1F *31   E000  	call	@g$pi
+20 *32   F601  	dloc	1
+               	
+21 *33   802C  	ldc		@msg_a	; cout << "a = " << a << endl;
+22 *34   FFF7  	sout
+23 *35   4001  	ldr		1
+24 *36   FFFD  	dout
+25 *37   800A  	ldc		'\n'
+26 *38   FFFB  	aout
+               	
+27 *39   F602  	dloc	2
+28 *40   8000  	ldc		0		; return 0;
+               	
+29 *41   F000  	ret
+               
+2A *42   0000  @swap:	dw		0
+2B *43   0001  @1:		dw		1
+2C *44   0061  @msg_a:	dw		"a = "
+2D *45   0020
+2E *46   003D
+2F *47   0020
+30 *48   0000
+               
+               
+               public main
+               extern @g$pi
+               
+               
+               
+31 *49   ========= end of main.mas ===============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$i                      0           17 
+ @msg                      7           0  
+ main                      C           31 
+ @swap                     2A          F   13  1A  1C 
+ @1                        2B          1D 
+ @msg_a                    2C          21 
+ @g$pi                     ext         31  1F 
+
+Input file   = main.mas
+Output file  = main.mob
+List file    = main.lst 
+Number base  = decimal
+Label status = case sensitive

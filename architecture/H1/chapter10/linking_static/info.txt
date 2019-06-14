@@ -1,0 +1,3 @@
+To compile module1 and module2 is used the next line command:
+
+g++ module1.cpp module2.cpp

@@ -1,0 +1,12 @@
+; SIM PROGRAM
+; Program that subtracts 15 decimal from 20 decimal using the add instruccion.
+	ld  n1 	; load n1
+	add n2	; add n2
+	halt	; Stop the programº
+
+; Data area
+n1:  dw 20 	; first number
+n2:  dw FFF1h	; second number 15 in two complements
+
+
+

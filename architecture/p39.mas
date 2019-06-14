@@ -1,0 +1,3 @@
+            ld   x + 4096
+            halt
+        x:  dw   5

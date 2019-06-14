@@ -1,0 +1,100 @@
+;------------------------------------------------------------------------------------------------------
+; Version	: 1.0
+; Created	: 5-january-2009
+; Author	: Juan Carlos Yescas
+; Description	: The latter portion of a program is given below. Add to it its first portion
+;		  (the new code you add should occupy addresses less than 1000) whose execution
+;		  has the efect of executing the code starting at location 1000 and the code
+;		  starting at location 2000 concurrently (i.e., in an interleaved fashion).
+;
+;		  How is the problem going to be solved??
+;
+;		  We are going to push the instructions in an interleaved fashion in the stack.
+;		  After that we're going to pop the instructions to be stored in the location 2000.
+;
+;-----------------------------------------------------------------------------------------------------
+
+part1:  ldc	1000		; load the value 1000 in ac
+	add	counter1	; add the counter to 1000
+	ldi			; load the value that is in the address pointed by ac
+	jz	part2		; if ZERO, jump to part2
+	push			; push the value in the stack
+	ld	counter1	; load counter1 to be incremented
+	add	@1		; add 1 to counter
+	st	counter1	; store the new value in counter1
+        
+part2:	ldc	2000		; load the value 2000 in ac
+	add	counter2	; add counter2 to 2000
+        ldi			; load the value that is in the address pointed by ac
+        jz	copyInverse	; if ZERO, jump to copyInverse
+        push			; push the value in the stack
+        ld	counter2	; load counter2 to be incremented
+        add 	@1		; add 1 to counter
+        st 	counter2	; store the new value in counter2
+        ja	part1		; jump always to part1
+       
+copyInverse:
+	ld	counter1	; load the value of counter1
+	add	counter2	; add the value of counter2 to counter1
+	sub    	@1		; subtract 1 to the sum because we're going to store the values of the stack
+				; starting in 2000 + (total -1) and ending in 2000.
+        st   	total		; store the value in total
+
+         ; The copy is going to be made from 2000 to up
+copy:	ldc  	2000		; load the value of 2000
+	add   	total		; add total to 2000
+	sti			; store the top value in the stack in the address pointed by ac
+    	ld    	total		; load the value of total
+      	sub   	@1		; subtract 1 to the ac
+       	st    	total		; store the new value in total
+       	jzop  	copy		; if ZERO or POSITIVE, jump to copy
+       	ja     	2000		; jump always to 2000
+   
+counter1:	dw	0
+counter2:    	dw  	0
+total:        	dw    	0
+@1:             dw    	1
+
+; LATTER PORTION OF THE PROGRAM
+
+org	1000
+	ldc	1
+	dout
+	add	x
+	dout
+	add	x
+	dout	
+	add	x
+	dout	
+	halt
+x:	dw	1
+
+org	2000
+	ldc	'A'
+	aout
+	add	y
+	aout
+	add	y
+	aout
+	add	y
+	aout
+	add	y
+	aout
+	add	y
+	aout
+	add	y
+	aout
+	add	y
+	aout
+	add	y
+	aout
+	add	y
+	aout
+	halt
+y:	dw	2
+
+
+
+
+
+

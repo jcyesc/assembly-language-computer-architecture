@@ -1,0 +1,4 @@
+	ld   s + 1
+	ld   s + 5
+	halt
+s:	dw   "hello"

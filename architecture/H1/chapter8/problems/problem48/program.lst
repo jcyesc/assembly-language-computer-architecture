@@ -1,0 +1,96 @@
+Machine-level Assembler Version 6.1    Fri Mar 27 23:46:59 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.48 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;--------------------------
+               ; void f(int a[])
+               ;--------------------------
+               
+0  *0    4001  @f$pi:	ldr	1	; a[1] = a[1] + 5;
+1  *1    202B  	add	@1
+2  *2    F100  	ldi
+3  *3    202A  	add	@5
+4  *4    F300  	push
+5  *5    4002  	ldr	2
+6  *6    202B  	add	@1
+7  *7    F200  	sti
+               
+8  *8    4001  	ldr	1	; cout << a[1] << endl;
+9  *9    202B  	add	@1
+A  *10   F100  	ldi
+B  *11   FFFD  	dout
+C  *12   800A  	ldc	'\n'
+D  *13   FFFB  	aout
+               	
+E  *14   F000  	ret		; return to the caller
+               
+               ;-------------------------
+               ; void f(int x)
+               ;-------------------------
+               
+F  *15   4001  @f$i:	ldr	1	; x = x + 3;
+10 *16   202C  	add	@3
+11 *17   5001  	str	1
+               
+12 *18   4001  	ldr	1	; cout << x << endl;
+13 *19   FFFD  	dout
+14 *20   800A  	ldc	'\n'
+15 *21   FFFB  	aout
+               
+16 *22   F000  	ret		; return to the caller
+               
+17 *23   8064  main:	ldc	100	; z[] = { 100, 101, 102 }
+18 *24   1027  	st	z
+19 *25   8065  	ldc	101
+1A *26   1028  	st	z + 1
+1B *27   8066  	ldc	102
+1C *28   1029  	st	z + 2
+               
+1D *29   0026  	ld	n	; f(n);
+1E *30   F300  	push
+1F *31   E00F  	call	@f$i
+20 *32   F601  	dloc	1
+               
+21 *33   8027  	ldc	z	; f(z);
+22 *34   F300  	push
+23 *35   E000  	call	@f$pi
+24 *36   F601  	dloc	1
+               
+25 *37   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+26 *38   0014  n:	dw	20
+27 *39   0000  z:	dw	3 dup 0	; Global array
+               
+2A *42   0005  @5:	dw	5
+2B *43   0001  @1:	dw	1
+2C *44   0003  @3:	dw	3
+2D *45   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$pi                     0           23 
+ @f$i                      F           1F 
+ main                      17          26 
+ n                         26          1D 
+ z                         27          18  1A  1C  21 
+ @5                        2A          3  
+ @1                        2B          1   6   9  
+ @3                        2C          10 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,16 @@
+	ldc   inbuf	; get address of input buffer
+	sin		; read string into inbuf
+	sout		; output string from inbuf
+	ldc '\n'	; get newline character
+	aout		; go to next line
+	ldc   msg1	; get address of msg1
+	sout		; output msg1
+	ld    x		; load value of x
+	dout		; output value of x in decimal
+	ldc   msg2	; get address of msg2
+	sout		; output msg2
+	halt
+x:	dw    5
+inbuf:  dw    81 dup 0
+msg1:   dw    "x = "
+msg2:   dw    "(decimal)\n"	

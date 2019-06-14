@@ -1,0 +1,56 @@
+;------------------------------------------------------------------
+; Translate the program 9.13 to assembly language.
+;------------------------------------------------------------------
+
+;------------------------------
+; int f()
+;------------------------------
+
+@f$v:	ldc	msg_h	; cout << "hello\n";
+	sout
+
+	ldc	1	; return 1
+	ret
+
+;------------------------------
+; int main()
+;------------------------------
+
+main:
+			; while(x < 5 && y < 12 && f())
+while:  ldc 	5	; x < 5
+	sub 	x
+	jz	en	
+	jn	en
+	
+	ld	y	; y < 12
+	sub	@12
+	jzop	en
+	
+	call	@f$v	; f()
+	jz	en
+	
+	; WHILE BODY
+	ldc	1	; x = x + 1;
+	add	x
+	st	x
+
+	ldc	1	; y = y + 2;
+	add	y
+	st	y
+
+	ldc	msg_b	; cout << "bye\n";
+	sout	
+	
+	ja	while
+
+en:	halt
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	0
+y:	dw	0
+@12:	dw	12
+msg_h:	dw	"hello\n"
+msg_b:	dw	"bye\n"

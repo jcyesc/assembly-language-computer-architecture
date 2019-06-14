@@ -1,0 +1,13 @@
+; #5695 13 30 10 71 40318
+;Use p645.has for your microcode
+;Create config file p645.cfg
+;Invoke sim with
+;   sim bprog /mp645 /ap645
+n
+o
+ln
+g
+SD
+enable
+sd
+q

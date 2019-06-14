@@ -1,0 +1,32 @@
+Machine-level Assembler Version 6.1    Thu Dec 25 12:32:46 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; What happens when the following program is run:
+               
+0  *0    800F  	ldc   15
+1  *1    F700  	swap		; swap ac, sp
+2  *2    0005  	ld    x
+3  *3    F300  a:	push
+4  *4    9003  	ja    a
+5  *5    FFFF  x:	dw    -1
+               
+               ; The program ends when the "push" instruction overlays the addr
+               ; that means halt. 
+6  *6    ========= end of overlay_stack.mas ======================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ a                         3           4  
+ x                         5           2  
+
+Input file   = overlay_stack.mas
+Output file  = overlay_stack.mac
+List file    = overlay_stack.lst 
+Number base  = decimal
+Label status = case sensitive

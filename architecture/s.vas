@@ -1,0 +1,310 @@
+/  Standard Instruction Set Vertical Microcode   s.vas
+
+/ The label indicates the opcode decoded up to that point.  
+/ Each hex digit in a label represents 4 bits.  0 or 1 in a 
+/ label represents the bits 0 and 1.  For example, the 
+/ label LF_01 corresponds to opcode bits 1111 01; the label 
+/ LF_2 corresponds to opcode bits 1111 0010. 
+
+/***************************************************************/
+/           Fetch instruction and increment pc register         /
+/***************************************************************/
+fetch:      mar    pc
+            rd
+            move   ir mdr
+            add    pc pc 1 
+/***************************************************************/
+/           Decode opcode                                       /
+/***************************************************************/
+            move   dc ir
+            bn     L1
+L0:         left   dc dc
+            bn     L01
+L00:        left   dc dc
+            bn     L001
+L000:       left   dc dc
+            bn     L0001
+            ba     L0000
+L1:         left   dc dc 
+            bn     L11 
+L10:        left   dc dc
+            bn     L101 
+L100:       left   dc dc 
+            bn     L9 
+            ba     L8
+L01:        left   dc dc 
+            bn     L011 
+L010:       left   dc dc 
+            bn     L5 
+            ba     L4          
+L11:        left   dc dc 
+            bn     L111 
+L110:       left   dc dc 
+            bn     LD 
+            ba     LC
+L001:       left   dc dc 
+            bn     L3 
+            ba     L2
+L011:       left   dc dc 
+            bn     L7 
+            ba     L6
+L101:       left   dc dc 
+            bn     LB 
+            ba     LA
+L111:       left   dc dc 
+            bn     LF 
+            ba     LE
+LF:         left   dc dc 
+            bn     LF_1 
+LF_0:       left   dc dc 
+            bn     LF_01 
+LF_00:      left   dc dc 
+            bn     LF_001 
+LF_000:     left   dc dc
+            bn     LF_0001
+            ba     LF_0000
+LF_1:       left   dc dc 
+            bn     LF_11 
+LF_10:      left   dc dc 
+            bn     LF_101 
+LF_100:     left   dc dc
+            bn     LF_9
+            ba     LF_8
+LF_01:      left   dc dc 
+            bn     LF_011 
+LF_010:     left   dc dc
+            bn     LF_5
+            ba     LF_4
+LF_11:      left   dc dc 
+            bn     LF_111 
+LF_110:     left   dc dc
+            bn     LF_D
+            ba     LF_C
+LF_001:     left   dc dc 
+            bn     LF_3
+            ba     LF_2
+LF_011:     left   dc dc
+            bn     LF_7
+            ba     LF_6
+LF_101:     left   dc dc
+            bn     LF_B
+            ba     LF_A
+LF_111:     left   dc dc
+            bn     LF_F
+            ba     LF_E
+LF_F:       left   dc dc 
+            bn     LF_F_1 
+LF_F_0:     left   dc dc 
+            bn     LF_F_01 
+LF_F_00:    left   dc dc 
+            bn     LF_F_001 
+LF_F_000:   left   dc dc
+            bn     LF_F_0001
+            ba     LF_F_0000
+LF_F_1:     left   dc dc 
+            bn     LF_F_11 
+LF_F_10:    left   dc dc 
+            bn     LF_F_101 
+LF_F_100:   left   dc dc
+            bn     LF_F_9
+            ba     LF_F_8
+LF_F_01:    left   dc dc 
+            bn     LF_F_011 
+LF_F_010:   left   dc dc
+            bn     LF_F_5
+            ba     LF_F_4
+LF_F_11:    left   dc dc 
+            bn     LF_F_111 
+LF_F_110:   left   dc dc
+            bn     LF_F_D
+            ba     LF_F_C
+LF_F_001:   left   dc dc 
+            bn     LF_F_3
+            ba     LF_F_2
+LF_F_011:   left   dc dc
+            bn     LF_F_7
+            ba     LF_F_6
+LF_F_101:   left   dc dc
+            bn     LF_F_B
+            ba     LF_F_A
+LF_F_111:   left   dc dc
+            bn     LF_F_F
+            ba     LF_F_E
+LF_F_F:     left   dc dc 
+            bn     fetch
+LF_F_F_0:   left   dc dc 
+            bn     LF_F_F_01 
+LF_F_F_00:  left   dc dc 
+            bn     LF_F_F_001 
+LF_F_F_000: left   dc dc
+            bn     LF_F_F_0001
+            ba     LF_F_F_0000
+LF_F_F_01:  left   dc dc 
+            bn     fetch
+LF_F_F_010: left   dc dc
+            bn     fetch
+            ba     LF_F_F_4
+LF_F_F_001: left   dc dc 
+            bn     LF_F_F_3
+            ba     LF_F_F_2
+/***************************************************************/
+/           Microcode for each instruction                      /
+/***************************************************************/
+L0000:      /-------------------- LD ---------------------------
+            mar    ir
+            rd 
+            move   ac mdr
+            ba     fetch 
+L0001:      /-------------------- ST ---------------------------
+            move mdr ac
+            mar ir
+            wr 
+            ba     fetch 
+L2:         /-------------------- ADD --------------------------
+            mar    ir
+            rd
+            move   f mdr
+            add    ac ac f 
+            ba     fetch 
+L3:         /-------------------- SUB --------------------------
+            mar    ir
+            rd 
+            move   f mdr 
+            sub    ac ac f 
+            ba     fetch 
+L4:         /-------------------- LDR --------------------------
+            add    f ir sp
+            mar    f 
+            rd 
+            move   ac mdr
+            ba     fetch
+L5:         /-------------------- STR --------------------------
+            add    f ir sp
+            move   mdr ac 
+            mar    f
+            wr 
+            ba     fetch
+L6:         /-------------------- ADDR -------------------------
+            add    f ir sp
+            mar    f 
+            rd
+            move   f mdr
+            add    ac ac f 
+            ba     fetch
+L7:         /-------------------- SUBR -------------------------
+            add    f ir sp
+            mar    f 
+            rd 
+            move   f mdr
+            sub    ac ac f
+            ba     fetch
+L8:         /-------------------- LDC -------------------------
+            and    ac ir xmask
+            ba     fetch         
+L9:         /-------------------- JA ---------------------------
+            and    pc ir xmask
+            ba     fetch          
+LA:         /-------------------- JZOP -------------------------
+            sz     ac
+            bn     fetch          
+            and    pc ir xmask
+            ba     fetch 
+LB:         /-------------------- JN --------------------------
+            sz     ac
+            bn     dojn           
+            ba     fetch 
+dojn:       and    pc ir xmask
+            ba     fetch 
+LC:         /-------------------- JZ ---------------------------
+            sz     ac
+            bz     dojz  
+            ba     fetch 
+dojz:       and    pc ir xmask
+            ba     fetch 
+LD:         /-------------------- JNZ --------------------------
+            sz     ac
+            bz     fetch
+            and    pc ir xmask
+            ba     fetch 
+LE:         /-------------------- CALL -------------------------
+            sub    sp  sp 1
+            move   mdr pc
+            mar sp  
+            wr 
+            and    pc ir xmask
+            ba     fetch
+LF_0000:    /-------------------- RET --------------------------
+            mar    sp
+            rd 
+            move   pc mdr
+            add    sp sp 1
+            ba     fetch 
+LF_0001:    /-------------------- LDI --------------------------
+            mar    ac
+            rd 
+            move   ac mdr
+            ba     fetch
+LF_2:       /-------------------- STI --------------------------
+            mar    sp
+            rd 
+            move   f mdr
+            move   mdr f
+            mar ac 
+            wr 
+            ba     fetch
+LF_3:       /-------------------- PUSH -------------------------
+            sub    sp sp 1
+            move   mdr ac
+            mar sp
+            wr 
+            ba     fetch
+LF_4:       /-------------------- POP --------------------------
+            mar    sp
+            rd 
+            move   ac mdr
+            add    sp sp 1
+            ba     fetch 
+LF_5:       /-------------------- ALOC -------------------------
+            and    f ir ymask
+            sub    sp sp f 
+            ba     fetch
+LF_6:       /-------------------- DLOC -------------------------
+            and    f ir ymask
+            add    sp sp f 
+            ba     fetch 
+LF_7:       /-------------------- SWAP -------------------------
+            move   f ac
+            move   ac sp 
+            move   sp f 
+            ba     fetch 
+/***************************************************************/
+/           Available Opcodes                                   /
+/***************************************************************/
+LF_8:       /---------------------------------------------------
+LF_9:       /---------------------------------------------------
+LF_A:       /---------------------------------------------------
+LF_B:       /---------------------------------------------------
+LF_C:       /---------------------------------------------------
+LF_D:       /---------------------------------------------------
+LF_E:       /---------------------------------------------------
+LF_F_0000:  /---------------------------------------------------
+LF_F_0001:  /---------------------------------------------------
+LF_F_2:     /---------------------------------------------------
+LF_F_3:     /---------------------------------------------------
+LF_F_4:     /---------------------------------------------------
+LF_F_5:     /---------------------------------------------------
+LF_F_6:     /---------------------------------------------------
+LF_F_7:     /---------------------------------------------------
+LF_F_8:     /---------------------------------------------------
+LF_F_9:     /---------------------------------------------------
+LF_F_A:     /---------------------------------------------------
+LF_F_B:     /---------------------------------------------------
+LF_F_C:     /---------------------------------------------------
+LF_F_D:     /---------------------------------------------------
+LF_F_E:     /---------------------------------------------------
+LF_F_F_0000:/---------------------------------------------------
+LF_F_F_0001:/---------------------------------------------------
+LF_F_F_2:   /---------------------------------------------------
+LF_F_F_3:   /---------------------------------------------------
+LF_F_F_4:   /---------------------------------------------------
+            ba     fetch

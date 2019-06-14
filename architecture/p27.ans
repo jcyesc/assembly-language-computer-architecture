@@ -1,0 +1,7 @@
+n   ; enter /ap27 from within debugger 
+o#
+ln
+D0 2
+U0 2
+g
+q

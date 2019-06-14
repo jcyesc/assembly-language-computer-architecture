@@ -1,0 +1,75 @@
+;------------------------------------------------------------------
+; Program in assembler of the program 7.32
+;------------------------------------------------------------------
+
+f:  aloc 1	; int y = 3
+    ldc	 3
+    str  0
+    
+    aloc 1	; int z = 5;
+    ldc  5
+    str  0
+
+    ld 	 @s0_x	; cout << x << " " << y << " " << z << endl;
+    dout
+    ldc  @msg
+    sout
+    ldr  1
+    dout
+    ldc  @msg
+    sout
+    ldr  0
+    dout
+    ldc  '\n'
+    aout
+
+    ldc  1	; x = 1
+    st   @s0_x
+    
+    ldc  1	; y = 2
+    str  1
+
+    ldc  3	; z = 3
+    str  0
+
+    dloc 2	; release the memory		
+    ret		; return to the calling function
+
+g:  aloc 1	; int y = 50
+    ldc  50
+    str  0
+
+    ld   @s1_x	; cout << x << " " << y << endl; 
+    dout
+    ldc  @msg
+    sout 
+    ldr  0
+    dout
+    ldc  '\n'
+    aout
+
+    ldc  22	; y = 22
+    str  0
+    ldr  0
+    st	 @s1_x
+   
+    dloc 1	; release the memory
+    ret		; return to the calling function
+
+main:
+    call f
+    call f
+    call g
+    call g
+    
+    halt	; end of the program
+    end main
+
+
+
+; VARIABLES
+
+@s0_x:	dw 2	 ; static local variable x at f()
+@s1_x:	dw 44	 ; static local variable x at g()
+
+@msg:	dw " "

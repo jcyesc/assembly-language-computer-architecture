@@ -1,0 +1,22 @@
+; #bf1c
+;Assume number inputed is unsigned.
+;Display should look exactly like this (with data from test
+;cases replacing numbers):
+;Enter binary number: 1100
+;Decimal equivalent = 12
+n
+o
+ln
+g
+1100
+o
+g
+1111111111111111
+o
+g
+0
+o
+g
+1
+SD
+q

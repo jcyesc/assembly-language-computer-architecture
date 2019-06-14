@@ -1,0 +1,71 @@
+Machine-level Assembler Version 6.1    Tue Mar 10 23:34:49 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate program 7.41 to assembly language
+               ;---------------------------------------------------------------
+               
+               ;-------------------
+               ; main()
+               ;-------------------
+               
+0  *0    F501  main:	aloc	1	; int x;
+               
+1  *1    F501  	aloc	1	; int y = 3;
+2  *2    8003  	ldc	3
+3  *3    5000  	str	0
+               
+4  *4    8005  	ldc	5	; x = y + 5	
+5  *5    6000  	addr	0
+6  *6    5001  	str	1
+               	
+7  *7    8015  	ldc	@msg_x	; cout << "x = " << x << endl;
+8  *8    FFF7  	sout
+9  *9    4001  	ldr	1
+A  *10   FFFD  	dout
+B  *11   800A  	ldc	'\n'
+C  *12   FFFB  	aout
+               
+D  *13   801A  	ldc	@msg_y	; cout << "y = " << y << endl;
+E  *14   FFF7  	sout
+F  *15   4000  	ldr	0
+10 *16   FFFD  	dout
+11 *17   800A  	ldc	'\n'
+12 *18   FFFB  	aout
+               	
+13 *19   F602  	dloc	2
+               
+14 *20   FFFF  	halt
+               
+               ; GLOBAL VARIABLES
+               
+15 *21   0078  @msg_x:	dw	"x = "
+16 *22   0020
+17 *23   003D
+18 *24   0020
+19 *25   0000
+1A *26   0079  @msg_y:	dw	"y = "
+1B *27   0020
+1C *28   003D
+1D *29   0020
+1E *30   0000
+               
+1F *31   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ @msg_x                    15          7  
+ @msg_y                    1A          D  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

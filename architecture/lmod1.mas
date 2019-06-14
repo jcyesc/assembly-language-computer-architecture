@@ -1,0 +1,12 @@
+         ;                                       lmod1.mas
+         ; Test module for linv1 
+         ; Link with lmod2.mas
+         ; Links ok
+         extern x
+         public sub
+         public total
+sub:     ld     x  
+         add    y  
+         ret    
+total:   dw     0  
+y:       dw     34 

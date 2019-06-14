@@ -1,0 +1,14 @@
+cat file main.cat
+0  *0    0001  ok:	ld	x + 1
+1  *1    2FFF  	add	y - 1
+2  *2    FFFD  	dout
+3  *3    800A  	ldc	'\n'
+4  *4    FFFB  	aout
+5  *5    FFFF  	halt
+6  *6    ========= end of main.mas ===============================
+6  *6    0005  x:	dw 	5
+7  *7    0006  y:	dw	6
+8  *8    ========= end of module1.mas ============================
+8  *8    0032  x:	dw	50
+9  *9    003C  y:	dw	60
+A  *10   ========= end of module2.mas ============================

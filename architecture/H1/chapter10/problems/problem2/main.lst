@@ -1,0 +1,36 @@
+Machine-level Assembler Version 6.1    Sun May  3 14:26:24 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Problem 10.2
+               ;
+               ; Create a program that consists of three separately assembled m
+               ; c. main calls b, b calls c, and c displays "in c". Assemble, l
+               ; in sim.
+               ;---------------------------------------------------------------
+               
+               
+0  *0    E000  main:	call b;
+               
+1  *1    FFFF  	halt
+               	end main
+               	extern b	; b is external
+               
+2  *2    ========= end of main.mas ===============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           2  
+ b                         ext         2   0  
+
+Input file   = main.mas
+Output file  = main.mob
+List file    = main.lst 
+Number base  = decimal
+Label status = case sensitive

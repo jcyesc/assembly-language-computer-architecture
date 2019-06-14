@@ -1,0 +1,88 @@
+Machine-level Assembler Version 6.1    Sat Mar 28 08:36:15 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------
+               ; Translate the program 8.50 to assembly language
+               ;---------------------------------------------------------
+               
+               ;----------------------------------
+               ; void f()
+               ;----------------------------------
+               
+0  *0    F505  @f$v:	aloc	5	; int b[5];
+               	
+1  *1    8001  	ldc	1	; a[0] = 1;
+2  *2    101E  	st	a
+               	
+3  *3    F700  	swap		; b[1] = 3;
+4  *4    1028  	st	spsave
+5  *5    F700  	swap
+6  *6    8003  	ldc	3
+7  *7    F300  	push
+8  *8    8001  	ldc	1
+9  *9    2028  	add	spsave
+A  *10   F200  	sti
+               
+B  *11   8016  	ldc	22	; c[3] = 22;
+C  *12   1026  	st	s0_c + 3		
+               		
+D  *13   800C  	ldc	12	; c[b[a[0]]] = 12;
+E  *14   F300  	push
+F  *15   0028  	ld	spsave
+10 *16   201E  	add	a
+11 *17   F100  	ldi
+12 *18   1029  	st	value	
+13 *19   8023  	ldc	s0_c
+14 *20   2029  	add	value
+15 *21   F200  	sti
+               	
+16 *22   0026  	ld	s0_c + 3	; cout << c[3] << endl;
+17 *23   FFFD  	dout
+18 *24   800A  	ldc	'\n'
+19 *25   FFFB  	aout
+               
+1A *26   F605  	dloc	5	; release the memory
+               
+1B *27   F000  	ret		; return to the calling function
+               
+               ;--------------------------
+               ; main()
+               ;--------------------------
+               
+1C *28   E000  main:	call	@f$v	; f();
+               
+1D *29   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+1E *30   0000  a:	dw	5 dup 0	; int a[5];
+23 *35   0000  s0_c:	dw	5 dup 0 ; static int c[5];
+28 *40   0000  spsave: dw	0
+29 *41   0000  value:	dw	0
+               
+2A *42   0003  @3:	dw	3
+               
+2B *43   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$v                      0           1C 
+ main                      1C          1E 
+ a                         1E          2   10 
+ s0_c                      23          C   13  16 
+ spsave                    28          4   9   F  
+ value                     29          12  14 
+ @3                        2A         
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

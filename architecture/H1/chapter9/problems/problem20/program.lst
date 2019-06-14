@@ -1,0 +1,100 @@
+Machine-level Assembler Version 6.1    Fri May  1 21:17:17 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 9.20 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;-------------------------------------------------------
+               ; int f(int x, int $y, int &z)  $y means value-result
+               ;-------------------------------------------------------
+               
+0  *0    8001  @f$ipiri:	ldc	1	; x++;
+1  *1    6001  		addr	1
+2  *2    5001  		str	1
+               
+3  *3    8001  		ldc	1	; y++; Take in count that y is value-result
+4  *4    6002  		addr	2
+5  *5    5002  		str	2
+               
+6  *6    4003  		ldr	3	; z++
+7  *7    F100  		ldi
+8  *8    2031  		add	@1
+9  *9    F300  		push
+A  *10   4004  		ldr	4
+B  *11   F200  		sti
+               
+C  *12   4003  		ldr	3	; x + y + z;
+D  *13   F100  		ldi
+E  *14   6001  		addr	1
+F  *15   6002  		addr	2
+               
+10 *16   F000  		ret
+               
+11 *17   8030  main:	ldc	c
+12 *18   F300  	push
+13 *19   002F  	ld	b
+14 *20   F300  	push
+15 *21   002E  	ld	a
+16 *22   F300  	push
+17 *23   E000  	call	@f$ipiri
+18 *24   102D  	st	s	
+               
+19 *25   4001  	ldr	1	; value-result
+1A *26   102F  	st	b
+               
+1B *27   F603  	dloc	3
+               
+1C *28   002D  	ld	s	; cout << s << endl;
+1D *29   FFFD  	dout
+1E *30   800A  	ldc	'\n'
+1F *31   FFFB  	aout
+               
+20 *32   002E  	ld	a	; cout << a << endl;	
+21 *33   FFFD  	dout
+22 *34   800A  	ldc	'\n'
+23 *35   FFFB  	aout
+               
+24 *36   002F  	ld	b	; cout << b << endl;
+25 *37   FFFD  	dout
+26 *38   800A  	ldc	'\n'
+27 *39   FFFB  	aout
+               
+28 *40   0030  	ld	c	; cout << c << endl;
+29 *41   FFFD  	dout
+2A *42   800A  	ldc	'\n'
+2B *43   FFFB  	aout
+               
+2C *44   FFFF  	halt
+               	end main
+               		
+               ; Global variables
+               
+2D *45   0000  s:	dw	0
+2E *46   0001  a:	dw	1
+2F *47   0002  b:	dw	2
+30 *48   0003  c:	dw	3
+31 *49   0001  @1:	dw	1
+32 *50   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$ipiri                  0           17 
+ main                      11          2D 
+ s                         2D          18  1C 
+ a                         2E          15  20 
+ b                         2F          13  1A  24 
+ c                         30          11  28 
+ @1                        31          8  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

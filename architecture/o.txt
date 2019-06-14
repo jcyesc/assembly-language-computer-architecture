@@ -1,0 +1,135 @@
+                                                 o.txt
+
+Optimal Instruction Set (o.hor, o.cfg)
+
+Opcode  Assembly    Name            Description
+(hex)    Form
+
+ 0     ld   x   Load                ac = mem[x];
+ 1     st   x   Store               mem[x] = ac;
+ 2     add  x   Add                 ac = ac + mem[x]; cy = carry;
+ 3     sub  x   Subtract            ac = ac - mem[x];
+
+ 4     ldr  s   Load relative       ac = mem[bp+s];
+ 5     str  s   Store relative      mem[bp+s] = ac;
+ 6     addr s   Add relative        ac = ac + mem[bp+s]; cy = carry;
+ 7     subr s   Subtract relative   ac = ac - mem[bp+s];
+
+ 8     ldc  x   Load constant       ac = x;
+
+ 9     ja   x   Jump always         pc = x;
+ A     jzop x   Jump zero or pos    if (ac >= 0) pc = x;
+ B     jn   x   Jump negative       if (ac < 0) pc = x;
+ C     jz   x   Jump zero           if (ac == 0) pc = x;
+ D     jnz  x   Jump nonzero        if (ac != 0) pc = x;
+
+ E     call x   Call procedure      mem[--sp] = pc; pc = x;
+ F0    ret      Return              pc = mem[sp++];
+
+ F1    ldi      Push indirect       ac = mem[ac];
+ F2    sti      Store indirect      mem[ac] = mem[sp++];
+
+ F3    push     Push onto stack     mem[--sp] = ac;
+ F4    pop      Pop from stack      ac = mem[sp++];
+
+ F5    aloc y   Allocate            sp = sp - y;
+ F6    dloc y   Deallocate          sp = sp + y;
+
+ F7    swap     Swap ac, sp         temp = ac; ac = sp; sp = temp;
+
+ F8    addc y   Add constant        ac = ac + y; cy = carry;
+ F9    subc y   Subtract constant   ac = ac - y;
+
+
+ FA    esba     Estab base addr     mem[--sp] = bp; bp = sp12;
+ FB    reba     Restore base addr   sp = bp; bp = mem[sp++];
+
+ FC    cora     Convert rel addr    ac = (ac + bp)12;
+
+ FD    scmp     Signed compare      temp = mem[sp++];
+                                    if (temp <  ac) ac = -1;
+                                    if (temp == ac) ac =  0;
+                                    if (temp >  ac) ac =  1;
+
+ FE    ucmp     Unsigned compare    Same as scmp except
+                                    unsigned comparison
+
+ FF0   shll z   Shift left logical  ac = ac << z; (inject 0's)
+ FF1   shrl z   Shift right logical ac = ac >> z; (inject 0's)
+ FF2   shra z   Shift right arith   ac = ac >> z; (inject sign)
+
+ FF3   m        Shift-add multiply  ac = mem[sp++] * ac;
+ FF4   mult     Hardware multiply   ac = mem[sp++] * ac;
+
+ FF5   div      Divide              if (ac == 0) ac = sp;
+                                    else ac = mem[sp++] / ac;
+
+ FF6   rem      Remainder           if (ac == 0) ac = ct;
+                                    else ac = mem[sp++] % ac;
+
+ FF7   addy     Add with carry      ac = mem[sp++] + ac + cy; cy = carry;
+
+ FF8   or       Bitwise or          ac = ac | mem[sp++];
+ FF9   xor      Bitwise excl or     ac = ac ^ mem[sp++];
+ FFA   and      Bitwise and         ac = ac & mem[sp++];
+ FFB   flip     Bitwise complement  ac = ~ac;
+
+ FFC   cali     Call indirect       mem[--sp] = pc; pc = ac12;
+
+ FFD   sect     Set ct register     ct = ac;
+ FFE   dect     Decrement ct reg    if (--ct == 0) pc++;
+
+ FFF0  sodd     Skip on odd         if (ac % 2 == 1) pc++;
+
+ FFF1  bpbp     Bp to bp            bp = mem[bp];
+ FFF2  pobp     Pop bp              bp = mem[sp++];
+ FFF3  pbp      Push bp             mem[--sp] = bp;
+
+ FFF4  bcpy     Block copy          temp = mem[sp++];
+                                    while (ct--)
+                                       mem[ac++] = mem[temp++];
+
+ FFF5  uout     Unsigned out        Output number in ac reg as
+                                    unsigned decimal number
+
+ FFF6  sin      String input        Input str to address in ac
+ FFF7  sout     String output       Output str pointed to by ac
+
+ FFF8  hin      Hex input           Input hex number to ac reg
+ FFF9  hout     Hex output          Output number in ac in hex
+
+ FFFA  ain      ASCII input         Input ASCII char to ac reg
+ FFFB  aout     ASCII output        Output ASCII char in ac reg
+
+ FFFC  din      Decimal input       Input decimal number (signed
+                                    or unsigned) to ac register
+ FFFD  dout     Decimal output      Output number in ac reg as
+                                    a signed decimal number
+
+ FFFE  bkpt     Breakpoint          Trigger breakpoint
+ FFFF  halt     Halt                Trigger halt
+
+!-directive: o
+-----------------------------------------------------------------
+Instruction Fields
+
+  s:   12 rightmost bits of instruction, -4095 <= s <= 4095 (FFF hex)
+  x:   12 rightmost bits of instruction,     0 <= x <= 4095 (FFF hex)
+  y:   8  rightmost bits of instruction,     0 <= y <= 255  (FF hex)
+  z:   4  rightmost bits of instruction,     0 <= z <= 15   (F dec)
+
+-----------------------------------------------------------------
+Registers
+
+pc:    program counter register
+sp:    stack pointer register
+ac:    accumulator register
+ct:    count register
+cy:    carry register
+bp:    base pointer register
+temp:  designates a work register within the CPU
+
+Note:  An item followed by "12" in the instruction set 
+       descriptions denotes the 12 rightmost bits of that item.  
+       Main memory references (i.e., wherever "mem[...]" appears) 
+       use only the 12 rightmost of the address specified. 

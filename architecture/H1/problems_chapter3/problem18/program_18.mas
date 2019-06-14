@@ -1,0 +1,7 @@
+x:	dw  1
+y:	dw  15
+z:	dw  0
+start:	ld  x
+	add y
+	st  z
+	halt

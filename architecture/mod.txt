@@ -1,0 +1,499 @@
+                                                 mod.txt
+
+                    How to Use mod Version 6.1
+
+Quick Start 
+
+     mod (MODify) can modify the executable files for sim, mas, 
+has, vas, lin, lib, pic, mex, see, or iss so that different 
+defaults are in effect on their startup.  
+
+     To invoke mod, enter
+
+     mod
+
+mod then prompts for the input file name.  Enter the program to 
+be modified with or without its extension. 
+
+     To exit mod on any prompt without making any changes, enter 
+"^" (without the quotes). 
+
+     To leave a current setting in effect, at its prompt hit 
+ENTER without first entering a new setting. 
+
+     When mod is used to modify an executable program, it prompts 
+the user for various settings for that program.  If you enter "<" 
+in response to any of these prompts, mod resets that setting to 
+its default value.  Thus, to reset a program to all its default 
+settings, you can enter "<" in response to each prompt.  
+Alternatively, you can simply specify the /r command line 
+argument when you invoke mod.  mod then uses a response file 
+containing all the default values for that program.  For example, 
+to reset mas to all of its default settings, enter 
+
+     mod mas /r 
+
+     To see the settings in effect for any program, run mod 
+against that program, and hit ENTER is response to every prompt.
+mod will then display all the current settings.  For example, to 
+see the current settings for mas, enter
+
+     mod mas
+
+and then hit ENTER in response to the prompts.  Before 
+terminating, mod will display all the current settings of mas.  For 
+example:
+
+     No changes made to mas.exe
+
+     Current settings in mas.exe:
+        Number base         = d (decimal)
+        Label status        = s (sensitive)
+        List status         = L (list on)
+        Message status      = m (messages on)
+        Sym tab display     = e (enabled)
+        Car file status     = c (car file on)
+        Reverse comments    = e (enabled)
+        Reverse file status = r (reverse file on)
+        Reverse delimiter   = //
+        Rev start column    = 25 (dec)
+        Config file name    = none
+
+
+
+For sim, mod can change 
+
+     - the student's name (the default is "Run mod sim /r to put 
+       your name here").  If a name is entered, it will be 
+       inserted at the beginning of every log file--a convenient 
+       feature if students submit their log files for homework 
+       assignments.  Maximum length of a name is 43 characters.  
+       Names longer than 43 characters are truncated.  If a 
+       leading period is specified in the name entered, then the 
+       name immediately following the period up to the first 
+       whitespace is incorporated into log file names.  If the 
+       entry in a response file for this item is ?, mod will 
+       prompt the user for a name.  Otherwise, it will use 
+       whatever string appears in the response file. 
+
+     - the microlevel status (disabled or enabled)
+
+     - the simulation mode (horizontal or vertical).  If a 
+       microcode file name with its extension is specified as a 
+       command line argument, it determines the simulation mode, 
+       regardless of this setting.  That is, horizontal microcode 
+       forces a horizontal simulation; vertical microcode forces 
+       vertical simulation.  If a microcode file name is 
+       specified WITHOUT an extension, then this setting 
+       determines the default extension (".hor" or ".ver"). 
+
+     - the horizontal microcode file name or "none".  If none, 
+       sim uses the built-in microcode or, if specified, the 
+       microcode specified by a command line argument or a !-
+       directive.  This microcode is used if the simulation mode 
+       is horizontal (see above) and a microcode file has not 
+       been specified on a command line argument or on a !-
+       directive. 
+
+     - the vertical microcode file name or "none".  If none, sim 
+       uses the built-in microcode or, if specified, the 
+       microcode specified by a command line argument or a !-
+       directive.  This microcode is used if the simulation mode 
+       is vertical (see above) and a microcode file has not been 
+       specified on a command line argument or on a !-directive. 
+
+     - SD default extension.  If the SD command is invoked 
+       without a filename argument, the file whose extension is 
+       equal to this setting and whose base name matches that of 
+       the executing ".mac" is displayed.  This extension may be 
+       entered with or without a leading ".". 
+
+     - the command line address or "none".  If the command line 
+       address is changed, startup code in sup.mas and ksup.mas 
+       must be reassembled with the new address. 
+
+     - the memory-mapped starting address
+
+     - the memory-mapped delay
+
+     - the load point
+
+     - the T count (the initial default T command when in
+       machine-level display mode)
+
+     - the tracing mode pause count (a pause in execution occurs 
+       whenever the microinstruction count is a multiple of this 
+       number).  The default value is 20,000 for all display 
+       modes except no display.  For no display mode, it is 20 
+       times the count for the other modes.  
+
+     - the LD max size (the maximum number of lines displayed by 
+       the LD command on each invocation).  LD max size must be 
+       between 1 and 120 decimal, inclusive. 
+
+     - the source only status at the machine-level--determines if 
+       only source lines are displayed when in machine-level 
+       display mode 
+
+     - the plus counts status (determines if microinstruction 
+       counts are displayed in addition to the regular 
+       information when in machine-level display mode) 
+
+     - the plus reads status (determines if addresses and data 
+       are displayed on a read in addition to the regular 
+       information when in machine-level display mode) 
+
+     - plus source status at the machine-level (determines if 
+       source lines are displayed in addition to the regular 
+       information when in machine-level display mode) 
+
+     - source only status at the microlevel (determines if only 
+       source lines are displayed when in microlevel display 
+       mode) 
+
+     - plus source status at the microlevel (determines if source 
+       lines are displayed in addition to the regular information 
+       when in microlevel display mode) 
+
+     - the label status (sensitive or insensitive) when in
+       plus source or source only display mode.
+
+     - the hout status (determines if leading zeros or no leading 
+       zeros are displayed when hout is executed) 
+
+     - the log file status.  The default is off.
+
+     - the program verification status.  The default is on.
+
+     - the return code status.  The default is off (i.e., the
+       return code from a halted program that sim has run is 
+       forced to 0, which is, in turn, returned by sim to the
+       operating system). 
+
+     - the message status--determines if non-error/non-warning 
+       console messages are displayed 
+
+     Microlevel status, simulation mode, horizontal microcode 
+     file name, vertical microcode file name, command line 
+     address, memory-mapped I/O start address, load point, and 
+     log file status, can be overridden by command line 
+     arguments.  Source only, plus counts, plus reads, and plus 
+     source status can be controlled by the debugger commands MC, 
+     MC-, MR, MR-, MS, MS-, MSO, MSO-, ms, ms-, mso, and mso-.  
+
+     The source only option at the machine-level is mutually 
+     exclusive with the plus counts, the plus reads, and the 
+     plus source (machine-level) options.  Thus, if the source 
+     only option is selected, mod automatically turns off the 
+     plus counts, plus reads, and plus source (machine-level) 
+     options.   
+
+     The source only option at the microlevel is mutually 
+     exclusive with the plus source option at the microlevel.
+     Thus, if the source only option is selected, mod 
+     automatically turns off the plus source option at the
+     microlevel.
+
+     For the horizontal and vertical microcode file names, 
+     either the file names or the file basenames are 
+     acceptable.  In the latter case, the extensions default to 
+     ".hor" or ".ver", respectively.  
+
+     Numbers entered without a "t" suffix are treated as hex 
+     numbers unless the prompt message for the entry indicates 
+     decimal.  Numbers entered with a "t"suffix are treated as 
+     decimal numbers. 
+
+
+
+For mas, mod can change 
+
+     - the number base used (decimal or hex)
+
+     - the label status (sensitive or insensitive)
+
+     - the list status (list on or no list).
+
+     - message status (determines if non-error/non-warning 
+       console messages are displayed)
+
+     - symbol table display in the ".lst" file (enabled or
+       disabled)
+
+     - car file status (car file on or no car file)
+
+     - reverse comments (enabled or disabled).  If enabled, mas 
+       will treat "//" comments as input when assembling a file 
+       with a ".cpp", ".c", ".java", or ".jav" extension (see the 
+       section "Reverse comments in mas.txt). 
+
+     - reverse comment delimiter (the comment delimiter for 
+       assembly code in a C++/C/Java file).  The default is "//".  
+       It can be set to "//" followed by an optional third 
+       character.  
+
+     - reverse file status (reverse file on or no reverse file)
+
+     - Reverse comments start column (the column to which 
+       C++/C/Java code is moved when reverse commenting is in 
+       effect).  The default is 25. The start column may be set 
+       to any value from 1 to 79. Setting the start column to a 
+       low value forces the C++/C/Java code to be positioned to 
+       the immediate right of the assembly code, rather than all 
+       starting in the same column. 
+
+     - the configuration file name
+
+     All of these settings, except for message status, symbol 
+     table display, reverse comments, reverse start column, and 
+     reverse comment delimiter, can be overriden by command line 
+     arguments. 
+
+     For the configuration file name, either the file name or 
+     the file basename is acceptable.  In the latter case, 
+     the extension defaults to ".cfg".  
+
+
+
+For has and vas, mod can change 
+
+     - the number base used (decimal or hex)
+
+     - the label status (sensitive or insensitive)
+
+     - the list status (no list or list).
+
+     - message status (determines if non-error/non-warning 
+       console messages are displayed)
+
+     All of these settings, except for message status, can be 
+     overriden by command line arguments. 
+
+
+
+For lin, mod can change
+     
+     - the label status of PUBLIC and EXTERN symbols 
+       (sensitive or insensitive).
+
+     - the table file status (no table file or table file).
+
+     - the cat file status (no cat file or cat file)
+
+     - message status (determines if non-error/non-warning 
+       console messages are displayed)
+
+     All of these settings, except for message status, can be 
+     overriden by command line arguments. 
+
+
+
+For lib, mod can change
+
+     - message status (determines if non-error/non-warning 
+       console messages are displayed)
+    
+
+
+For pic, mex, and see, mod can change
+
+     - the list status (no list or list).
+
+     - message status (determines if non-error/non-warning 
+       console messages are displayed)
+
+
+     List status can be overriden by a command line argument. 
+
+
+
+For iss, mod can change
+
+     - the reverse comment delimiter.  The default is "//".
+
+     - message status (determines if non-error/non-warning 
+       console messages are displayed)
+
+
+To use mod, enter
+
+   mod
+
+mod then prompts the user for a filename.  Enter the file name of 
+the program to be modified, with or without its extension, and/or 
+other desired command line arguments (any number of items per 
+input line).  Once the user enters an input file name, mod then 
+prompts the user for the changes requested.  If the ENTER key is 
+hit in response to a prompt without first entering a reply, mod 
+skips that change.  Before terminating, mod lists the new 
+settings.  To view the current settings of a program without 
+making any changes, run mod and skip each change by hitting the 
+ENTER key without first entering a reply. 
+
+
+Command Line Arguments
+
+     All command  line arguments are optional, can be specified in 
+any order, must have no embedded spaces, and must be separated by 
+at least one space. 
+
+     All command line arguments, except <infilename>, must have a 
+leading "/" or "-". 
+
+     All command line arguments are case insensitive, except for 
+filenames on systems with case-sensitive filenames. 
+
+     The format of the command line is
+
+   mod   <infilename>   /h  /r<rspfilename>
+                        /?
+
+mod applies its changes to the file whose name is <infilename>.  
+If <infilename> is specified on the command line, then mod will 
+not prompt the user for additional input.  In response to a 
+prompt, the user can enter <infilename> and/or other command line 
+arguments.  Prompting ends whenever the user enters <infilename>.  
+Microsoft systems only: if <infilename> has no extension, then 
+".exe" is appended to it.  If <infilename> starts with a pathname 
+that starts with "/", then substitute "//" for the leading "/" in 
+the pathname when entering <infilename>.  
+
+/h or /? displays a help screen.
+
+/r causes mod to use the specified response file for input.  If 
+<rspfilename> has no extension, ".rsp" is assumed.  If 
+<rspfilename> is omitted, the response file name defaults to 
+<infilename_less_ext>.rsp.  If ? is the first line of a response 
+file used to configure sim, mod will prompt the user for a name.  
+If the first line is anything other than ?, mod will use that 
+line as input (in which case it will not prompt the user for a 
+name).  Comments are permitted in a response file, but they must 
+start with a ";".  mod ignores a line that contains only a 
+comment.  However, completely blank lines in a response file are 
+treated as responses.  That is, a blank line corresponds to an 
+entry in which the user hits ENTER without first entering a 
+response (the effect of which is to keep the current setting).  
+Each modifiable program in the H1 Software Package comes with a 
+response file that sets the program to its "factory" defaults.  
+For example, entering 
+
+     mod sim /r
+
+sets sim to its factory defaults using the sim.rsp response file.
+Because the first line of sim.rsp is "?", mod will prompt the 
+user for an name rather than using a response from the response 
+file.
+
+
+Using o.hor, k.hor, or r.hor Microcode 
+     
+    To use mod to change mas and sim so that they use by default 
+the optimal instruction set defined by o.hor and o.cfg, do the 
+following: 
+
+To change mas:
+
+Enter
+
+     mod mas 
+
+Hit ENTER until the following prompts appears:
+
+  Enter config file name, "none", or hit ENTER for no change. 
+
+Enter
+
+     o 
+
+Then on the prompt that asks if it is okay to change mas, enter 
+
+     y
+
+To change sim:
+
+Enter 
+
+     mod sim 
+
+Hit ENTER until the following prompt appears:
+
+  Enter horizontal file name, "none", or hit ENTER for no change.
+
+Enter
+
+     o 
+
+and then hit ENTER until the prompt message that asks if it is okay 
+to change sim appears.  Then enter
+
+     y 
+
+     To use the stack instruction, enter as above, except 
+substitute "k" for "o".
+
+     To use the really-simple instruction, enter as above, except 
+substitute "r" for "o".
+
+
+Problem with a Leading "/" in Command Line Arguments on Non-
+Microsoft Systems
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with EITHER "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems can cause a 
+problem.  For example, suppose you want to specify an input file 
+on the command line.  Recall that an input file argument is not 
+preceded by an argument marker.  For example in, 
+
+    sim a /ms
+
+the argument "a" (which specifies the input file a.mac) does NOT 
+have a preceding "/" or "-".  "/ms", on the other hand, has the 
+argument marker "/".  "/ms" is interpreted as the "/m" argument 
+followed by the secondary argument "s".  Now suppose the input 
+file you want to specify on the command line is 
+
+     /abc.x
+
+This denotes the abc.x file in the root directory "/".  
+Unfortunately, all the programs in the H1 Software Package will 
+interpret a leading "/" as an argument marker rather than as the 
+root directory.  Thus, 
+
+     /abc.x
+
+on the command line is incorrectly interpreted as the argument 
+
+     /a 
+
+followed by the secondary argument
+
+     bc.x
+
+This problem does not occur on Microsoft systems because they use 
+"\" rather than "/" as the filename separator, and, thus, there 
+is never any confusion with the argument marker "/". 
+
+You will probably rarely run into this problem because full 
+pathnames are rarely needed when using the programs in the H1 
+Software Package.  However, if the problem does occur, it can 
+easily be circumvented: simply use "//" to represent the root.  
+For example, if 
+
+     //abc.x
+
+appears on a command line, it is interpreted as the input file
+
+     /abc.x
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 

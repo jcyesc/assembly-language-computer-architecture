@@ -1,0 +1,141 @@
+Machine-level Assembler Version 6.1    Mon May 11 23:03:32 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;--------------------------------------------------------------
+               ; 10.53 Translate the next C program to assembly languague.
+               ;
+               ;	#include <iostream>
+               ;	using namespace std;
+               ;	int x = 5;
+               ;	int y;
+               ;
+               ;	static void f(int a, int b)
+               ;	{
+               ;	    y = a + b + x;
+               ;	}
+               ;
+               ;	int main()
+               ;	{
+               ;	    int z = 10;
+               ;	    f(z, z + 3);
+               ;	    cout << "x  =  " << x << endl;
+               ;	    cout << "y =  " << y << endl;
+               ;	    cout << "z = " << z << endl;
+               ;	    return 0;
+               ;	}
+               ;--------------------------------------------------------------
+               
+               ;------------------------------
+               ; static void f(int a, int b)
+               ;------------------------------
+               
+               @f$ii:
+0  *0    4001  		ldr		1	; y = a + b x;	
+1  *1    6002  		addr	2
+2  *2    2024  		add		x
+3  *3    1025  		st		y
+               		
+4  *4    F000  		ret
+               
+               ;------------------------
+               ; int main()
+               ;------------------------
+               main:
+5  *5    800A  		ldc		10		; int z = 10;
+6  *6    F501  		aloc	1	
+7  *7    5000  		str		0
+               		
+8  *8    4000  		ldr		0		; f(z, z + 3)
+9  *9    2026  		add		@3
+A  *10   F300  		push
+B  *11   4001  		ldr		1
+C  *12   F300  		push
+D  *13   E000  		call	@f$ii
+E  *14   F602  		dloc	2
+               		
+F  *15   8027  		ldc		msg1	; cout << "x = " << x << endl;
+10 *16   FFF7  		sout
+11 *17   0024  		ld		x
+12 *18   FFFD  		dout
+13 *19   800A  		ldc		'\n'
+14 *20   FFFB  		aout
+               		
+15 *21   802C  		ldc		msg2	; cout << "y = " << y << endl;
+16 *22   FFF7  		sout
+17 *23   0025  		ld		y
+18 *24   FFFD  		dout
+19 *25   800A  		ldc		'\n'
+1A *26   FFFB  		aout
+               		
+1B *27   8031  		ldc		msg3	; cout << "z = " << z << endl;
+1C *28   FFF7  		sout
+1D *29   4000  		ldr		0
+1E *30   FFFD  		dout
+1F *31   800A  		ldc		'\n'
+20 *32   FFFB  		aout
+               		
+21 *33   F601  		dloc	1		; release memory
+22 *34   8000  		ldc		0;	return 0;
+23 *35   F000  		ret
+               
+               ; Global variables
+24 *36   0005  x:		dw		5	
+25 *37   0000  y:		dw		0
+26 *38   0003  @3:		dw		3
+27 *39   0078  msg1:	dw		"x = "
+28 *40   0020
+29 *41   003D
+2A *42   0020
+2B *43   0000
+2C *44   0079  msg2:	dw		"y = "
+2D *45   0020
+2E *46   003D
+2F *47   0020
+30 *48   0000
+31 *49   007A  msg3:	dw		"z = "
+32 *50   0020
+33 *51   003D
+34 *52   0020
+35 *53   0000
+               	
+               public main
+               	
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               	
+               	
+               	
+36 *54   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$ii                     0           D  
+ main                      5           36 
+ x                         24          2   11 
+ y                         25          3   17 
+ @3                        26          9  
+ msg1                      27          F  
+ msg2                      2C          15 
+ msg3                      31          1B 
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

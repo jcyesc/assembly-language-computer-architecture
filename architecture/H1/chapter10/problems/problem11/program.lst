@@ -1,0 +1,33 @@
+Machine-level Assembler Version 6.1    Mon May  4 21:30:05 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; 10.11 Show the contents of the ".mob" file that correspond to 
+               ; program. Use the same format that pic uses.
+               ;---------------------------------------------------------------
+               
+0  *0    0002  	ld	x
+               	public	x
+1  *1    2000  	add	y
+               	extern	y
+               	end	25
+2  *2    1006  x:	st	6
+3  *3    FFFF  	halt
+4  *4    ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         2           1   0  
+ y                         ext         2   1  
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,78 @@
+Machine-level Assembler Version 6.1    Fri May  1 23:48:57 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 9.22 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;-------------------------------------
+               ; void f(const int &m)
+               ;-------------------------------------
+               
+0  *0    4001  @f$ri:	ldr	1	; if(m != 0)
+1  *1    F100  	ldi
+2  *2    C010  	jz	en
+               
+3  *3    F501  	aloc	1	; int tmp = m - 1;
+4  *4    4002  	ldr	2
+5  *5    F100  	ldi
+6  *6    301D  	sub	@1
+7  *7    5000  	str	0
+               
+8  *8    F700  	swap		; f(tmp);
+9  *9    101C  	st	sp_save	; save the address of sp
+A  *10   F700  	swap
+B  *11   001C  	ld	sp_save
+C  *12   F300  	push
+D  *13   E000  	call	@f$ri
+E  *14   F601  	dloc	1
+F  *15   F601  	dloc	1	; deallocate memory of tmp.
+               
+10 *16   4001  en:	ldr	1	; cout << m << endl;
+11 *17   F100  	ldi
+12 *18   FFFD  	dout
+13 *19   800A  	ldc	'\n'
+14 *20   FFFB  	aout
+               
+15 *21   F000  	ret
+               
+               ;-------------------------------
+               ; int main()
+               ;-------------------------------
+               
+16 *22   801B  main:	ldc	x	; f(x);
+17 *23   F300  	push
+18 *24   E000  	call	@f$ri
+19 *25   F601  	dloc	1
+               	
+1A *26   FFFF  	halt
+               	end main
+               ; Global variables
+               
+1B *27   0005  x:	dw	5
+1C *28   0000  sp_save:	dw	0
+1D *29   0001  @1:	dw	1
+               
+               
+1E *30   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$ri                     0           D   18 
+ en                        10          2  
+ main                      16          1B 
+ x                         1B          16 
+ sp_save                   1C          9   B  
+ @1                        1D          6  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

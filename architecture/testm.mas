@@ -1,0 +1,7 @@
+         !o                                      testm.mas
+                   ; multiply 3000 x 4                    
+         ldc  3000 ; get multiplier                        
+         push      ; push one number onto stack            
+         ldc  4    ; get multilplicand                     
+         m         ; multiply using shift-add in microcode 
+         halt                                              

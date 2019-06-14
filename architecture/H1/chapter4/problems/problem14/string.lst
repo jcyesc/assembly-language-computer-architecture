@@ -1,0 +1,144 @@
+Machine-level Assembler Version 6.1    Thu Dec 25 18:56:49 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Program that reads in a string and then determines and display
+               ; the frequency of occurrence of each character in the string.
+               ; For example, if the string "aAbazAA" is read in, your program 
+               ;
+               ;	A   3
+               ;	a   2
+               ;	b   1
+               ;	z   1
+               ;
+               ; The ASCII code for A is 32, and the ASCII code for z is 126.
+               ;
+               ; How is the problem going to be solved?
+               ; 	
+               ;  Place the counter for each character at the location that equ
+               ;  that character's ASCII code. For example, place the counter '
+               ;  Then an ld instruction with 'A' as its address field would lo
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    807F  	ldc    string		; load the address of string
+1  *1    FFF6  	sin   			; input a string
+               	
+2  *2    807F  for_m:	ldc    string		; load the address of string
+3  *3    2012  	add    index		; add index to the address
+4  *4    F100  	ldi			; load the value that is in the address of ac.
+5  *5    C010  	jz     continue		; the end of the string (null=0000)
+6  *6    1013  	st     address_char	; store the current address that we're anal
+7  *7    F100  	ldi 			; store the value that is in the address_char
+8  *8    20CF  	add    @1		; add 1 to the value
+9  *9    F300  	push			; push the value in the stack
+A  *10   0013  	ld     address_char	; load address_char
+B  *11   F200  	sti			; store the value in the address that is in address_char
+C  *12   0012  	ld     index		; load the value of index
+D  *13   20CF  	add    @1		; add 1 to the index
+E  *14   1012  	st     index		; store the value of index
+F  *15   9002  	ja     for_m		; jump to form_m
+               		
+               continue:
+10 *16   E0D2  	call   printAlphabet	; call printAlphabet
+               
+11 *17   FFFF  	halt			; end of the program
+               
+               ;-----------------
+               ; Variables area
+               ;-----------------
+12 *18   0000  index:	dw  0
+13 *19   0000  address_char:   dw  0
+               dataarea:  org  32
+20 *32   0000  alphabet:  dw   95 dup 0	; this label is used to reserve the spa
+7F *127  0000  string:    dw   80 dup 0
+CF *207  0001  @1:	   dw   1
+D0 *208  007F  limite:     dw  127 ; end of the ASCII CODE 127 + 1, to end the 
+D1 *209  0020  inicio_ascii: dw 32 ; start of the ASCII CODE
+               
+               ;----------------------------------------------------------
+               ; printAlphabet()
+               ;
+               ; Function that prints the alphabet.
+               ; The alphabet is contained in the addresses 32d to 126d.
+               ; This function only is going to print the letters that
+               ; appear with a value greater than zero.
+               ;----------------------------------------------------------
+               printAlphabet:
+D2 *210  00D1  	ld     inicio_ascii 	; load the value that is in inicio_ascii
+D3 *211  10E7  	st     contador		; store the value in contador
+D4 *212  00E7  for:	ld     contador		; load contador
+D5 *213  F100  	ldi			; load the value that is stored in the address pointed by
+D6 *214  D0DE  	jnz    print		; if the value is no zero, jump print
+               	
+               siguiente:
+D7 *215  00E7  	ld     contador		; load the value of cantador
+D8 *216  20CF  	add    @1		; add 1 to contador
+D9 *217  10E7  	st     contador		; store the value of contador
+DA *218  30D0  	sub    limite		; subtract limite to contador ( contador - limit
+DB *219  C0DD  	jz     endfunc		; if the result is ZERO, jump endfun
+DC *220  90D4  	ja     for		; continue with the for
+               
+DD *221  F000  endfunc: ret			; return to the caller
+               
+DE *222  00E7  print:	ld     contador		; load contador
+DF *223  FFFB  	aout			; ASCII output
+E0 *224  E0E8  	call   printBlank	; call printBlank
+E1 *225  00E7  	ld     contador		; load contador
+E2 *226  F100  	ldi			; load the value that is in the address pointed by contad
+E3 *227  FFFD  	dout			; decimal output
+E4 *228  800A  	ldc    '\n'		; load a line feed
+E5 *229  FFFB  	aout			; ASCII output
+E6 *230  90D7  	ja     siguiente	; jump siguiente
+               
+E7 *231  0000  contador:  dw  0
+               
+               ;-----------------------------------------------------------
+               ; printBlank()
+               ;
+               ; Function to print a blank space
+               ;-----------------------------------------------------------
+               printBlank:
+E8 *232  80EB          ldc   blank             ; load the address of blank
+E9 *233  FFF7          sout                    ; print the string
+EA *234  F000          ret                     ; return to the caller
+               
+EB *235  0020  blank:  dw  " "
+EC *236  0000
+                
+ED *237  ========= end of string.mas =============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ for_m                     2           F  
+ continue                  10          5  
+ index                     12          3   C   E  
+ address_char              13          6   A  
+ dataarea                  14         
+ alphabet                  20         
+ string                    7F          0   2  
+ @1                        CF          8   D   D8 
+ limite                    D0          DA 
+ inicio_ascii              D1          D2 
+ printAlphabet             D2          10 
+ for                       D4          DC 
+ siguiente                 D7          E6 
+ endfunc                   DD          DB 
+ print                     DE          D6 
+ contador                  E7          D3  D4  D7  D9  DE 
+                                       E1 
+ printBlank                E8          E0 
+ blank                     EB          E8 
+
+Input file   = string.mas
+Output file  = string.mac
+List file    = string.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,366 @@
+Machine-level Assembler Version 6.1    Sat Dec 27 00:20:15 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;----------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 26-december-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	:
+               ;
+               ;	Program that reads in 10 decimal numbers and then
+               ; 	displays then in ascending order WITHOU ANY REPEATS. 
+               ;	For exmple, if the input is 1,1,5,1,1,1,1, then the
+               ;	output should be 1, 5.
+               ;
+               ;	The bubble sort is used to sort the elements.
+               ;	
+               ;	The program is solved in the following way:
+               ;		- Capture the numbers
+               ;		- Sort the numbers
+               ;		- Print not repeat numbers
+               ;
+               ;----------------------------------------------------------
+               
+               main:
+0  *0    8078  	ldc     msg		; load the address of msg
+1  *1    FFF7  	sout  			; String output
+2  *2    E072  	call    printLine	; call printLine
+               	
+               capture:
+3  *3    808A  	ldc     numbers		; load the address of numbers(array)
+4  *4    2099  	add     index		; add index to the address of numbers
+5  *5    1094  	st  	address		; store the curren address
+6  *6    FFFC  	din			; decimal input
+7  *7    F300  	push			; push the value in the stack
+8  *8    0094  	ld	address		; load address
+9  *9    F200  	sti			; store in the address that points "address" the content 
+A  *10   0099  	ld	index		; load index
+B  *11   2096  	add	@1		; increment index
+C  *12   1099  	st      index		; store the value of index
+D  *13   3098  	sub	@10		; subtract 10 to index to verify if we finish the capt
+E  *14   D003  	jnz     capture		; if it's no ZERO jump to capture
+               	
+F  *15   80AD  	ldc	msg_sorted	; load the address of msg_sorted
+10 *16   FFF7  	sout			; string output
+11 *17   E072  	call	printLine	; call printLine
+12 *18   E01A  	call	sort		; call sort
+13 *19   E04F  	call	printNumbers	; call printNumbers
+               
+14 *20   E072  	call    printLine	; call printLine
+15 *21   80BC  	ldc	msg_no_repeat	; load the address of msg_no_repeat
+16 *22   FFF7  	sout			; string output
+17 *23   E072  	call	printLine	; call printLine
+18 *24   E05C  	call	printNoRepeat	; call to printNoRepeat
+               
+19 *25   FFFF  	halt			; end of the program
+               
+               ;----------------------------------------------------------
+               ; sort()
+               ;
+               ; Function that is in charge to sort all the numbers in the
+               ; array called numbers.
+               ;
+               ; The algorith that is used is the bubble sort.
+               ;----------------------------------------------------------
+               sort:
+1A *26   8000  	ldc     0		; load zero to initializate i
+1B *27   104D  	st	i		; initialize i to zero
+               for_ex: 			; OUTER FOR
+1C *28   004D  	ld	i		; load i
+1D *29   309A  	sub	@9		; subtract 9 to verify if we end the iteration
+1E *30   C047  	jz	end_sort	; if ZERO, jump end_sort
+               
+1F *31   8000  	ldc	0		; load zero to initializate j
+20 *32   104E  	st	j		; initialize j to zero
+               for_in:				; INNER FOR
+21 *33   004E  	ld	j		; load j
+22 *34   309A  	sub	@9		; subtract 9 to j to verify if the cycle is ended
+23 *35   C043  	jz	incr_i		; if ZERO, jump to incr_i
+               	
+24 *36   808A  	ldc	numbers		; load the address of numbers
+25 *37   204E  	add	j		; add j to the address of numers
+26 *38   104B  	st	x_add		; store the address of numbers
+27 *39   2096  	add	@1		; add 1 to the address of numbers
+28 *40   104C  	st	y_add		; store the address of numbers + 1
+               
+               	; load the value that is in the address y_add to y
+29 *41   004C  	ld	y_add		; load the value of y_add, that is an address
+2A *42   F100  	ldi			; load the value that is in the address
+2B *43   104A  	st	y		; store the value in y
+               	
+               	; load the value that is in the address x_add to x
+2C *44   004B  	ld	x_add		; load the value of x_add, that is an address
+2D *45   F100  	ldi			; load the value that is in the address
+2E *46   1049  	st	x		; store the value in x
+               		
+2F *47   304A  	sub	y		; subtract x-y
+30 *48   A036  	jzop	interchange	; if it's zero or positive, jump to interchang
+31 *49   9032  	ja	incr_j		; jump to incr_j
+               	
+               incr_j:
+               	; increment j		
+32 *50   0096  	ld	@1		; load 1
+33 *51   204E  	add	j		; add 1 to j
+34 *52   104E  	st	j		; store the value of j
+35 *53   9021  	ja	for_in		; jump to for_in
+               
+               interchange:
+36 *54   004B  	ld	x_add		; load the address that is in x_add
+37 *55   F100  	ldi			; load the content that is in the address
+38 *56   1048  	st	tmp		; store the address in tmp
+39 *57   004C  	ld	y_add		; load the addres that is in y_add
+3A *58   F100  	ldi			; load the content that is in the address
+3B *59   F300  	push			; push te value in the stack
+3C *60   004B  	ld	x_add		; load the address that is in  x_add
+3D *61   F200  	sti			; store the value that is in the stack in the address tha
+3E *62   0048  	ld	tmp		; load the value of tmp
+3F *63   F300  	push			; push the value in the stack
+40 *64   004C  	ld	y_add		; load the address that is in y_add
+41 *65   F200  	sti			; store the value that is in the stack in the address tha
+42 *66   9032  	ja	incr_j		; jump to incr_j
+               
+               incr_i:
+43 *67   0096  	ld	@1		; load 1
+44 *68   204D  	add	i		; add 1 to i
+45 *69   104D  	st	i		; store the new value of i
+46 *70   901C  	ja	for_ex		; jump to for_ex
+               	
+               end_sort:	
+47 *71   F000  	ret			; return to the caller
+               
+48 *72   0000  tmp:	dw 	0
+49 *73   0000  x:	dw	0
+4A *74   0000  y: 	dw	0
+4B *75   0000  x_add:  dw	0
+4C *76   0000  y_add:	dw	0
+4D *77   0000  i:	dw  	0
+4E *78   0000  j:	dw  	0
+               
+               ;----------------------------------------------------------
+               ; printNumbers()
+               ;
+               ; Function that prints the 10 numbers that are in the array
+               ; numbers.
+               ;----------------------------------------------------------
+               
+               printNumbers:
+4F *79   8000  	ldc	0	; load zero to initialize index
+50 *80   1099  	st	index	; store zero in index
+               	
+               printN:	
+51 *81   808A  	ldc     numbers	; load the address of numbers
+52 *82   2099  	add	index	; add index to the address
+53 *83   F100  	ldi		; load the value that is contented in the address
+54 *84   FFFD  	dout		; print the value
+55 *85   E075  	call	printBlank ; call printBlank
+56 *86   0099  	ld	index	; load index
+57 *87   2096  	add	@1	; add 1 to index
+58 *88   1099  	st	index	; store index
+59 *89   3098  	sub	@10	; substract 10 to index to figure out if we finish to p
+5A *90   D051  	jnz	printN	; if the result is no zero, jump to printN
+5B *91   F000  	ret		; return to the caller
+               
+               ;-------------------------------------------------------------
+               ; printNoRepeat()
+               ;
+               ; Print the numbers without any repeat. The array must be
+               ; sorted.
+               ;	
+               ;	int last = -1
+               ;	for(int i = 0; i < 10; i++)
+               ;		if(last != array [i])
+               ;		{
+               ;			printf("%d ", array[i]);
+               ;			last = array[i];
+               ;		}
+               ;
+               ;-------------------------------------------------------------
+               
+               printNoRepeat:
+5C *92   8000  	ldc	0;		; load zero to initializate index
+5D *93   1099  	st	index		; store zero in index
+5E *94   0097  	ld	@_1		; load @_1
+5F *95   1071  	st	last		; initializate last with -1
+               printNr:
+60 *96   808A  	ldc 	numbers		; load the address of numbers
+61 *97   2099  	add	index		; add index to the address
+62 *98   F100  	ldi			; load the content that is in the address that is in ac 
+63 *99   1070  	st	current		; store current
+64 *100  3071  	sub	last		; subtract last to curren
+               
+65 *101  C06A  	jz	inc_i_nr	; if zero, jump to inc_i_nr
+66 *102  0070  	ld	current		; load current
+67 *103  1071  	st	last		; store the value of current in last
+68 *104  FFFD  	dout			; decimal output
+               
+69 *105  E075  	call	printBlank	; call printBlank
+               
+               inc_i_nr:
+6A *106  0099  	ld	index		; load index
+6B *107  2096  	add	@1		; add 1
+6C *108  1099  	st	index		; store index
+6D *109  3098  	sub	@10		; subtract 10 to verify if it finished
+6E *110  D060  	jnz	printNr		; if no zero, jump to printNr
+6F *111  F000  	ret			; return to the caller
+               
+               ; VARIABLES
+70 *112  0000  current:  dw  0
+71 *113  0000  last:	  dw  0
+               
+               ;-------------------------------------------------------------
+               ; printLine()
+               ;
+               ; Print a line feed
+               ;-------------------------------------------------------------
+               printLine:
+72 *114  800A  	ldc  '\n'	; load the character '\n'
+73 *115  FFFB  	aout		; ASCII output
+74 *116  F000  	ret		; return to the caller
+               
+               ;-------------------------------------------------------------
+               ; printBlank()
+               ;
+               ; Print a blank space
+               ;-------------------------------------------------------------
+               printBlank:
+75 *117  8020  	ldc ' '		; load the character ' '
+76 *118  FFFB  	aout		; ASCII output
+77 *119  F000  	ret		; return to the caller
+               
+               ;------------------------------------
+               ; VARIABLES
+               ;------------------------------------
+78 *120  0057  msg:	 dw   "Write ten numbers"
+79 *121  0072
+7A *122  0069
+7B *123  0074
+7C *124  0065
+7D *125  0020
+7E *126  0074
+7F *127  0065
+80 *128  006E
+81 *129  0020
+82 *130  006E
+83 *131  0075
+84 *132  006D
+85 *133  0062
+86 *134  0065
+87 *135  0072
+88 *136  0073
+89 *137  0000
+8A *138  0000  numbers: dw   10 dup 0
+94 *148  0000  address: dw   0
+95 *149  000A  counter: dw   10
+96 *150  0001  @1:	 dw   1
+97 *151  FFFF  @_1:	 dw   -1
+98 *152  000A  @10:	 dw   10
+99 *153  0000  index:   dw   0
+9A *154  0009  @9:	 dw   9
+9B *155  0008  @8:	 dw   8
+9C *156  0055  msg_unsorted:	dw	"Unsorted numbers"
+9D *157  006E
+9E *158  0073
+9F *159  006F
+A0 *160  0072
+A1 *161  0074
+A2 *162  0065
+A3 *163  0064
+A4 *164  0020
+A5 *165  006E
+A6 *166  0075
+A7 *167  006D
+A8 *168  0062
+A9 *169  0065
+AA *170  0072
+AB *171  0073
+AC *172  0000
+AD *173  0053  msg_sorted:	dw	"Sorted numbers"
+AE *174  006F
+AF *175  0072
+B0 *176  0074
+B1 *177  0065
+B2 *178  0064
+B3 *179  0020
+B4 *180  006E
+B5 *181  0075
+B6 *182  006D
+B7 *183  0062
+B8 *184  0065
+B9 *185  0072
+BA *186  0073
+BB *187  0000
+BC *188  004E  msg_no_repeat:  dw	"No repeat numbers"
+BD *189  006F
+BE *190  0020
+BF *191  0072
+C0 *192  0065
+C1 *193  0070
+C2 *194  0065
+C3 *195  0061
+C4 *196  0074
+C5 *197  0020
+C6 *198  006E
+C7 *199  0075
+C8 *200  006D
+C9 *201  0062
+CA *202  0065
+CB *203  0072
+CC *204  0073
+CD *205  0000
+CE *206  ========= end of print_no_repeated.mas ==================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ capture                   3           E  
+ sort                      1A          12 
+ for_ex                    1C          46 
+ for_in                    21          35 
+ incr_j                    32          31  42 
+ interchange               36          30 
+ incr_i                    43          23 
+ end_sort                  47          1E 
+ tmp                       48          38  3E 
+ x                         49          2E 
+ y                         4A          2B  2F 
+ x_add                     4B          26  2C  36  3C 
+ y_add                     4C          28  29  39  40 
+ i                         4D          1B  1C  44  45 
+ j                         4E          20  21  25  33  34 
+ printNumbers              4F          13 
+ printN                    51          5A 
+ printNoRepeat             5C          18 
+ printNr                   60          6E 
+ inc_i_nr                  6A          65 
+ current                   70          63  66 
+ last                      71          5F  64  67 
+ printLine                 72          2   11  14  17 
+ printBlank                75          55  69 
+ msg                       78          0  
+ numbers                   8A          3   24  51  60 
+ address                   94          5   8  
+ counter                   95         
+ @1                        96          B   27  32  43  57 
+                                       6B 
+ @_1                       97          5E 
+ @10                       98          D   59  6D 
+ index                     99          4   A   C   50  52 
+                                       56  58  5D  61  6A 
+                                       6C 
+ @9                        9A          1D  22 
+ @8                        9B         
+ msg_unsorted              9C         
+ msg_sorted                AD          F  
+ msg_no_repeat             BC          15 
+
+Input file   = print_no_repeated.mas
+Output file  = print_no_repeated.mac
+List file    = print_no_repeated.lst 
+Number base  = decimal
+Label status = case sensitive

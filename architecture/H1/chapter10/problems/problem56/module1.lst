@@ -1,0 +1,60 @@
+Machine-level Assembler Version 6.1    Tue May 12 21:11:33 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;----------------------------------
+               ; Module 1
+               ;----------------------------------
+               
+               ;------------------------------
+               ; void g(int *p)
+               ;------------------------------
+               @g$pi:
+0  *0    8064  	ldc		100	;	*p = 100;	
+1  *1    F300  	push
+2  *2    4002  	ldr		2
+3  *3    F200  	sti
+               	
+4  *4    E006  	call	@f$v	; f();
+               	
+5  *5    F000  	ret
+               	
+               ;-------------------------------
+               ; void f()
+               ;-------------------------------
+               
+               @f$v:	
+6  *6    8009  	ldc		@msg	; cout << "hello\n";
+7  *7    FFF7  	sout
+               	
+8  *8    F000  	ret
+               	
+9  *9    0068  @msg:	dw		"hello\n"
+A  *10   0065
+B  *11   006C
+C  *12   006C
+D  *13   006F
+E  *14   000A
+F  *15   0000
+               
+               
+               public @g$pi
+               public @f$v	
+10 *16   ========= end of module1.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @g$pi                     0           10 
+ @f$v                      6           10  4  
+ @msg                      9           6  
+
+Input file   = module1.mas
+Output file  = module1.mob
+List file    = module1.lst 
+Number base  = decimal
+Label status = case sensitive

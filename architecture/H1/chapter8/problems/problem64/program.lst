@@ -1,0 +1,75 @@
+Machine-level Assembler Version 6.1    Wed Apr  1 00:26:36 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;-------------------------------------------------------------
+               ; Translate the program 8.64 to assembly language.
+               ;-------------------------------------------------------------
+               
+0  *0    0012  main:	ld	y	; z = x < y;
+1  *1    3011  	sub	x
+2  *2    1013  	st	z
+               	
+3  *3    0013  	ld	z	; cout << z << endl;
+4  *4    FFFD  	dout
+5  *5    800A  	ldc	'\n'
+6  *6    FFFB  	aout
+               
+7  *7    0012  	ld	y	; if(x < y)
+8  *8    3011  	sub	x
+9  *9    B00E  	jn	else
+A  *10   C00E  	jz	else	
+               
+B  *11   8014  	ldc	good	; cout << "good\n";
+C  *12   FFF7  	sout
+               	
+D  *13   9010  	ja	end_p
+               else:
+E  *14   801A  	ldc	bad	; cout << "bad\n";
+F  *15   FFF7  	sout
+               
+               end_p:
+10 *16   FFFF  	halt		; end of the program
+               	end main	
+               
+               ; GLOBAL VARIABLES
+               
+11 *17   0001  x:	dw	1	; int x = 1;
+12 *18   000A  y:	dw	10	; int y = 10;
+13 *19   0000  z:	dw	0	; int z = 0;
+               
+14 *20   0067  good:	dw	"good\n"
+15 *21   006F
+16 *22   006F
+17 *23   0064
+18 *24   000A
+19 *25   0000
+1A *26   0062  bad:	dw	"bad\n"
+1B *27   0061
+1C *28   0064
+1D *29   000A
+1E *30   0000
+               
+1F *31   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           11 
+ else                      E           9   A  
+ end_p                     10          D  
+ x                         11          1   8  
+ y                         12          0   7  
+ z                         13          2   3  
+ good                      14          B  
+ bad                       1A          E  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

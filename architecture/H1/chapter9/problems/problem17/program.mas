@@ -1,0 +1,71 @@
+;-----------------------------------------------------------------------
+; Translate the program 9.17 to assembly language.
+;-----------------------------------------------------------------------
+
+;------------------------
+; void f(A **p)
+;------------------------
+
+@f$ppA:	ldc	1	; (*p)->x = 1;
+	push
+	ldr	2
+	ldi
+	sti
+
+	ldc	2	; (*p)->y = 2;
+	push
+	ldr	2
+	ldi
+	add	@1
+	sti
+
+	ldc	s	; cout << s.x << endl;
+	ldi	
+	dout
+	ldc	'\n'
+	aout
+	
+	ldc	s	; cout << s.y << endl;
+	add	@1
+	ldi
+	dout
+	ldc	'\n'
+	aout	
+
+	ret
+
+;-----------------------
+; main()
+;-----------------------
+main:	ldc	s	; p = &s;
+	st	p
+
+	ldc	p	; f(&p);
+	push
+	call	@f$ppA
+	dloc	1
+	
+	ldc	s	; cout << s.x << endl;
+	ldi	
+	dout
+	ldc	'\n'
+	aout
+	
+	ldc	s	; cout << s.y << endl;
+	add	@1
+	ldi
+	dout
+	ldc	'\n'
+	aout	
+
+	halt
+	end main
+
+; Global variables
+
+s:	dw 2 dup 0	; A s;
+p:	dw	0	; A *p;
+
+@1:	dw	1
+
+

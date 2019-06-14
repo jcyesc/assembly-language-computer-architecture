@@ -1,0 +1,5 @@
+cat file module1.cat
+0  *0    0000  b:	dw	a
+1  *1    ========= end of module1.mas ============================
+1  *1    0000  a:	dw	b
+2  *2    ========= end of module2.mas ============================

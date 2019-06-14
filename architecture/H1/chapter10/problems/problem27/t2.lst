@@ -1,0 +1,30 @@
+Machine-level Assembler Version 6.1    Sat May  9 20:41:31 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               	; t2.mas
+0  *0    0006  q:	dw	6
+1  *1    000A  b:	dw	a + 10
+2  *2    0000  x:	dw	q
+               	public	x
+               	extern	a
+               	end	q
+3  *3    ========= end of t2.mas =================================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ q                         0           3   2  
+ b                         1          
+ x                         2           3  
+ a                         ext         3   1  
+
+Input file   = t2.mas
+Output file  = t2.mob
+List file    = t2.lst 
+Number base  = decimal
+Label status = case sensitive

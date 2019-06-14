@@ -1,0 +1,71 @@
+Machine-level Assembler Version 6.1    Sun Mar 22 07:34:35 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Program 8.20 translated to assembly language
+               
+               ;------------------
+               ; int fp(int x)
+               ;------------------
+               
+0  *0    4001  @fp$i:	ldr	1	; cout << x << endl;
+1  *1    FFFD  	dout
+2  *2    800A  	ldc	'\n'
+3  *3    FFFB  	aout
+4  *4    4001  	ldr	1	; return x;
+               	
+5  *5    F000  	ret
+               
+               ;-------------------
+               ; main()
+               ;-------------------
+               
+               main:
+6  *6    8003  	ldc	3	; y = fp(3)
+7  *7    F300  	push
+8  *8    E000  	call	@fp$i
+9  *9    F601  	dloc	1
+A  *10   1016  	st	y
+               	
+B  *11   8000  	ldc	@fp$i
+C  *12   1017  	st	p
+               	
+D  *13   0018  	ld	@call	;  y = p(3);
+E  *14   2017  	add	p
+F  *15   1012  	st	* + 3	; store call into dw below
+10 *16   8003  	ldc	3	; create x parameter containing 3
+11 *17   F300  	push
+12 *18   0000  	dw	0	; execute manufactured call
+13 *19   F601  	dloc	1	; remove parameter
+14 *20   1016  	st	y	; store returned value in y
+               
+15 *21   FFFF  	halt
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+16 *22   0000  y:	dw	0
+17 *23   0000  p:	dw	0	; int (*p)(in);	p is a pointer to a function that is pas
+               			; and returns and int.
+               
+18 *24   E000  @call:	call	0
+19 *25   ========= end of example820.mas =========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @fp$i                     0           8   B  
+ main                      6           16 
+ y                         16          A   14 
+ p                         17          C   E  
+ @call                     18          D  
+
+Input file   = example820.mas
+Output file  = example820.mac
+List file    = example820.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,96 @@
+Machine-level Assembler Version 6.1    Sat Mar 14 21:27:04 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate program 7.45 to assembly language
+               ;---------------------------------------------------------------
+               
+               ;--------------------------
+               ; void f()
+               ;--------------------------
+               
+0  *0    F501  f:	aloc	1	; int x, y = 2;
+1  *1    8002  	ldc	2
+2  *2    F300  	push
+               	
+3  *3    800A  	ldc	10	; x = 10;
+4  *4    5001  	str	1
+               	
+               			; { start of the block
+5  *5    F501  	aloc	1	; int x, y = 4;
+6  *6    8004  	ldc	4
+7  *7    F300  	push
+               
+8  *8    8005  	ldc	5	; x = 5;
+9  *9    5001  	str	1	
+               
+A  *10   8023  	ldc	msg_x	; cout << "x = " << x << " y = " << y << endl;
+B  *11   FFF7  	sout
+C  *12   4001  	ldr	1
+D  *13   FFFD  	dout
+E  *14   8028  	ldc	msg_y	
+F  *15   FFF7  	sout
+10 *16   4000  	ldr	0
+11 *17   FFFD  	dout
+12 *18   800A  	ldc	'\n'
+13 *19   FFFB  	aout
+14 *20   F602  	dloc	2
+               			; }  end of the block	
+               
+15 *21   8023  	ldc	msg_x	; cout << "x = " << x << " y = " << y << endl;
+16 *22   FFF7  	sout
+17 *23   4001  	ldr	1
+18 *24   FFFD  	dout
+19 *25   8028  	ldc	msg_y	
+1A *26   FFF7  	sout
+1B *27   4000  	ldr	0
+1C *28   FFFD  	dout
+1D *29   800A  	ldc	'\n'
+1E *30   FFFB  	aout
+1F *31   F602  	dloc	2
+               
+20 *32   F000  	ret		; return to the calling function
+               	
+               ;------------------------
+               ; main()
+               ;------------------------
+               
+21 *33   E000  main:	call f		; f();	
+               	
+22 *34   FFFF  	halt		; end of the program
+               
+               	end main
+               
+               ; GLOBAL VARIABLES
+23 *35   0078  msg_x:	dw	"x = "
+24 *36   0020
+25 *37   003D
+26 *38   0020
+27 *39   0000
+28 *40   0020  msg_y:	dw	" y = "
+29 *41   0079
+2A *42   0020
+2B *43   003D
+2C *44   0020
+2D *45   0000
+               
+2E *46   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           21 
+ main                      21          23 
+ msg_x                     23          A   15 
+ msg_y                     28          E   19 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

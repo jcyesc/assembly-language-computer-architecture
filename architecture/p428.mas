@@ -1,0 +1,5 @@
+            ldc  y
+            swap
+            call x
+        x:  halt
+        y:  dw   -1

@@ -1,0 +1,14 @@
+           ld    w
+           add   x
+           dout
+           sub   y
+           dout
+           div   y
+           dout
+           div   z
+           dout
+           halt
+       w:  dw    10
+       x:  dw    7
+       y:  dw    3
+       z:  dw    -2

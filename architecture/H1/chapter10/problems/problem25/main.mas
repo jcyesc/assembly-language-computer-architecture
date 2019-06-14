@@ -1,0 +1,3 @@
+10.26 Create a library with lib that contains modules that are neither
+".mob" nor ".mac" files. Does lib detect the invalid input? Try lin with 
+your library. Does lin detect the invalid modules in the bogus library?

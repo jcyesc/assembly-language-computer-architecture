@@ -1,0 +1,72 @@
+;------------------------------------------------------------------
+; Translate the program 7.43 to assembly language
+;------------------------------------------------------------------
+
+;-------------------------------------------
+; void f(char c, int i, char *cp, int *ip)
+;-------------------------------------------
+
+f:	ldc	'A'	; c = 'A'
+	str	1
+	
+	ldc	2	; i = 2;
+	str	2	
+
+	ldc	'B'	; *cp = 'B'
+	push
+	ldr	4
+	sti	
+
+	ldc	3	; *ip = 3
+	push
+	ldr	5
+	sti
+
+	ret		; return to the calling function
+
+;-------------------
+; main()
+;-------------------
+
+main:	ldc	gi	; f('X', 5, &gc, &gi);
+	push
+	ldc	gc
+	push
+	ldc	5
+	push
+	ldc	'X'
+	push
+	call	f
+	dloc	4
+
+	ldc	msg_gc	; cout << "gc = " << gc << " gi = " << gi << endl;
+	sout
+	ld	gc
+	aout
+	ldc	msg_gi
+	sout
+	ld	gi
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+
+	end main
+
+; GLOBAL VARIABLES
+
+gc:	dw	0
+gi:	dw	0
+msg_gc: dw	"gc = "
+msg_gi:	dw	" gi = "
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,51 @@
+;-----------------------------------------------------
+; Translate the program 8.47 to assembly language
+;-----------------------------------------------------
+
+;--------------------------
+; void f(int x)
+;--------------------------
+
+@f$i:	ldr	1	; cout << x << endl;º
+	dout
+	ldc	'\n'
+	aout
+
+	ret		; return to the caller
+
+;---------------------------
+; void f(int a[])
+;---------------------------
+
+@f$pi:	ldc	5	; a[0] = 5;
+	push
+	ldr	2
+	sti
+
+	ret		; return to the caller
+	
+;---------------------------
+; int main()
+;---------------------------
+
+main:	ldc	3	; f(3);
+	push
+	call	@f$i
+	dloc	1	
+
+	ldc	z	; f(&z);
+	push
+	call	@f$pi
+	dloc	1
+
+	ld	z	; cout << z << endl;
+	dout
+	ldc	'\n'
+	aout
+	
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+z:	dw	100

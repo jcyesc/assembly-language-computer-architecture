@@ -1,0 +1,5 @@
+s        ; Label status (s or i)                 lin.rsp
+t        ; Table file status (t or n) 
+c        ; Cat file status (c or n)  
+m        ; Message status (m or n)
+y        ; Okay to change? (y or n)

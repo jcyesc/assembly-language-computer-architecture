@@ -1,0 +1,35 @@
+;----------------------------------------------------------------
+; Translate the progarm 9.15 to assembly language.
+;----------------------------------------------------------------
+
+main:	ldc	x	; p = &x;
+	st	p
+	
+	ldc	p	; q = &p;
+	st	q
+
+	ld	p	; cout << *p << " " << **q << endl;
+	ldi
+	dout
+	
+	ldc	msg	; " "
+	sout
+	
+	ld	q	; **q
+	ldi
+	ldi
+	dout
+	
+	ldc	'\n'	; endl;
+	aout
+	
+	halt
+
+; Global variables
+
+x:	dw	1
+p:	dw	0	; int **q;
+q:	dw	0	; int *p;
+
+msg:	dw	" "
+

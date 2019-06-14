@@ -1,0 +1,20 @@
+                ld    zero
+                ldct  ten
+       loop:    addi  array
+                decj  loop
+                st    sum
+                dout
+                halt
+       sum:     dw    0
+       zero:    dw    0
+       ten:     dw    10
+       array:   dw    1
+                dw    1
+                dw    2
+                dw    3
+                dw    5
+                dw    8
+                dw    13
+                dw    21
+                dw    34
+                dw    55

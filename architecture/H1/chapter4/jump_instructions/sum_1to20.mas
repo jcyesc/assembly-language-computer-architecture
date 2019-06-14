@@ -1,0 +1,20 @@
+loop:	ld    sum   ; get sum
+	add   count ; add count to sum
+	st    sum   ; store new sum
+	ld    count ; decrement count
+	sub   @1
+	st    count ; put new value in count
+	jnz   loop  ; repeat if count not zero
+done:   ldc   msg   ; output "Sum = "
+	sout
+	ld    sum   ; output sum
+	dout
+	ldc   '\n'  ; output newline
+	aout
+	halt
+@1:	dw    1
+count:  dw    20
+msg:    dw    "Sum = "
+sum:    dw    0
+
+

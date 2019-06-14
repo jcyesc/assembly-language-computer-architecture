@@ -1,0 +1,6 @@
+            ldc  15
+            swap
+            ld    x
+        a:  push
+            ja    a
+        x:  dw   -1

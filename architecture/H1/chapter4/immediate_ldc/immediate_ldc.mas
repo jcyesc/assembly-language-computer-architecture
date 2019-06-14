@@ -1,0 +1,10 @@
+	ldc   'A'  ; immediate operand is 041
+	st     x   ; store code in ac to x
+	ldc   'B'  ; immediate operand is 042
+	st     y   ; store code in ac to y
+	ldc   'C'  ; immediate operand is 043
+	st     z   ; store code in ac to z
+	halt
+x: 	dw     0
+y:	dw     0
+z:	dw     0

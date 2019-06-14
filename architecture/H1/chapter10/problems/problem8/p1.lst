@@ -1,0 +1,22 @@
+Machine-level Assembler Version 6.1    Mon May  4 17:55:31 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0005  a:	dw	5
+               	public	a
+1  *1    ========= end of p1.mas =================================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ a                         0           1  
+
+Input file   = p1.mas
+Output file  = p1.mob
+List file    = p1.lst 
+Number base  = decimal
+Label status = case sensitive

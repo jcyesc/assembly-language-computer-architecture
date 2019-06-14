@@ -1,0 +1,5 @@
+            a:  dw   b
+            b:  dw   c
+            c:  dw   a
+            d:  dw   *
+                halt

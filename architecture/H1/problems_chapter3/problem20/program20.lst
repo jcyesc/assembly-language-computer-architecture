@@ -1,0 +1,39 @@
+Machine-level Assembler Version 6.1    Wed Dec 17 23:33:01 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Write, assemble using the sim assembler, and run on sim a prog
+               ; that subtracts the ASCII code for 'A' from the ASCII code for 
+               ; the result. Your program should also do the same for 'B' and '
+               
+               
+0  *0    0007  	ld   A
+1  *1    3006  	sub  a
+2  *2    FFFD  	dout
+3  *3    0009  	ld   B
+4  *4    3008  	sub  b
+5  *5    FFFD  	dout
+               
+6  *6    0061  a:	dw   'a'
+7  *7    0041  A:	dw   'A'
+8  *8    0062  b:	dw   'b'
+9  *9    0042  B:	dw   'B'
+A  *10   ========= end of program20.mas ==========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ a                         6           1  
+ A                         7           0  
+ b                         8           4  
+ B                         9           3  
+
+Input file   = program20.mas
+Output file  = program20.mac
+List file    = program20.lst 
+Number base  = decimal
+Label status = case sensitive

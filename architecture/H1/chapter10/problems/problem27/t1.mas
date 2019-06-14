@@ -1,0 +1,11 @@
+;-------------------------------------------------------------------------
+; Show the contents of t1.mob, t2.mob, and t1.mac. Use the same format
+; that pic uses.
+;-------------------------------------------------------------------------
+
+	; t1.mas
+a:	dw	5
+b:	dw	a + 1
+c:	dw	x + 5
+	extern	x
+	public 	a

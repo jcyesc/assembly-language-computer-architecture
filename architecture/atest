@@ -1,0 +1,373 @@
+echo =====================================================
+echo This shell scipt compares the model version of 
+echo masv1 with the student-written version.
+echo The first three test cases should assemble
+echo without errors.  The remaining test cases have
+echo errors for which the two assemblers should      
+echo produce similar error messages.
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+if test "$1" = "java"
+then
+if test -f masv1.class
+then
+echo
+else
+echo ERROR: Student version of masv1 \(masv1.class\) not found
+exit
+fi
+else
+if test -f masv1
+then
+echo
+else
+echo ERROR: Student version of masv1 not found
+exit
+fi
+fi
+if  test -f masv1m
+then
+echo
+else
+echo ERROR: Model version of masv1 \(masv1m\) not found
+exit
+fi
+
+echo ===== aprog1 ========================================
+
+if masv1m aprog1
+then
+echo
+else
+echo ERROR: masv1m failed on aprog1.mas--check masv1m and aprog1.mas
+exit
+fi
+
+mycopy aprog1.mac savemac
+rm aprog1.mac
+echo -----
+
+if $1 masv1 aprog1
+then
+
+echo -----
+if myfc aprog1.mac savemac
+then echo aprog1 ok
+else
+echo ERROR: masv1m/masv1 discrepancy on aprog1
+fi
+
+else
+echo -----
+echo ERROR: bad return code from masv1 assembly of aprog1
+fi
+
+if test -f aprog1.mac
+then
+rm aprog1.mac
+fi
+if test -f savemac 
+then
+rm savemac
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+
+
+echo ===== aprog2 ========================================
+
+if masv1m ./aprog2
+then
+echo
+else
+echo ERROR: masv1m failed on aprog2.mas--check masv1m and m2prog.mas
+exit
+fi
+
+mycopy aprog2.mac savemac
+rm aprog2.mac
+echo -----
+
+if $1 masv1 ./aprog2
+then
+
+echo -----
+if myfc aprog2.mac savemac
+then echo aprog2 ok
+else
+echo ERROR: masv1m/masv1 discrepancy on aprog2
+fi
+
+else
+echo -----
+echo ERROR: bad return code from masv1 assembly of aprog2
+fi
+
+if test -f aprog2.mac
+then 
+rm aprog2.mac
+fi
+if test -f savemac 
+then
+rm savemac
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+
+
+echo ===== aprog3 ========================================
+
+mycopy aprog3.mas x.y
+if masv1m x.y
+then
+echo
+else
+echo ERROR: masv1m failed on aprog3.mas--check masv1m and aprog3.mas
+exit
+fi
+
+mycopy x.mac savemac
+rm x.mac
+echo -----
+if $1 masv1 x.y
+then
+
+echo -----
+if myfc x.mac savemac
+then echo aprog3 ok
+else
+echo ERROR: masv1m/masv1 discrepancy on aprog3
+fi
+
+else
+echo -----
+echo ERROR: Bad return code from masv1 assembly of aprog3
+fi
+
+if test -f x.mac
+then
+rm x.mac
+fi
+if test -f savemac 
+then
+rm savemac
+fi
+echo =====================================================
+echo =====================================================
+echo Test cases with errors now follow.
+echo The error messages from the two assemblers 
+echo should be similar.
+echo Hit enter to continue
+read junk
+
+
+
+
+echo ===== aprog4 ========================================
+masv1m aprog4
+echo -----
+if $1 masv1 aprog4
+then
+echo ERROR: masv1 should return a bad return code on aprog4
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog5 ========================================
+masv1m aprog5
+echo -----
+if $1 masv1 aprog5
+then
+echo ERROR: masv1 should return a bad return code on aprog5
+fi
+
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog6 ========================================
+masv1m aprog6
+echo -----
+if $1 masv1 aprog6
+then
+echo ERROR: masv1 should return a bad return code on aprog6
+fi
+
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog7 ========================================
+masv1m aprog7
+echo -----
+if $1 masv1 aprog7
+then
+echo ERROR: masv1 should return a bad return code on aprog7
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog8 ========================================
+masv1m aprog8
+echo -----
+if $1 masv1 aprog8
+then
+echo ERROR: masv1 should return a bad return code on aprog8
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog9 ========================================
+masv1m aprog9
+echo -----
+if $1 masv1 aprog9
+then
+echo ERROR: masv1 should return a bad return code on aprog9
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog10 ========================================
+masv1m aprog10
+echo -----
+if $1 masv1 aprog10
+then
+echo ERROR: masv1 should return a bad return code on aprog10
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog11 ========================================
+masv1m aprog11
+echo -----
+if $1 masv1 aprog11
+then
+echo ERROR: masv1 should return a bad return code on aprog11
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog12 ========================================
+masv1m aprog12
+echo -----
+if $1 masv1 aprog12
+then
+echo ERROR: masv1 should return a bad return code on aprog12
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== aprog13 ========================================
+masv1m aprog13
+echo -----
+if $1 masv1 aprog13
+then
+echo ERROR: masv1 should return a bad return code on aprog13
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== no input file specified on the command line ====
+masv1m
+echo -----
+if $1 masv1
+then
+echo ERROR: masv1 should return a bad return code
+fi
+echo =====================================================
+echo Hit enter to continue
+read junk
+
+echo ===== non-existent input file =======================
+if test -f garbage.ggg
+then
+rm garbage.ggg
+fi
+masv1m garbage.ggg
+echo -----
+if $1 masv1 garbage.ggg
+then
+echo ERROR: masv1 should return a bad return code
+fi
+echo =====================================================
+echo Hit enter to finish
+read junk
+echo =====================================================
+if test -f x.y
+then
+rm x.y
+fi
+if test -f x.mac
+then
+rm x.mac
+fi
+if test -f savemac
+then
+rm savemac
+fi
+if test -f aprog1.mac
+then
+rm aprog1.mac
+fi
+if test -f aprog2.mac
+then
+rm aprog2.mac
+fi
+if test -f aprog3.mac
+then
+rm aprog3.mac
+fi
+if test -f aprog4.mac
+then
+rm aprog4.mac
+fi
+if test -f aprog5.mac
+then
+rm aprog5.mac
+fi
+if test -f aprog6.mac
+then
+rm aprog6.mac
+fi
+if test -f aprog7.mac
+then
+rm aprog7.mac
+fi
+if test -f aprog8.mac
+then
+rm aprog8.mac
+fi
+if test -f aprog9.mac
+then
+rm aprog9.mac
+fi
+if test -f aprog10.mac
+then
+rm aprog10.mac
+fi
+if test -f aprog11.mac
+then
+rm aprog11.mac
+fi
+if test -f aprog12.mac
+then
+rm aprog12.mac
+fi
+if test -f aprog13.mac
+then
+rm aprog13.mac
+fi

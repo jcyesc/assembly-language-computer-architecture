@@ -1,0 +1,624 @@
+         !ks                                     ksprog.mas
+         ;
+         ; Tests student-written microcode for the
+         ; stack instruction set in ks.hor
+         ;
+         ; Will output:
+         ;
+         ;    "ERROR detected in stack instruction set at loc XXXX hex" 
+         ;                    or
+         ;    "No errors detected in stack instruction set"
+         ;
+test:    
+         pc   1
+         pc   2
+         rev
+         pc   1
+         sub
+         jz   * + 2
+         call error
+         pc   2
+         sub
+         jz   * + 2
+         call error
+
+         pc   1
+         pc   2
+         pc   3
+         rot
+         pc   2
+         sub
+         jz   * + 2
+         call error
+         pc   1
+         sub
+         jz   * + 2
+         call error
+         pc   3
+         sub
+         jz   * + 2
+         call error
+
+         pc   5
+         pc   x
+         stva
+         pc   x
+         load
+         pc   5
+         sub
+         jz   * + 2
+         call error
+
+         esba
+         esba
+         bpbp
+         pc   fffh
+         sub
+         jz   * + 2
+         call error
+         dupe
+         sub
+         jz   * + 2
+         call error
+
+         esba
+         pbp
+         pc   fffh
+         sub
+         jz   * + 2
+         call error
+         dupe
+         sub
+         jz   * + 2
+         call error
+
+         esba
+         esba
+         pobp
+         esba
+         pc   fffh
+         sub
+         jz   * + 2
+         call error
+
+
+         pc   1
+         pc   2
+         add
+         p    @3
+         sub
+         jz   * + 2
+         call   error
+
+         pc   2
+         pc   7
+         mult
+         pc   14
+         sub
+         jz   * + 2
+         call error
+
+         pc   2
+         p    @_3
+         mult
+         p    @_6
+         sub
+         jz   * + 2
+         call error
+
+         p    @_2
+         pc   3
+         mult
+         p    @_6
+         sub
+         jz   * + 2
+         call error
+
+         p    @_2
+         p    @_4
+         mult
+         pc   8
+         sub
+         jz   * + 2
+         call error
+
+         pc   2
+         pc   7
+         m
+         pc   14
+         sub
+         jz   * + 2
+         call error
+
+         pc   2
+         p    @_3
+         m
+         p    @_6
+         sub
+         jz   * + 2
+         call error
+
+         p    @_2
+         pc   3
+         m
+         p    @_6
+         sub
+         jz   * + 2
+         call error
+
+         p    @_2
+         p    @_4
+         m
+         pc   8
+         sub
+         jz   * + 2
+         call error
+
+         pc   6
+         pc   2
+         div  
+         pc   3
+         sub
+         jz   * + 2
+         call error
+
+         p    @_6
+         p    @_2
+         div
+         pc   3
+         sub
+         jz   * + 2
+         call error
+
+         p    @_6
+         pc   2
+         div
+         p    @_3
+         sub
+         jz   * + 2
+         call error
+
+         pc   6
+         p    @_2
+         div
+         p    @_3
+         sub
+         jz   * + 2
+         call error
+
+
+         pc   6
+         pc   4
+         rem
+         pc   2
+         sub
+         jz   * + 2
+         call error
+
+         pc   6
+         p    @_4
+         rem
+         pc   2
+         sub
+         jz   * + 2
+         call error
+
+         p    @_6
+         pc   4
+         rem
+         p    @_2
+         sub
+         jz   * + 2
+         call error
+
+         p    @_6
+         p    @_4
+         rem
+         p    @_2
+         sub
+         jz   * + 2
+         call error
+
+         pc   10
+         pc   12
+         or 
+         p    @14
+         sub
+         jz   * + 2
+         call error
+
+         pc   10
+         pc   12
+         xor
+         pc   6
+         sub
+         jz   * + 2
+         call error
+
+         pc   10
+         pc   12
+         and
+         pc   8
+         sub
+         jz   * + 2
+         call error
+
+         pc   6
+         flip
+         pc   1
+         add
+         pc   6
+         add
+         jz   * + 2
+         call error
+
+         p    shift1
+         shrl 2
+         p    shift2
+         sub
+         jz   * + 2
+         call error
+
+         p    @_1
+         shrl 15
+         pc   1
+         sub
+         jz   * + 2
+         call error
+         
+         p    shift1
+         shra 2
+         p    shift3
+         sub
+         jz   * + 2
+         call error
+
+         pc   7
+         shra 2
+         pc   1
+         sub
+         jz   * + 2
+         call error
+
+         p    @3
+         shll 2
+         p    @12
+         sub
+         jz   * + 2
+         call error
+
+         pc   7
+         pc   sub
+         cali
+         pc   7
+         sub
+         jz   * + 2
+         call error
+
+         pc   7
+         call sub
+         pc   aftersub
+         ret
+         call error
+
+sub:     esba
+         aspc -2
+         pc   5
+         pr   2
+         pc   7
+         sub
+         jz   * + 2
+         call error
+
+         pr   -3
+         pc   5
+         sub
+         jz   * + 2
+         call error
+
+         cora -3
+         load
+         pc   5
+         sub
+         jz   * + 2
+         call error
+
+         cora -3
+         pc   8 
+         stav
+         pr   -3
+         pc   8
+         sub
+         jz   * + 2
+         call error
+
+         reba
+         ret
+
+aftersub:pc   7
+         sub
+         jz   * + 2
+         call error
+
+         pc   5
+         sect
+         pc   0
+loop:    pc   1
+         add
+         jcnt loop
+         pc   5
+         sub
+         jz   * + 2
+         call error
+
+         pc   1
+         jodd * + 2
+         call error
+         pc  2
+         jodd * + 2
+         ja   * + 2
+         call error
+
+         pc   0
+         jz * + 2
+         call error
+         pc   1
+         jz   * + 2
+         ja   * + 2
+         call error
+
+         p    @_1
+         jn   * + 2
+         call error
+         pc   1
+         jn   * + 2
+         ja   * + 2
+         call error
+
+         pc   1
+         jp   * + 2
+         call error
+         p    @_1
+         jp   * + 2
+         ja   * + 2
+         call error
+
+         pc   1
+         jnz  * + 2
+         call error
+         p    @_1
+         jnz  * + 2
+         call error
+         pc   0
+         jnz  * + 2
+         ja   * + 2
+         call error
+
+         pc   0
+         jzon * + 2
+         call error
+         p    @_1
+         jzon * + 2
+         call error
+         pc   1
+         jzon * + 2
+         ja   * + 2
+         call error
+
+         pc   0
+         jzop * + 2
+         call error
+         pc   1
+         jzop * + 2
+         call error
+         p    @_1
+         jzop * + 2
+         ja   * + 2
+         call error
+
+         zesp
+         aspc 5
+         pc   22
+         pc   4
+         load
+         pc   22
+         sub
+         jz   * + 2
+         call error
+
+         aspc 10
+         zesp
+         pc 22
+         p  4095
+         sub
+         jz   * + 2
+         call error
+
+         pc   5
+         dupe
+         scmp
+         jz  * + 2
+         call error
+
+         pc   5
+         dupe
+         ucmp
+         jz   * + 2
+         call error
+
+         p    @_1
+         pc   1
+         scmp
+         jn   * + 2
+         call error
+
+         pc   5
+         pc   5
+         scmp
+         jz   * + 2
+         call error
+
+         pc   1
+         p    @_2
+         scmp
+         jp   * + 2
+         call error
+
+         p    @_1
+         pc   1
+         ucmp
+         jp   * + 2
+         call error
+
+         pc   5
+         pc   5
+         ucmp
+         jz   * + 2
+         call error
+
+         pc   1
+         p    @_1
+         ucmp
+         jn   * + 2
+         call error
+
+         pc   2
+         pc   3
+         ucmp
+         jn   * + 2
+         call error
+
+         p    @_1
+         p    @_1
+         add
+         pc   1
+         pc   1
+         addy
+         pc   3
+         sub
+         jz   * + 2
+         call error
+         pc   1
+         pc   1
+         addy
+         pc   2
+         sub
+         jz   * + 2
+         call error
+
+         pc   0
+         jz   * + 2
+         call error
+         pc   1
+         jz   error
+
+         esba
+         cora 4
+         pc   2
+         sub
+         jz   * + 2
+         call error
+
+         p    @_6
+         addc 6
+         jz   * + 2
+         call error
+
+         p    @_1
+         addc 1
+         pc   0
+         pc   0
+         addy
+         pc   1
+         sub
+         jz   * + 2
+         call error
+
+         p    @_1
+         addc 1
+         p    0
+         addc 1
+         pc   0
+         pc   0
+         addy
+         jz   * + 2
+         call error
+
+         pc   6
+         subc 6
+         jz   * + 2
+         call error
+
+         pc    3
+         sect
+         pc    s
+         pc    d
+         bcpy
+         p  d + 2
+         p s + 2
+         sub
+         jz  * + 2
+         call error
+         p  d + 3
+         p s + 3
+         jnz * + 2
+         call error
+
+         pc  abch
+         psp
+         load
+         pc  abch
+         sub
+         jz  * + 2
+         call error
+
+
+         zesp
+         pc   10
+         pc   0
+         div
+         p   @_1
+         sub
+         jz   * + 2
+         call error
+
+         pc 4
+         sect
+         pc  0
+         rem
+         pc  4
+         sub
+         jz   * + 2
+         call error
+
+
+
+         pc   okmsg
+         sout
+         ja   alldone
+
+error:   pc    badmsg1
+         sout
+         pc   1
+         sub
+         hout
+         pc   badmsg2
+         sout
+alldone: halt
+badmsg1: dw   "ERROR detected in stack instruction set at loc "
+badmsg2: dw   " hex\n"
+okmsg:   dw   "No errors detected in stack instruction set\n"
+@3:      dw   3
+@12:     dw   12
+@14:     dw   14
+@_1:     dw   -1
+@_2:     dw   -2
+@_3:     dw   -3
+@_4:     dw   -4
+@_6:     dw   -6
+x:       dw   22
+shift1:  dw   8001h
+shift2:  dw   2000h
+shift3:  dw   E000h  
+d:       dw   'DDDD'
+s:       dw   'SSSS'

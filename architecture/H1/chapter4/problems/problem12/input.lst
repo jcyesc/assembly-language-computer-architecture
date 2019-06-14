@@ -1,0 +1,60 @@
+Machine-level Assembler Version 6.1    Thu Dec 25 14:16:22 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Write and run  an assembly language program that reads in a de
+               ; and then displays its value times 7 in decimal.
+               
+0  *0    800D  	ldc   msg	; load the address of msg
+1  *1    FFF7  	sout 		; print the string
+2  *2    FFFC  	din		; input for a decimal
+3  *3    101D  	st    number	; store the number
+4  *4    001D  for:	ld    number	; load the number, the loop starts
+5  *5    FFFD  	dout		; print the decimal number
+6  *6    800A  	ldc   '\n'	; load a line feed
+7  *7    FFFB  	aout		; output the character
+8  *8    001E  	ld    counter	; load the counter
+9  *9    301F  	sub   @1	; add 1 to the ac
+A  *10   101E  	st    counter	; store the value of ac in counter
+B  *11   D004  	jnz   for	; if it's not zero, jump to for
+C  *12   FFFF  	halt		; end of the program
+               
+D  *13   0057  msg:	dw    "Write a number "
+E  *14   0072
+F  *15   0069
+10 *16   0074
+11 *17   0065
+12 *18   0020
+13 *19   0061
+14 *20   0020
+15 *21   006E
+16 *22   0075
+17 *23   006D
+18 *24   0062
+19 *25   0065
+1A *26   0072
+1B *27   0020
+1C *28   0000
+1D *29   0000  number: dw    0
+1E *30   0007  counter:dw    7
+1F *31   0001  @1:	dw    1
+20 *32   ========= end of input.mas ==============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ for                       4           B  
+ msg                       D           0  
+ number                    1D          3   4  
+ counter                   1E          8   A  
+ @1                        1F          9  
+
+Input file   = input.mas
+Output file  = input.mac
+List file    = input.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,7 @@
+              ld   0
+          z:  ld   1
+              ld   z
+          s:  st   x
+          x:  halt
+              sub   z
+              ja    s

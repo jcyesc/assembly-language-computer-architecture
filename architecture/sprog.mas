@@ -1,0 +1,192 @@
+         !s                                      sprog.mas
+         ;
+         ; Tests microcode in s.hor and s.ver for
+         ; standard instruction set 
+         ;
+         ; Will output:
+
+         ;    "ERROR detected in standard instruction set at loc XXXX hex"
+         ;                  or
+         ;    "No errors detected in standard instruction set"
+         ;
+         ld   @1
+         add  @2
+         add  @2
+         sub  @3
+         sub  @2
+         st   t
+         ld   t
+         jz   * + 2
+         call error
+
+         ld   @2
+         add  @_2
+         jz   * + 2
+         call error
+
+         ldc  3
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  0
+         swap
+         push
+         ldc  2
+         push
+         ldc  0
+         ld   ffeh
+         sub  @2
+         jz   * + 2
+         call error
+
+         swap
+         add  @2
+         jz   * + 2
+         call error
+
+         ldc  0
+         swap
+         ldc  3
+         push
+         ldc  2
+         push
+         ldc  1
+         push
+         ldr  0
+         addr 1
+         addr 2
+         sub  @6
+         jz   * + 2
+         call error
+
+         ldc  6
+         subr 0
+         subr 1
+         subr 2
+         jz   * + 2
+         call error
+
+         ldc  3
+         str  0
+         ldc  1
+         ldr  0
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  0
+         jzop * + 2
+         call error
+         ldc  5
+         jzop * + 2
+         call error
+         ld   @_3
+         jzop * + 2
+         ja   * + 2
+         call error
+
+         ldc  0
+         jn   * + 2
+         ja   * + 2
+         call error
+         ldc  5
+         jn   * + 2
+         ja   * + 2
+         call error
+         ld   @_3
+         jn   * + 2
+         call error
+
+         ldc  0
+         jz   * + 2
+         call error
+         ldc  5
+         jz   * + 2
+         ja   * + 2
+         call error
+         ld   @_3
+         jz   * + 2
+         ja   * + 2
+         call error
+
+         ldc  0
+         jnz  * + 2
+         ja   * + 2
+         call error
+         ldc  5
+         jnz  * + 2
+         call error
+         ld   @_3
+         jnz  * + 2
+         call error
+
+         ldc  0
+         call sub
+         sub  @3
+         jz   * + 2
+         call error
+         ja   * + 3
+sub:     ld   @3
+         ret
+
+         ldc  3
+         st   t
+         ldc  t
+         ldi
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ldc  t
+         sti
+         ld   t
+         sub  @2
+         jz   * + 2
+         call error
+
+         ldc  4
+         swap
+         push
+         swap
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  1
+         swap
+         dloc 33
+         aloc 32
+         swap  
+         sub  @2
+         jz   * + 2
+         call error
+
+         ldc  okmsg
+         sout
+         halt
+
+error:   ldc  badmsg1
+         sout
+         pop
+         sub  @1
+         hout
+         ldc  badmsg2
+         sout
+         halt
+
+okmsg:   dw   "No errors detected in standard instruction set\n"
+badmsg1: dw   "ERROR detected in standard instruction set at loc "
+badmsg2: dw   " hex\n"
+@0:      dw   0
+@1:      dw   1
+@2:      dw   2
+@3:      dw   3
+@6:      dw   6
+@_1:     dw   -1
+@_2:     dw   -2
+@_3:     dw   -3
+t:       dw    5
+

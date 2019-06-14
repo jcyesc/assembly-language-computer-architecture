@@ -1,0 +1,66 @@
+Machine-level Assembler Version 6.1    Fri May  1 11:04:09 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 9.16 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;----------------------------
+               ; void f(int **p)
+               ;----------------------------
+               
+0  *0    8013  @f$ppi:	ldc	x	; *p = &x;
+1  *1    F300  	push
+2  *2    4002  	ldr	2
+3  *3    F200  	sti
+               	
+4  *4    F000  	ret
+               
+               ;----------------------------
+               ; int main()
+               ;----------------------------
+               
+5  *5    8012  main:	ldc	q	; f(&q);
+6  *6    F300  	push
+7  *7    E000  	call	@f$ppi
+8  *8    F601  	dloc	1
+               	
+9  *9    8037  	ldc	55	; *q = 55;
+A  *10   F300  	push
+B  *11   0012  	ld	q
+C  *12   F200  	sti	
+               		
+D  *13   0013  	ld	x	; cout << x << endl;
+E  *14   FFFD  	dout
+F  *15   800A  	ldc	'\n'
+10 *16   FFFB  	aout
+               
+11 *17   FFFF  	halt
+               	end main
+               
+               ; Global variables
+               
+12 *18   0000  q:	dw	0	; int *q
+13 *19   0000  x:	dw	0
+               
+               
+14 *20   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$ppi                    0           7  
+ main                      5           12 
+ q                         12          5   B  
+ x                         13          0   D  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

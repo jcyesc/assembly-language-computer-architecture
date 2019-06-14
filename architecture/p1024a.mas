@@ -1,0 +1,3 @@
+                   extern a
+                   public b
+            b:     dw   a  

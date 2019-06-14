@@ -1,0 +1,124 @@
+Machine-level Assembler Version 6.1    Sun Mar 29 19:31:27 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.56 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;------------------------------------------
+               ; void f(int x, unsigned y, short z)
+               ;------------------------------------------
+               
+               @f$iuis:
+0  *0    8001  	ldc	1	; x = 1;
+1  *1    5001  	str	1
+               
+2  *2    8002  	ldc	2	; y = 2;
+3  *3    5002  	str	2
+               
+4  *4    8003  	ldc	3	; z = 3;
+5  *5    5003  	str	3
+               
+6  *6    4001  	ldr	1	; cout << x << " " << y << " " << z << endl;
+7  *7    FFFD  	dout
+8  *8    803F  	ldc	msg
+9  *9    FFF7  	sout
+A  *10   4002  	ldr	2
+B  *11   FFFD  	dout
+C  *12   803F  	ldc	msg
+D  *13   FFF7  	sout
+E  *14   4003  	ldr	3
+F  *15   FFFD  	dout
+10 *16   800A  	ldc	'\n'
+11 *17   FFFB  	aout
+               
+12 *18   F000  	ret		; return to the calling function.
+               
+               ;---------------------------------------------
+               ; void f(int x, int y, int z)
+               ;---------------------------------------------
+               
+               @f$iii:
+13 *19   8004  	ldc	4	; x = 4;
+14 *20   5001  	str	1
+               
+15 *21   8005  	ldc	5	; y = 5;
+16 *22   5002  	str	2
+               
+17 *23   8006  	ldc	6	; z = 6;
+18 *24   5003  	str	3
+               	
+19 *25   4001  	ldr	1	; cout << x << " " << y << " " << z << endl;
+1A *26   FFFD  	dout
+1B *27   803F  	ldc	msg
+1C *28   FFF7  	sout
+1D *29   4002  	ldr	2
+1E *30   FFFD  	dout
+1F *31   803F  	ldc	msg
+20 *32   FFF7  	sout
+21 *33   4003  	ldr	3
+22 *34   FFFD  	dout
+23 *35   800A  	ldc	'\n'
+24 *36   FFFB  	aout
+               
+25 *37   F000  	ret		; return to the calling function.
+               
+               ;-------------------------------
+               ; main()
+               ;-------------------------------
+               
+26 *38   800C  main:	ldc	12	; f(10, -11, 12);
+27 *39   F300  	push
+28 *40   8FF5  	ldc	-11
+29 *41   F300  	push
+2A *42   800A  	ldc	10
+2B *43   F300  	push
+2C *44   E013  	call	@f$iii
+2D *45   F603  	dloc	3
+               
+2E *46   800C  	ldc	12	; f(10, 11, 12);
+2F *47   F300  	push
+30 *48   800B  	ldc	11
+31 *49   F300  	push
+32 *50   800A  	ldc	10
+33 *51   F300  	push
+34 *52   E013  	call	@f$iii
+35 *53   F603  	dloc	3
+               
+36 *54   800C  	ldc	12	; f(10, 400, 12);
+37 *55   F300  	push
+38 *56   8FA0  	ldc	4000
+39 *57   F300  	push
+3A *58   800A  	ldc	10
+3B *59   F300  	push
+3C *60   E013  	call	@f$iii
+3D *61   F603  	dloc	3
+               
+3E *62   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+3F *63   0020  msg:	dw	" "
+40 *64   0000
+               	
+41 *65   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$iuis                   0          
+ @f$iii                    13          2C  34  3C 
+ main                      26          3F 
+ msg                       3F          8   C   1B  1F 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

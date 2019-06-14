@@ -1,0 +1,12 @@
+;--------------------------------------------------------------------------------
+; 10.11 Show the contents of the ".mob" file that correspond to the following
+; program. Use the same format that pic uses.
+;--------------------------------------------------------------------------------
+
+	ld	x
+	public	x
+	add	y
+	extern	y
+	end	25
+x:	st	6
+	halt

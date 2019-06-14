@@ -1,0 +1,27 @@
+;----------------------------------------------------------------------------------
+; Version	: 1
+; Created	: 4-december-2009
+; Author	: Juan Carlos Yescas
+; Description	: Program that reads in a decimal number using memory-mapped input
+;		  and displays its value in hexadecimal using hout.
+;---------------------------------------------------------------------------------- 
+
+	&		; Configure H1 for memory-mapped I/0
+	ld	3000	; get keyboard status
+	jz	* - 1	; if 0 (not ready), try again
+	ld	3001	; get character from keyboard
+
+	hout		; show the number using hexadecimal output
+			; the number printed is the ASCII code of the number.
+
+	halt		; end of the program
+
+
+
+
+
+
+
+
+
+

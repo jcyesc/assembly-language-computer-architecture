@@ -1,0 +1,38 @@
+;------------------------------------------------------------
+; Translate the program 9.14 to assembly language.
+;------------------------------------------------------------
+
+main:	ld	x	; z = x < y;
+	sub	y
+	jzop	@L1
+	ldc	1
+	ja	@L2
+@L1:	ldc	0
+@L2:	st	z
+
+	ld	z	; cout << z << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ld	x	; if(x < y)
+	sub	y
+	jzop	@L3	
+	
+	ldc	msg_g	; cout << "good\n";
+	sout
+	ja	en
+
+@L3:	ldc	msg_b	; else cout << "bad\n";	
+	sout
+
+en:	halt
+
+; Global variables
+
+x:	dw	1
+y:	dw	10
+z:	dw	0
+
+msg_g:	dw	"good\n"
+msg_b:	dw	"bad\n"

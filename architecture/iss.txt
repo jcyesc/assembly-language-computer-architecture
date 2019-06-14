@@ -1,0 +1,249 @@
+                                                 iss.txt
+
+                  How to Use iss Version 6.0
+
+Quick Start
+
+     iss inserts lines starting with "//" into a C++/C/Java file 
+so that you can easily add assembler code to the file.  iss 
+inserts one or more "//" lines after any line that is not 
+exclusively a comment, a blank line, "{", a directive, or a 
+using statement.  iss will insert multiple lines at every 
+insertion point if you specify a repetition count on the command 
+line when you invoke iss.  The default repetition count is 5.  
+For example, 
+
+     iss  t.cpp
+
+inserts 5 lines into t.cpp at every insertion point.
+
+     iss  t.cpp /3
+
+inserts 3 lines into t.cpp at every insertion point.  When
+processing a file for the first time, iss creates a backup file
+whose name is the same as the input file but with the extension 
+".iss".  
+
+     A negative repetition count removes lines previously 
+inserted to which you have not added anything.  If you use a 
+negative repetition count whose absolute value is as large or 
+larger than the number of lines inserted at each insertion point, 
+iss will remove all inserted lines that remain blank.  
+
+     iss is useful when you are using the reverse comment feature 
+of mas.  It relieves you of the task of creating lines starting 
+with "//" to which you add assembler code.  Typically, after you 
+add your assembler code, you would then invoke iss with a large 
+negative repetition count to remove unused inserted lines.  If 
+you wish to retain some of the unused lines, simply enter ";" 
+after the "//" on the unused lines you wish to retain.  The 
+insertion of ";" on a line changes its status to "used".  Thus, 
+iss will now not remove it when operating with a negative 
+repetition count. 
+
+     You may use iss repeatedly on the same file with either 
+positive or negative counts to add or remove lines, respectively. 
+
+     If you use the /r command line argument, iss will restore 
+the file to its original form, assuming you have not changed the 
+original code.  That is, iss will remove all inserted lines 
+(changed and unchanged). 
+
+     Be sure to distinguish between a minus sign in a negative 
+repetition count and the "/" or "-" that leads the repetition 
+count argument.   For example, in 
+
+     iss t -1
+
+the repetition count is +1 (the "-" here is the command line 
+argument marker).  For a -1 repetition count, enter 
+
+     iss t /-1
+
+or 
+
+     iss t --1
+
+
+Here is an example of the transformation iss performs.  If you 
+enter
+
+     iss  t 
+
+where t.cpp is
+
+#include <iostream>
+using namespace std;
+int x;
+int main() 
+{
+   x = 5;
+   cout << x << endl;
+   return 0;
+}
+
+
+iss will modify t.cpp so that it is
+
+//; iss of t.cpp  Your name: 
+//
+//
+//
+//
+//
+#include <iostream>
+using namespace std;
+int x;
+//
+//
+//
+//
+//
+int main() 
+//
+//
+//
+//
+//
+{
+   x = 5;
+//
+//
+//
+//
+//
+   cout << x << endl;
+//
+//
+//
+//
+//
+   return 0;
+//
+//
+//
+//
+//
+}
+//
+//
+//
+//
+//
+
+
+
+Command Line Arguments
+
+     All command line arguments are optional, can be specified in 
+any order, must have no embedded spaces, and must be separated by 
+at least one space. 
+
+     All command line arguments, except <infilename>, must have a 
+leading "/" or "-". 
+
+     All command line arguments are case insensitive, except for 
+filenames on systems with case-sensitive filenames. 
+
+     The command line format is
+
+     iss <infilename>  /count  /r   /?
+                                    /h
+
+If <infilename> has no extension, ".cpp" is assumed. 
+
+/count is the number of lines to insert at each insertion point.  
+The default value is 5.  The count can be positive or negative.  
+A negative count deletes unchanged lines that were added on a 
+previous run of iss. 
+
+/h or /? displays a help screen.
+
+
+Changing the Reverse Comment Delimiter
+
+     Using the mod program, you can change the reverse comment 
+delimiter that iss uses (in which case you should also use mod to 
+similarly change the reverse comment delimiter that mas uses).  
+This change would be necessary if you wanted to add assembler 
+code to a C++/C/Java program that already had // comments.  
+Changing the reverse comment delimiter would allow mas to 
+distinuguish between the genuine // comments and the reverse 
+comments containing assembler code. 
+
+
+Problem with a Leading "/" in Command Line Arguments on Non-
+Microsoft Systems
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with EITHER "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems can cause a 
+problem.  For example, suppose you want to specify an input file 
+on the command line.  Recall that an input file argument is not 
+preceded by an argument marker.  For example in, 
+
+    sim a /ms
+
+the argument "a" (which specifies the input file a.mac) does NOT 
+have a preceding "/" or "-".  "/ms", on the other hand, has the 
+argument marker "/".  "/ms" is interpreted as the "/m" argument 
+followed by the secondary argument "s".  Now suppose the input 
+file you want to specify on the command line is 
+
+     /abc.x
+
+This denotes the abc.x file in the root directory "/".  
+Unfortunately, all the programs in the H1 Software Package will 
+interpret a leading "/" as an argument marker rather than as the 
+root directory.  Thus, 
+
+     /abc.x
+
+on the command line is incorrectly interpreted as the argument 
+
+     /a 
+
+followed by the secondary argument
+
+     bc.x
+
+This problem does not occur on Microsoft systems because they use 
+"\" rather than "/" as the filename separator, and, thus, there 
+is never any confusion with the argument marker "/". 
+
+You will probably rarely run into this problem because full 
+pathnames are rarely needed when using the programs in the H1 
+Software Package.  However, if the problem does occur, it can 
+easily be circumvented: simply use "//" to represent the root.  
+For example, if 
+
+     //abc.x
+
+appears on a command line, it is interpreted as the input file
+
+     /abc.x
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 
+
+
+Default Settings
+
+     iss is shipped with the following default settings:
+
+     reverse comment delimiter: //
+     message status:            messages on 
+                                (i.e., non-error/non-warning 
+                                console messages are displayed)
+
+These settings, however, can be changed with the mod program.  
+For information on the mod program, see mod.txt. 

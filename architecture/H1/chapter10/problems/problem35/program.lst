@@ -1,0 +1,109 @@
+Machine-level Assembler Version 6.1    Sun May 10 09:03:03 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 10.35 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;-----------------------------
+               ; void exit(int rc)
+               ;-----------------------------
+               
+               @exit$i:
+0  *0    8026  	ldc	msg_exit	; cout << "exit\n";
+1  *1    FFF7  	sout
+2  *2    F000  		ret;
+               
+               ;----------------------------
+               ; void f()
+               ;----------------------------
+               
+3  *3    8015  @f$v:	ldc	msg_f	; cout << "in f\n";
+4  *4    FFF7  	sout
+               	
+5  *5    8001  	ldc	1	; exit(1);
+6  *6    F300  	push
+7  *7    E000  	call	@exit$i
+8  *8    F601  	dloc	1
+               
+9  *9    8021  	ldc	msg_b	; cout << "bug\n";
+A  *10   FFF7  	sout
+               	
+B  *11   F000  	ret;
+               
+               ;----------------------------
+               ; void g()
+               ;----------------------------
+               
+C  *12   801B  @g$v:	ldc	msg_g	; cout << "in g\n";
+D  *13   FFF7  	sout
+               
+E  *14   E003  	call	@f$v	; f();
+               	
+F  *15   8021  	ldc	msg_b	; cout << "bug\n";
+10 *16   FFF7  	sout	
+               
+11 *17   F000  	ret
+               
+               ;----------------------------------------------
+               ; int main()
+               ;	Function called by the start-up code 
+               ;----------------------------------------------
+               
+12 *18   E00C  main:	call	@g$v	; g();
+               	
+13 *19   8000  	ldc	0	; return 0;
+14 *20   F000  	ret
+               
+               ; Global variables
+15 *21   0069  msg_f:	dw	"in f\n"
+16 *22   006E
+17 *23   0020
+18 *24   0066
+19 *25   000A
+1A *26   0000
+1B *27   0069  msg_g:	dw	"in g\n"
+1C *28   006E
+1D *29   0020
+1E *30   0067
+1F *31   000A
+20 *32   0000
+21 *33   0062  msg_b:	dw	"bug\n"
+22 *34   0075
+23 *35   0067
+24 *36   000A
+25 *37   0000
+26 *38   0065  msg_exit:	dw	"exit\n";
+27 *39   0078
+28 *40   0069
+29 *41   0074
+2A *42   000A
+2B *43   0000
+               
+               public main
+               public @exit$i
+               
+2C *44   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @exit$i                   0           2C  7  
+ @f$v                      3           E  
+ @g$v                      C           12 
+ main                      12          2C 
+ msg_f                     15          3  
+ msg_g                     1B          C  
+ msg_b                     21          9   F  
+ msg_exit                  26          0  
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

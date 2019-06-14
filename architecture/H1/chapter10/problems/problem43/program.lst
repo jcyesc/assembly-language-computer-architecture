@@ -1,0 +1,111 @@
+Machine-level Assembler Version 6.1    Mon May 11 23:00:33 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; 10.43 Write  and run on sim an assembly language program that 
+               ; strings pointed to by the argv array with no intervening space
+               ; resulting string.
+               ;---------------------------------------------------------------
+               
+               ;---------------------------------------------------------
+               ;int main(int argc, char *argv) {
+               ;	char *string = new char[100];
+               ;		int index = 0;
+               ;		while(argc != 0) {
+               ;			char *s = *argv;
+               ;			while(*s != 0) {
+               ;				string[index] = s[0];
+               ;				s++;
+               ;				index++;
+               ;			}
+               ;			argv++;
+               ;			argc--;
+               ;		}
+               ;		cout << concat << endl;
+               ;		return 0;
+               ; }
+               ;----------------------------------------------------------
+               
+               main:
+               
+0  *0    4001  _while:	ldr		1	; while(argc != 0)
+1  *1    C01A  		jz		_end_main
+               		
+2  *2    4002  		ldr		2	; char *s = *argv;
+3  *3    F100  		ldi
+4  *4    1086  		st		@s
+               		
+               _while2:
+5  *5    0086  		ld		@s	; while(*s != 0)	
+6  *6    F100  		ldi
+7  *7    C013  		jz		_next
+               		
+8  *8    F300  		push			; string[index] = s[0];			
+9  *9    8021  		ldc		@string
+A  *10   2085  		add		@index
+B  *11   F200  		sti	
+               		
+C  *12   0086  		ld		@s		; s++;
+D  *13   2020  		add		@1
+E  *14   1086  		st		@s
+               		
+F  *15   0085  		ld		@index	; index++
+10 *16   2020  		add		@1
+11 *17   1085  		st		@index
+               		
+12 *18   9005  		ja		_while2
+               		
+               _next:
+13 *19   4002  		ldr		2		; argv++
+14 *20   2020  		add		@1
+15 *21   5002  		str		2
+               		
+16 *22   4001  		ldr		1		; argc--
+17 *23   3020  		sub		@1		
+18 *24   5001  		str		1
+               		
+19 *25   9000  		ja		_while
+               
+               _end_main:
+1A *26   8021  		ldc		@string		; cout << string << endl;
+1B *27   FFF7  		sout
+1C *28   800A  		ldc		'\n'
+1D *29   FFFB  		aout
+               		
+1E *30   8000  		ldc		0
+1F *31   F000  		ret
+               		
+               ; Global variables
+               
+20 *32   0001  @1:			dw		1
+21 *33   0000  @string:	dw  100 dup 0	; This string stores the value of the con
+85 *133  0000  @index:		dw	0
+86 *134  0000  @s:			dw	0		; char *s;
+               
+               public	main
+               
+87 *135  ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           87 
+ _while                    0           19 
+ _while2                   5           12 
+ _next                     13          7  
+ _end_main                 1A          1  
+ @1                        20          D   10  14  17 
+ @string                   21          9   1A 
+ @index                    85          A   F   11 
+ @s                        86          4   5   C   E  
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

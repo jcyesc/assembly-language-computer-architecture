@@ -1,0 +1,11 @@
+; What happens when the following program is run:
+
+	ldc   15
+	swap		; swap ac, sp
+	ld    x
+a:	push
+	ja    a
+x:	dw    -1
+
+; The program ends when the "push" instruction overlays the address 0004 with FFFF,
+; that means halt. 

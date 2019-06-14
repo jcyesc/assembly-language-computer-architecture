@@ -1,0 +1,35 @@
+;-------------------------------------------------------------
+; Translate the program 8.52 to assembly language.
+;-------------------------------------------------------------
+
+@f$v:	aloc	250	; int a[500];
+	aloc	250	
+
+	ldc	56	; a[499] = 56;
+	push
+	swap	
+	st	spsave
+	swap
+	ldc	499
+	add	spsave
+	sti
+
+	ldc	499	; cout << a[499] << endl;
+	add	spsave
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	dloc	250	; realease the memory
+	dloc	250
+	ret		; return to the calling function
+
+main:	call	@f$v	; f();
+	
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+spsave: dw	0
+

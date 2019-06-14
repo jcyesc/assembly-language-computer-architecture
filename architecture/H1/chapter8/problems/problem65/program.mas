@@ -1,0 +1,46 @@
+;-------------------------------------------------------------------
+; Translate the program 8.65 to assembly language.
+;-------------------------------------------------------------------
+
+;---------------------------------
+; void f(int x, int y)
+;---------------------------------
+
+@f$ii:	ldr	1	; cout << x + y << endl;
+	addr	2
+	dout
+	ldc	'\n'
+	aout
+
+	ret
+
+;---------------------------------
+; main()
+;---------------------------------
+
+main:	ldc	@f$ii	; p = f;
+	st	p
+
+	ldc	2	; f(1, 2);
+	push
+	ldc	1
+	push
+	call	@f$ii
+	dloc	2	; release the memory
+
+	ld	@call	; p(3, 4);
+	add	p
+	st	* + 5	; store call into dw bello
+	ldc	4
+	push
+	ldc	3
+	push
+	dw	0 	; execute manufactured call
+	dloc	2	; remove parameters.
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+p:	dw	0	; void (*p)(int, int);
+@call:	call 	0

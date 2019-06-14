@@ -1,0 +1,324 @@
+Vertical Microcode Assembler Version 6.1      Fri Jun 15 14:09:43 2007
+
+  LOC    OBJ    SOURCE
+hex*dec
+
+                /  Standard Instruction Set Vertical Microcode   s.vas
+                
+                / The label indicates the opcode decoded up to that point.  
+                / Each hex digit in a label represents 4 bits.  0 or 1 in a 
+                / label represents the bits 0 and 1.  For example, the 
+                / label LF_01 corresponds to opcode bits 1111 01; the label 
+                / LF_2 corresponds to opcode bits 1111 0010. 
+                
+                /**************************************************************
+                /           Fetch instruction and increment pc register        
+                /**************************************************************
+0  *0    40006  fetch:      mar    pc
+1  *1    68000              rd
+2  *2    2A4A0              move   ir mdr
+3  *3    018C1              add    pc pc 1 
+                /**************************************************************
+                /           Decode opcode                                      
+                /**************************************************************
+4  *4    2A920              move   dc ir
+5  *5    5800D              bn     L1
+6  *6    32940  L0:         left   dc dc
+7  *7    58014              bn     L01
+8  *8    32940  L00:        left   dc dc
+9  *9    5801E              bn     L001
+A  *10   32940  L000:       left   dc dc
+B  *11   5808B              bn     L0001
+C  *12   50087              ba     L0000
+D  *13   32940  L1:         left   dc dc 
+E  *14   58019              bn     L11 
+F  *15   32940  L10:        left   dc dc
+10 *16   58024              bn     L101 
+11 *17   32940  L100:       left   dc dc 
+12 *18   580B1              bn     L9 
+13 *19   500AF              ba     L8
+14 *20   32940  L01:        left   dc dc 
+15 *21   58021              bn     L011 
+16 *22   32940  L010:       left   dc dc 
+17 *23   5809E              bn     L5 
+18 *24   50099              ba     L4          
+19 *25   32940  L11:        left   dc dc 
+1A *26   58027              bn     L111 
+1B *27   32940  L110:       left   dc dc 
+1C *28   580C1              bn     LD 
+1D *29   500BC              ba     LC
+1E *30   32940  L001:       left   dc dc 
+1F *31   58094              bn     L3 
+20 *32   5008F              ba     L2
+21 *33   32940  L011:       left   dc dc 
+22 *34   580A9              bn     L7 
+23 *35   500A3              ba     L6
+24 *36   32940  L101:       left   dc dc 
+25 *37   580B7              bn     LB 
+26 *38   500B3              ba     LA
+27 *39   32940  L111:       left   dc dc 
+28 *40   5802A              bn     LF 
+29 *41   500C5              ba     LE
+2A *42   32940  LF:         left   dc dc 
+2B *43   58033              bn     LF_1 
+2C *44   32940  LF_0:       left   dc dc 
+2D *45   5803A              bn     LF_01 
+2E *46   32940  LF_00:      left   dc dc 
+2F *47   58044              bn     LF_001 
+30 *48   32940  LF_000:     left   dc dc
+31 *49   580D0              bn     LF_0001
+32 *50   500CB              ba     LF_0000
+33 *51   32940  LF_1:       left   dc dc 
+34 *52   5803F              bn     LF_11 
+35 *53   32940  LF_10:      left   dc dc 
+36 *54   5804A              bn     LF_101 
+37 *55   32940  LF_100:     left   dc dc
+38 *56   580EF              bn     LF_9
+39 *57   500EF              ba     LF_8
+3A *58   32940  LF_01:      left   dc dc 
+3B *59   58047              bn     LF_011 
+3C *60   32940  LF_010:     left   dc dc
+3D *61   580E5              bn     LF_5
+3E *62   500E0              ba     LF_4
+3F *63   32940  LF_11:      left   dc dc 
+40 *64   5804D              bn     LF_111 
+41 *65   32940  LF_110:     left   dc dc
+42 *66   580EF              bn     LF_D
+43 *67   500EF              ba     LF_C
+44 *68   32940  LF_001:     left   dc dc 
+45 *69   580DB              bn     LF_3
+46 *70   500D4              ba     LF_2
+47 *71   32940  LF_011:     left   dc dc
+48 *72   580EB              bn     LF_7
+49 *73   500E8              ba     LF_6
+4A *74   32940  LF_101:     left   dc dc
+4B *75   580EF              bn     LF_B
+4C *76   500EF              ba     LF_A
+4D *77   32940  LF_111:     left   dc dc
+4E *78   58050              bn     LF_F
+4F *79   500EF              ba     LF_E
+50 *80   32940  LF_F:       left   dc dc 
+51 *81   58059              bn     LF_F_1 
+52 *82   32940  LF_F_0:     left   dc dc 
+53 *83   58060              bn     LF_F_01 
+54 *84   32940  LF_F_00:    left   dc dc 
+55 *85   5806A              bn     LF_F_001 
+56 *86   32940  LF_F_000:   left   dc dc
+57 *87   580EF              bn     LF_F_0001
+58 *88   500EF              ba     LF_F_0000
+59 *89   32940  LF_F_1:     left   dc dc 
+5A *90   58065              bn     LF_F_11 
+5B *91   32940  LF_F_10:    left   dc dc 
+5C *92   58070              bn     LF_F_101 
+5D *93   32940  LF_F_100:   left   dc dc
+5E *94   580EF              bn     LF_F_9
+5F *95   500EF              ba     LF_F_8
+60 *96   32940  LF_F_01:    left   dc dc 
+61 *97   5806D              bn     LF_F_011 
+62 *98   32940  LF_F_010:   left   dc dc
+63 *99   580EF              bn     LF_F_5
+64 *100  500EF              ba     LF_F_4
+65 *101  32940  LF_F_11:    left   dc dc 
+66 *102  58073              bn     LF_F_111 
+67 *103  32940  LF_F_110:   left   dc dc
+68 *104  580EF              bn     LF_F_D
+69 *105  500EF              ba     LF_F_C
+6A *106  32940  LF_F_001:   left   dc dc 
+6B *107  580EF              bn     LF_F_3
+6C *108  500EF              ba     LF_F_2
+6D *109  32940  LF_F_011:   left   dc dc
+6E *110  580EF              bn     LF_F_7
+6F *111  500EF              ba     LF_F_6
+70 *112  32940  LF_F_101:   left   dc dc
+71 *113  580EF              bn     LF_F_B
+72 *114  500EF              ba     LF_F_A
+73 *115  32940  LF_F_111:   left   dc dc
+74 *116  58076              bn     LF_F_F
+75 *117  500EF              ba     LF_F_E
+76 *118  32940  LF_F_F:     left   dc dc 
+77 *119  58000              bn     fetch
+78 *120  32940  LF_F_F_0:   left   dc dc 
+79 *121  5807F              bn     LF_F_F_01 
+7A *122  32940  LF_F_F_00:  left   dc dc 
+7B *123  58084              bn     LF_F_F_001 
+7C *124  32940  LF_F_F_000: left   dc dc
+7D *125  580EF              bn     LF_F_F_0001
+7E *126  500EF              ba     LF_F_F_0000
+7F *127  32940  LF_F_F_01:  left   dc dc 
+80 *128  58000              bn     fetch
+81 *129  32940  LF_F_F_010: left   dc dc
+82 *130  58000              bn     fetch
+83 *131  500EF              ba     LF_F_F_4
+84 *132  32940  LF_F_F_001: left   dc dc 
+85 *133  580EF              bn     LF_F_F_3
+86 *134  500EF              ba     LF_F_F_2
+                /**************************************************************
+                /           Microcode for each instruction                     
+                /**************************************************************
+                L0000:      /-------------------- LD --------------------------
+87 *135  40009              mar    ir
+88 *136  68000              rd 
+89 *137  2A0A0              move   ac mdr
+8A *138  50000              ba     fetch 
+                L0001:      /-------------------- ST --------------------------
+8B *139  29500              move mdr ac
+8C *140  40009              mar ir
+8D *141  70000              wr 
+8E *142  50000              ba     fetch 
+                L2:         /-------------------- ADD -------------------------
+8F *143  40009              mar    ir
+90 *144  68000              rd
+91 *145  2BCA0              move   f mdr
+92 *146  0210F              add    ac ac f 
+93 *147  50000              ba     fetch 
+                L3:         /-------------------- SUB -------------------------
+94 *148  40009              mar    ir
+95 *149  68000              rd 
+96 *150  2BCA0              move   f mdr 
+97 *151  0A10F              sub    ac ac f 
+98 *152  50000              ba     fetch 
+                L4:         /-------------------- LDR -------------------------
+99 *153  03D27              add    f ir sp
+9A *154  4000F              mar    f 
+9B *155  68000              rd 
+9C *156  2A0A0              move   ac mdr
+9D *157  50000              ba     fetch
+                L5:         /-------------------- STR -------------------------
+9E *158  03D27              add    f ir sp
+9F *159  29500              move   mdr ac 
+A0 *160  4000F              mar    f
+A1 *161  70000              wr 
+A2 *162  50000              ba     fetch
+                L6:         /-------------------- ADDR ------------------------
+A3 *163  03D27              add    f ir sp
+A4 *164  4000F              mar    f 
+A5 *165  68000              rd
+A6 *166  2BCA0              move   f mdr
+A7 *167  0210F              add    ac ac f 
+A8 *168  50000              ba     fetch
+                L7:         /-------------------- SUBR ------------------------
+A9 *169  03D27              add    f ir sp
+AA *170  4000F              mar    f 
+AB *171  68000              rd 
+AC *172  2BCA0              move   f mdr
+AD *173  0A10F              sub    ac ac f
+AE *174  50000              ba     fetch
+                L8:         /-------------------- LDC -------------------------
+AF *175  1A122              and    ac ir xmask
+B0 *176  50000              ba     fetch         
+                L9:         /-------------------- JA --------------------------
+B1 *177  19922              and    pc ir xmask
+B2 *178  50000              ba     fetch          
+                LA:         /-------------------- JZOP ------------------------
+B3 *179  48100              sz     ac
+B4 *180  58000              bn     fetch          
+B5 *181  19922              and    pc ir xmask
+B6 *182  50000              ba     fetch 
+                LB:         /-------------------- JN --------------------------
+B7 *183  48100              sz     ac
+B8 *184  580BA              bn     dojn           
+B9 *185  50000              ba     fetch 
+BA *186  19922  dojn:       and    pc ir xmask
+BB *187  50000              ba     fetch 
+                LC:         /-------------------- JZ --------------------------
+BC *188  48100              sz     ac
+BD *189  600BF              bz     dojz  
+BE *190  50000              ba     fetch 
+BF *191  19922  dojz:       and    pc ir xmask
+C0 *192  50000              ba     fetch 
+                LD:         /-------------------- JNZ -------------------------
+C1 *193  48100              sz     ac
+C2 *194  60000              bz     fetch
+C3 *195  19922              and    pc ir xmask
+C4 *196  50000              ba     fetch 
+                LE:         /-------------------- CALL ------------------------
+C5 *197  09CE1              sub    sp  sp 1
+C6 *198  294C0              move   mdr pc
+C7 *199  40007              mar sp  
+C8 *200  70000              wr 
+C9 *201  19922              and    pc ir xmask
+CA *202  50000              ba     fetch
+                LF_0000:    /-------------------- RET -------------------------
+CB *203  40007              mar    sp
+CC *204  68000              rd 
+CD *205  298A0              move   pc mdr
+CE *206  01CE1              add    sp sp 1
+CF *207  50000              ba     fetch 
+                LF_0001:    /-------------------- LDI -------------------------
+D0 *208  40008              mar    ac
+D1 *209  68000              rd 
+D2 *210  2A0A0              move   ac mdr
+D3 *211  50000              ba     fetch
+                LF_2:       /-------------------- STI -------------------------
+D4 *212  40007              mar    sp
+D5 *213  68000              rd 
+D6 *214  2BCA0              move   f mdr
+D7 *215  295E0              move   mdr f
+D8 *216  40008              mar ac 
+D9 *217  70000              wr 
+DA *218  50000              ba     fetch
+                LF_3:       /-------------------- PUSH ------------------------
+DB *219  09CE1              sub    sp sp 1
+DC *220  29500              move   mdr ac
+DD *221  40007              mar sp
+DE *222  70000              wr 
+DF *223  50000              ba     fetch
+                LF_4:       /-------------------- POP -------------------------
+E0 *224  40007              mar    sp
+E1 *225  68000              rd 
+E2 *226  2A0A0              move   ac mdr
+E3 *227  01CE1              add    sp sp 1
+E4 *228  50000              ba     fetch 
+                LF_5:       /-------------------- ALOC ------------------------
+E5 *229  1BD23              and    f ir ymask
+E6 *230  09CEF              sub    sp sp f 
+E7 *231  50000              ba     fetch
+                LF_6:       /-------------------- DLOC ------------------------
+E8 *232  1BD23              and    f ir ymask
+E9 *233  01CEF              add    sp sp f 
+EA *234  50000              ba     fetch 
+                LF_7:       /-------------------- SWAP ------------------------
+EB *235  2BD00              move   f ac
+EC *236  2A0E0              move   ac sp 
+ED *237  29DE0              move   sp f 
+EE *238  50000              ba     fetch 
+                /**************************************************************
+                /           Available Opcodes                                  
+                /**************************************************************
+                LF_8:       /--------------------------------------------------
+                LF_9:       /--------------------------------------------------
+                LF_A:       /--------------------------------------------------
+                LF_B:       /--------------------------------------------------
+                LF_C:       /--------------------------------------------------
+                LF_D:       /--------------------------------------------------
+                LF_E:       /--------------------------------------------------
+                LF_F_0000:  /--------------------------------------------------
+                LF_F_0001:  /--------------------------------------------------
+                LF_F_2:     /--------------------------------------------------
+                LF_F_3:     /--------------------------------------------------
+                LF_F_4:     /--------------------------------------------------
+                LF_F_5:     /--------------------------------------------------
+                LF_F_6:     /--------------------------------------------------
+                LF_F_7:     /--------------------------------------------------
+                LF_F_8:     /--------------------------------------------------
+                LF_F_9:     /--------------------------------------------------
+                LF_F_A:     /--------------------------------------------------
+                LF_F_B:     /--------------------------------------------------
+                LF_F_C:     /--------------------------------------------------
+                LF_F_D:     /--------------------------------------------------
+                LF_F_E:     /--------------------------------------------------
+                LF_F_F_0000:/--------------------------------------------------
+                LF_F_F_0001:/--------------------------------------------------
+                LF_F_F_2:   /--------------------------------------------------
+                LF_F_F_3:   /--------------------------------------------------
+                LF_F_F_4:   /--------------------------------------------------
+EF *239  50000              ba     fetch
+F0 *240  ========== end of s.vas =================================
+
+Input file   = s.vas
+Output file  = dist/s.ver
+List file    = dist/s.vst 
+Config file  = s.cfg 
+Number base  = decimal
+Label status = case sensitive
+Shifter      = one-position

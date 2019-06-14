@@ -1,0 +1,57 @@
+Machine-level Assembler Version 6.1    Sun Mar 29 12:03:15 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;-------------------------------------------------------------
+               ; Translate the program 8.52 to assembly language.
+               ;-------------------------------------------------------------
+               
+0  *0    F5FA  @f$v:	aloc	250	; int a[500];
+1  *1    F5FA  	aloc	250	
+               
+2  *2    8038  	ldc	56	; a[499] = 56;
+3  *3    F300  	push
+4  *4    F700  	swap	
+5  *5    1015  	st	spsave
+6  *6    F700  	swap
+7  *7    81F3  	ldc	499
+8  *8    2015  	add	spsave
+9  *9    F200  	sti
+               
+A  *10   81F3  	ldc	499	; cout << a[499] << endl;
+B  *11   2015  	add	spsave
+C  *12   F100  	ldi
+D  *13   FFFD  	dout
+E  *14   800A  	ldc	'\n'
+F  *15   FFFB  	aout
+               
+10 *16   F6FA  	dloc	250	; realease the memory
+11 *17   F6FA  	dloc	250
+12 *18   F000  	ret		; return to the calling function
+               
+13 *19   E000  main:	call	@f$v	; f();
+               	
+14 *20   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+15 *21   0000  spsave: dw	0
+               
+16 *22   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$v                      0           13 
+ main                      13          15 
+ spsave                    15          5   8   B  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,8 @@
+M   ; enter /ap26 from within debugger 
+o#   
+ln
+g
+D0 6
+U0 6
+R
+q

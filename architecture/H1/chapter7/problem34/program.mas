@@ -1,0 +1,63 @@
+;-------------------------------------------------------------
+; For the following problems, translate the given program to
+; assembly languague, assemble, and run on sim.
+;-------------------------------------------------------------
+
+
+;-------------
+; f(int x)
+;-------------
+
+f:	aloc  1		; int y = 7;
+	ldc   7
+	str   0
+	
+	ldr   0		; x = y;
+	str   2
+
+	ldr   2		; cout << x << " " << y << endl;
+	dout
+	ldc   msg
+	sout
+	ldr   0
+	dout 
+	ldc   '\n'
+	aout
+
+	dloc  1		; return the memory
+	ret		; return to the calling function
+
+;-------------
+; main()
+;-------------
+
+main:	ld    x		; f(x)
+	push		
+	call  f
+	dloc  1
+	
+	ld    y		; f(y)
+	push
+	call  f
+	dloc  2
+
+	ld    x		; cout << x << " " << y << endl;
+	dout
+	ldc   msg
+	sout
+	ld    y
+	dout
+	ldc   '\n'
+	aout
+
+	halt
+	
+     end main;
+
+;-------------------
+; GLOBAL VARIABLES
+;-------------------
+x: 	dw 1
+y:	dw 2
+msg:	dw " "
+

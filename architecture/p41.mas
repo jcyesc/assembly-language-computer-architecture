@@ -1,0 +1,17 @@
+             ldc  1
+             push
+             ldc  2
+             push
+             ldc  m1
+             sout
+             pop
+             dout
+             ldc  m2
+             sout
+             pop
+             dout
+             ldc  '\n'
+             aout
+             halt 
+        m1:  dw   "first pop =" 
+        m2:  dw   "\nsecond pop =" 

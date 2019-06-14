@@ -1,0 +1,39 @@
+Machine-level Assembler Version 6.1    Sat Feb 28 22:50:23 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               		!b	
+0  *0    000A  	ld 	w
+1  *1    100B  	add	x
+2  *2    FFFD  	dout	
+3  *3    300C  	sub	y
+4  *4    FFFD  	dout	
+5  *5    500C  	div	y
+6  *6    FFFD  	dout
+7  *7    500D  	div	z
+8  *8    FFFD  	dout
+9  *9    FFFF  	halt
+A  *10   0064  w:	dw	100
+B  *11   0007  x:	dw	7
+C  *12   0003  y:	dw	3
+D  *13   FFFE  z:	dw	-2
+E  *14   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ w                         A           0  
+ x                         B           1  
+ y                         C           3   5  
+ z                         D           7  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Config file  = b.cfg 
+Number base  = decimal
+Label status = case sensitive

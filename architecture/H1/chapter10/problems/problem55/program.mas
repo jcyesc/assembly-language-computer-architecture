@@ -1,0 +1,87 @@
+;------------------------------------------------------------
+; 10.55 Translate the next C program to assembly language
+;
+;	#include <iostream>
+;	using namespace std;
+;
+;	int main()
+;	{
+;		int a, b[5];
+;		cout << "enter number\n";
+;		cin >> a;
+;		b[a] = 5;
+;		cout << " a = " << a << endl;
+;		for(a = 0; a < 5; a++)
+;		cout << b[a] << endl;
+;
+;		return 0;
+;	}
+;------------------------------------------------------------
+
+main:
+	aloc	5		; int a, b[5];
+	aloc	1	
+
+	ldc		@msg1	; cout << "enter number\n";
+	sout
+	
+	din				; cin >> a
+	str		0
+	
+	ldc		5		; b[a] = 5;
+	push
+	swap
+	st		@tmp
+	swap
+	ld		@tmp	; get the address of b
+	add		@2
+	addr	1
+	sti
+	
+	ldc		@msg2	; cout << " a = " << a << endl;
+	sout
+	ldr		0
+	dout
+	ldc		'\n'
+	aout
+	
+	; for(a = 0; a < 5; a++)
+	ldc		0
+	str		0
+	
+_for:	
+	ldc		5
+	subr	0
+	jz		_end
+	
+	swap			; cout << b[a] << endl;
+	st		@tmp
+	swap
+	ld		@tmp
+	add		@1
+	addr	0
+	ldi
+	dout
+	ldc		'\n'
+	aout
+	
+	ldr		0		; a++
+	add		@1
+	str		0
+	
+	ja		_for
+	
+_end:	
+	dloc	6
+	ldc		0
+	
+	ret
+	
+; Global variables
+@msg1:	dw		"enter number\n"
+@msg2:	dw		" a = "
+@tmp:	dw		0
+@1:		dw		1
+@2:		dw		2
+
+public main

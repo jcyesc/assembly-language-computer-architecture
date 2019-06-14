@@ -1,0 +1,74 @@
+Machine-level Assembler Version 6.1    Sun Jan  4 09:16:17 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1
+               ; Created	: 4-december-2009
+               ; Author	: Juan Carlos Yescas
+               ; Description	: The loop in Figure 4.14 counts down from 20 and 
+               ;		  when it reaches 0. Rewrite the program so that it counts up
+               ;		  from 0 and terminates when it reaches 20. Compare your vers
+               ;		  with Figure 4.14. Which is better?
+               ;---------------------------------------------------------------
+               
+0  *0    0019  loop:	ld	sum	; get sum
+1  *1    2010  	add	count	; add count to sum
+2  *2    1019  	st	sum	; store new sum
+3  *3    0010  	ld	count	; decrement count
+4  *4    200F  	add	@1
+5  *5    1010  	st	count	; put new value in count
+6  *6    3011  	sub	limite
+7  *7    D000  	jnz	loop	; repeat if count not zero
+8  *8    8012  done:	ldc	msg	; output "Sum = "
+9  *9    FFF7  	sout
+A  *10   0019  	ld	sum	; output sum
+B  *11   FFFD  	dout
+C  *12   800A  	ldc	'\n'
+D  *13   FFFB  	aout
+E  *14   FFFF  	halt
+F  *15   0001  @1:	dw	1
+10 *16   0001  count:	dw	1
+11 *17   0015  limite: dw	21
+12 *18   0053  msg:	dw	"Sum = "
+13 *19   0075
+14 *20   006D
+15 *21   0020
+16 *22   003D
+17 *23   0020
+18 *24   0000
+19 *25   0000  sum:	dw	0
+               
+               ;---------------------------------------------------------------
+               ; CONCLUSION
+               ;
+               ; It's better in this case to count down from 20 to 0 than count
+               ; we have to add one instruccion and other variable.
+               ;---------------------------------------------------------------
+               
+               
+               
+               
+               
+1A *26   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ loop                      0           7  
+ done                      8          
+ @1                        F           4  
+ count                     10          1   3   5  
+ limite                    11          6  
+ msg                       12          8  
+ sum                       19          0   2   A  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

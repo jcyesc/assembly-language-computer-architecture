@@ -1,0 +1,15 @@
+; Use the comamand d$ to observe the activity on the stack.
+
+	ldc    65    ; loads ac with binary number 1000001
+	dout 	     ; displays 65
+	ldc    '\n'  ; load newline character
+	aout 	     ; output newline-that is go to next line
+	ldc    65    ; restore ac with 65
+	hout	     ; displays 41
+	ldc    '\n'  ; load newline character
+	aout	     ; output newline-that is go to next line
+	ldc    65    ; restore ac with 65
+	aout	     ; displays A
+	ldc    '\n'  ; load newline character
+	aout	     ; output newline-that is go to next line
+	halt

@@ -1,0 +1,12 @@
+; #0e30 14 70 10 173 42138
+;Use p617.has for your microcode
+;Create config file p617.cfg
+;Insert !p617 at beginning of assembly language program
+n
+o
+ln
+g
+SD
+enable
+sd
+q

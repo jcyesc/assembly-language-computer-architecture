@@ -1,0 +1,3 @@
+	ld   0
+	org  11
+	halt

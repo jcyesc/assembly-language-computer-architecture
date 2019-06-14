@@ -1,0 +1,81 @@
+;---------------------------------------------------------------------
+; Translate the program 8.69 to assembly language.
+;---------------------------------------------------------------------
+
+;---------------------------------
+; int tough(int x, int *p)
+;---------------------------------
+
+@tough$ipi:	
+	aloc	2	; int a, b;
+	
+	ldr	3	; a = x;
+	str	0
+
+	ldr	4	; b = *p;
+	ldi
+	str	1
+
+	ldr	0	; if(a == 0)
+	jnz	next	
+	
+	ldr	4	; return *p;
+	ldi
+
+	ja	end_f
+next:
+	swap		; tough(x - 1, &b)
+	st	sp_save
+	swap	
+	ld	sp_save
+	add	@1
+	push
+	ldr	4
+	sub	@1
+	push
+	call	@tough$ipi
+	dloc	2
+		
+end_f:	dloc	2	;release memory
+	ret		; return to the calling function
+
+;----------------------------
+; int main()
+;----------------------------
+
+main:	ldc	5	; s = 5;
+	st	s
+
+	ldc	s	; t = tough(3, &s);
+	push
+	ldc	3
+	push
+	call	@tough$ipi
+	dloc	2
+	st	t
+
+	ldc	msg_s	; cout << "s = " << s << endl;
+	sout
+	ld	s
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	msg_t	; cout << "t = " << t << endl;
+	sout
+	ld	t
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+s:	dw	0	; int s;
+t:	dw	0	; int t;
+msg_s:	dw	"s = "
+msg_t:	dw	"t = "
+@1:	dw	1
+sp_save:dw	0

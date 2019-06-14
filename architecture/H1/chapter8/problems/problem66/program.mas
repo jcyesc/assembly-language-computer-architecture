@@ -1,0 +1,18 @@
+;-----------------------------------------------------------------
+; Translate the program 8.66 to assembly language.
+;-----------------------------------------------------------------
+
+;-----------------------
+; void f()
+;-----------------------
+
+@f$v:	ldc	'A'	; cout << 'A';
+	aout
+	call	@f$v	; f(); recursive call
+	
+	ret		; never return to the calling function
+
+main:	call	@f$v	; f();
+
+	halt		; end of the program
+	end main

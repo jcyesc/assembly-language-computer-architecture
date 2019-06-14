@@ -1,0 +1,201 @@
+Machine-level Assembler Version 6.1    Wed Dec 31 09:43:51 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 27-december-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Program that reads in a number and then displays
+               ; 		  Fibonacci numbers less than the input number.
+               ;
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    803F  	ldc	msg	; load the address of msg
+1  *1    FFF7  	sout		; string out
+2  *2    FFFC  	din		; decimal input
+3  *3    103A  	st	counter	; store the input in counter
+               	
+4  *4    800A  	ldc	'\n'	; load the value of '\n'
+5  *5    FFFB  	aout		; ASCII output
+               
+               for_numbers:
+6  *6    003B  	ld	index		; load index
+7  *7    F300      	push   			; push index in the stack
+8  *8    E018      	call    fibonacci 	; call fibonacci 
+9  *9    F400      	pop  			; pop the number we saved in the stack   
+A  *10   003D  	ld   	result		; load the result
+B  *11   FFFD      	dout			; decimal out
+C  *12   E015      	call	printBlank	; call printBlank 
+               	
+               	; index++
+D  *13   003B  	ld	index		; load index
+E  *14   2037  	add	@1		; add 1 to index
+F  *15   103B  	st	index		; store the new value of index
+               
+               	; counter--
+10 *16   003A  	ld	counter		; load counter
+11 *17   3037  	sub	@1		; subtract 1 to counter
+12 *18   103A  	st	counter		; store the new value of counter
+13 *19   D006  	jnz	for_numbers	; if it's no zero, jump to for_number
+               
+14 *20   FFFF  	halt			; end of the program
+               
+               
+               ;---------------------------------------------------------------
+               ; printBlank()
+               ;
+               ; Function that prints a blank space
+               ;
+               ;---------------------------------------------------------------
+               
+               printBlank:
+15 *21   8020  	ldc	' '	; load ' '
+16 *22   FFFB  	aout		; ASCII output
+17 *23   F000  	ret		; return to the caller
+               
+               ;---------------------------------------------------------------
+               ; fibonacci()
+               ; 
+               ; Function that gets the number fibonacci that is needed.
+               ;
+               ; int fibonacci(int number)
+               ; {
+               ;        if( number == 0 || number == 1)
+               ;          return number;
+               ;        else
+               ;          return fibonacci(number -1 ) + fibonacci(number -2);
+               ; }
+               ;
+               ; The parameter is store in the stack. The parameter is not the 
+               ; in the stack, because when we do a call, the return address is
+               ; the stack. 
+               ; The value is return in the "result" variable.
+               ;---------------------------------------------------------------
+               
+               fibonacci:
+18 *24   F700  	swap			; swap ac with sp
+19 *25   103C      	st    	sp		; store the value of sp (stack pointer) in the v
+1A *26   F700      	swap           		; swap ac with sp for restablish the corre
+1B *27   003C      	ld    	sp		; load sp
+1C *28   2037      	add	@1		; add 1 to sp to get the address where the paramete
+1D *29   F100      	ldi   			; load the value that is being pointed by sp + 1
+1E *30   1039      	st   	number		; store the value in number
+1F *31   C023  	jz    	base		; if it's ZERO, jump to base
+20 *32   3037      	sub   	@1		; subtract 1 to number
+21 *33   C023      	jz    	base		; if it's ZERO, jump to base
+22 *34   9026      	ja    	general		; jump to general
+               
+               base:				; BASE CASE
+23 *35   0039      	ld    	number		; load the value of number
+24 *36   103D      	st    	result		; the result is stored in result
+25 *37   F000      	ret       		; return to the caller
+               
+               general:			; GENERAL CASE
+26 *38   0039      	ld   	number		; load the number
+27 *39   3037      	sub    	@1		; subtract 1 to number
+28 *40   F300      	push			; push the number in the stack
+29 *41   E018      	call    fibonacci	; call fibonacci
+2A *42   F400      	pop            		; pop the number we passed as parameter
+2B *43   3037      	sub    	@1		; subtract 1 to the number again
+2C *44   103E      	st    	tmp   		; store the value in tmp
+2D *45   003D      	ld    	result		; load result
+2E *46   F300      	push			; push the value of result in the stack ( the result
+2F *47   003E      	ld    	tmp		; load tmp
+30 *48   F300      	push			; push the value of tmp in the stack ( number -2 )
+31 *49   E018      	call    fibonacci	; call fibonacci
+32 *50   F400      	pop			; pop the parameter of the function
+33 *51   F400      	pop			; pop the value of the result of fibonacci(number-1)
+34 *52   203D      	add    	result        	; add the value of result ( fibonacc
+35 *53   103D      	st  	result		; store the result
+36 *54   F000      	ret       		; resturn to the caller
+                  
+37 *55   0001  @1:    	dw	1
+38 *56   0002  @2:   	dw    	2
+39 *57   0000  number:	dw    	0
+3A *58   0000  counter:dw    	0
+3B *59   0000  index:	dw    	0
+3C *60   0000  sp:    	dw    	0
+3D *61   0000  result:	dw    	0
+3E *62   0000  tmp:	dw    	0
+3F *63   0048  msg:	dw    	"How many FIBONACCI numbers do you want to print?"
+40 *64   006F
+41 *65   0077
+42 *66   0020
+43 *67   006D
+44 *68   0061
+45 *69   006E
+46 *70   0079
+47 *71   0020
+48 *72   0046
+49 *73   0049
+4A *74   0042
+4B *75   004F
+4C *76   004E
+4D *77   0041
+4E *78   0043
+4F *79   0043
+50 *80   0049
+51 *81   0020
+52 *82   006E
+53 *83   0075
+54 *84   006D
+55 *85   0062
+56 *86   0065
+57 *87   0072
+58 *88   0073
+59 *89   0020
+5A *90   0064
+5B *91   006F
+5C *92   0020
+5D *93   0079
+5E *94   006F
+5F *95   0075
+60 *96   0020
+61 *97   0077
+62 *98   0061
+63 *99   006E
+64 *100  0074
+65 *101  0020
+66 *102  0074
+67 *103  006F
+68 *104  0020
+69 *105  0070
+6A *106  0072
+6B *107  0069
+6C *108  006E
+6D *109  0074
+6E *110  003F
+6F *111  0000
+70 *112  ========= end of fibonacci.mas ==========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ for_numbers               6           13 
+ printBlank                15          C  
+ fibonacci                 18          8   29  31 
+ base                      23          1F  21 
+ general                   26          22 
+ @1                        37          E   11  1C  20  27 
+                                       2B 
+ @2                        38         
+ number                    39          1E  23  26 
+ counter                   3A          3   10  12 
+ index                     3B          6   D   F  
+ sp                        3C          19  1B 
+ result                    3D          A   24  2D  34  35 
+ tmp                       3E          2C  2F 
+ msg                       3F          0  
+
+Input file   = fibonacci.mas
+Output file  = fibonacci.mac
+List file    = fibonacci.lst 
+Number base  = decimal
+Label status = case sensitive

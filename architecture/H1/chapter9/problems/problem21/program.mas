@@ -1,0 +1,71 @@
+;--------------------------------------------------------------------------
+; Translate the program 9.21 to assembly language.
+;--------------------------------------------------------------------------
+
+;--------------------------
+; void f(int &m)
+;--------------------------
+
+@f$ri:	ldc	msg	; cout << "enter\n";
+	sout
+
+	din		; cin >> x >> y;
+	st	x
+	din
+	st	y
+
+	ld	x	; m = x;
+	push
+	ldr	2
+	sti
+
+	ld	x	; if(x != y)
+	sub	y
+	jz	en
+
+	aloc	1	; int tmp = x + y;
+	ld	x
+	add	y
+	str	0
+	
+	swap		; f(tmp);
+	st	sp_save	; save the address of tmp
+	swap
+	ld	sp_save
+	push	
+	call	@f$ri
+	dloc	1	
+
+	dloc	1	; deallocate tmp
+
+en:	ldr	1	; cout << m << endl;
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	ret
+
+;-----------------------------
+; int main()
+;-----------------------------
+main:	ldc	3	; int tmp = 3;
+	push
+	
+	swap		; f(tmp);
+	st	sp_save	; save the address of tmp
+	swap
+	ld	sp_save
+	push
+	call	@f$ri
+	dloc	1
+
+	halt
+	end main
+
+; Global variables
+
+x:	dw	0
+y:	dw	0
+msg:	dw	"enter\n"
+sp_save:	dw	0

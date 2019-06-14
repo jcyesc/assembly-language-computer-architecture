@@ -1,0 +1,28 @@
+;-----------------------------------------------------------------
+; Translate the program 8.58 to assembly language.
+;-----------------------------------------------------------------
+
+main:
+	ja expr
+		
+body:	ldc	msg	; cout << "hello\n";
+	sout	
+
+expr:	ldc	1	; ++x + 2 < 20
+	add	x
+	st	x
+	add	@2
+	st	tmp
+	ldc	20
+	sub	tmp
+	jnz	body
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	1		; x = 1;
+msg:	dw	"hello\n"
+@2:	dw	2
+tmp:	dw	0

@@ -1,0 +1,41 @@
+; #3546
+:The numbers should be listed in order of first occurrence.
+;The display should look exactly like this (with the data from
+;the test cases replacing the numbers):
+;Enter number: 1
+;Enter number: 1
+;   .
+;   .
+;   .
+;Enter number: 1
+;List of numbers without repeats
+;1
+n
+o
+ln
+g
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+o
+g
+5
+2
+2
+-3
+-3
+10
+5
+-3
+5
+10
+SD
+q
+

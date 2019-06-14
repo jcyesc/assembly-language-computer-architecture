@@ -1,0 +1,114 @@
+;------------------------------------------------------
+; Translate the program 7.40 to assembly language
+;------------------------------------------------------
+
+;-----------------------
+; void f(int x, int y)
+;-----------------------
+
+f:	aloc	1	; int p, q=8;	
+	aloc	1
+	ldc	8
+	str	0
+	
+	ldr	0	; p = q++;
+	str	1
+	ldr	0
+	add	@1
+	str	0	
+
+	ld	@s0_t	; s = t++;
+	st	@s0_s
+	add	@1
+	st	@s0_t
+	
+	ldr	4	; x = ++y;
+	add	@1
+	str	4
+	str	3	
+
+	ldr	1	; cout << p << " " << q << " " << s << " " << t << endl;
+	dout
+	ldc	msg
+	sout
+	ldr	0
+	dout
+	ldc	msg
+	sout
+	ld	@s0_s
+	dout
+	ldc	msg
+	sout
+	ld	@s0_t
+	dout
+	ldc	'\n'
+	aout
+
+	dloc	2
+
+	ret
+
+;-------------------------
+; main()
+;-------------------------
+
+main:	ldc	5	; z = 5;
+	st	z	
+
+	ld	y	; f(x, y);
+	push	
+	ld	x
+	push
+	call	f
+	dloc	2
+
+	ld	x	; cout << x << " " << y << " " << z << endl
+	dout
+	ldc	msg
+	sout
+	ld	y
+	dout
+	ldc	msg
+	sout
+	ld	z
+	dout
+	ldc	'\n'
+	aout
+
+	ld	x	; f(y, x);
+	push
+	ld	y
+	push
+	call	f
+	dloc	2
+	
+	ld      x       ; cout << x << " " << y << " " << z << endl 
+        dout
+        ldc     msg
+        sout
+        ld      y
+        dout
+        ldc     msg
+        sout
+        ld      z
+        dout
+        ldc     '\n'
+        aout		
+		
+	halt
+
+	end main	
+
+; GLOBAL VARIABLES
+
+x:	dw	0
+y:	dw	5
+z:	dw	0
+
+@s0_s:	dw	0
+@s0_t:	dw	17
+@1:	dw	1
+msg:	dw	" "
+
+
+

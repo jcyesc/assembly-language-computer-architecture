@@ -1,0 +1,18 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 20:16:20 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               &
+0  *0    8041  ldc    'A'
+1  *1    1BBB  st     3003
+               ;st     3003
+               ;st     3003
+2  *2    FFFF  halt
+3  *3    ========= end of mapped_memory.mas ======================
+
+Input file   = mapped_memory.mas
+Output file  = mapped_memory.mac
+List file    = mapped_memory.lst 
+Number base  = decimal
+Label status = case sensitive

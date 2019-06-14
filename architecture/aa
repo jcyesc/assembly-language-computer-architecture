@@ -1,0 +1,8 @@
+if test "$1" = "" 
+then
+echo Error: File name not specified
+echo Format: aa masfilename_less_extension
+elif mas $1              
+then
+sim -a $1 $2 $3 $4 $5 $6 $7 $8 $9
+fi

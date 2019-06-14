@@ -1,0 +1,515 @@
+echo =======================================================
+echo This shell script compares the model version of linv1
+echo with the student-written version.  The first two
+echo test cases should work without errors.  The remaining
+echo test cases have errors for which the two linkers
+echo should produce similar error messages. 
+echo =======================================================
+echo Hit ENTER to assemble test cases with mas
+read junk
+
+if test "$1" = "java"
+then
+if test -f linv1.class
+then
+echo
+else
+echo ERROR: Student version of linv1 \(linv1.class\) not found
+exit
+fi
+else
+if test -f linv1
+then
+echo
+else
+echo ERROR: Student version of linv1 not found
+exit
+fi
+fi
+if  test -f linv1m
+then
+echo
+else
+echo ERROR: Model version of linv1 \(linv1m\) not found
+exit
+fi
+
+if mas /n lmod1
+then
+echo
+else
+echo ERROR: bad test case--check lmod1.mas
+exit
+fi
+
+if mas /n lmod2
+then
+echo
+else
+echo ERROR: bad test case--check lmod2.mas
+exit
+fi
+
+if mas /n lmod3
+then
+echo
+else
+echo ERROR: bad test case--check lmod3.mas
+exit
+fi
+
+if mas /n lmod4
+then
+echo
+else
+echo ERROR: bad test case--check lmod4.mas
+exit
+fi
+
+if mas /n lmod5
+then
+echo
+else
+echo ERROR: bad test case--check lmod5.mas
+exit
+fi
+
+if mas /n lmod6
+then
+echo
+else
+echo ERROR: bad test case--check lmod6.mas
+exit
+fi
+
+if mas /n lmod7
+then
+echo
+else
+echo ERROR: bad test case--check lmod7.mas
+exit
+fi
+
+if mas /n lmod8
+then
+echo
+else
+echo ERROR: bad test case--check lmod8.mas
+exit
+fi
+
+if mas /n lmod9
+then
+echo
+else
+echo ERROR: bad test case--check lmod9.mas
+exit
+fi
+
+if mas /n lmod10
+then
+echo
+else
+echo ERROR: bad test case--check lmod10.mas
+exit
+fi
+
+if mas /n lmod11
+then
+echo
+else
+echo ERROR: bad test case--check lmod11.mas
+exit
+fi
+
+if mas /n lmod12
+then
+echo
+else
+echo ERROR: bad test case--check lmod12.mas
+exit
+fi
+
+if mas /n lmod13
+then
+echo
+else
+echo ERROR: bad test case--check lmod13.mas
+exit
+fi
+
+if mas /n lmod16
+then
+echo
+else
+echo ERROR: bad test case--check lmod16.mas
+exit
+fi
+
+if mas /n lmod17
+then
+echo
+else
+echo ERROR: bad test case--check lmod17.mas
+exit
+fi
+
+if mas /n lmod18
+then
+echo
+else
+echo ERROR: bad test case--check lmod18.mas
+exit
+fi
+
+
+
+echo =======================================================
+echo Hit ENTER to start testing
+read junk
+
+echo ===== lmod1, lmod2 ====================================
+if linv1m lmod1 lmod2
+then
+echo
+else
+echo ERROR: linv1m failure on lmod1, lmod2
+echo        Check linv1m, lmod1, and lmod2
+exit
+fi
+
+mycopy lmod1.mac savemac
+rm lmod1.mac
+echo -----
+
+if $1 linv1 lmod1 lmod2
+then 
+echo -----
+if myfc lmod1.mac savemac
+then
+echo lmod1, lmod2 ok
+else
+echo -----
+echo ERROR: linv1m/linv1 discrepancy on lmod1 and lmod2
+fi
+else
+echo -----
+echo ERROR: linv1 link of lmod1 and lmod2 failed
+fi
+if test -f lmod1.mac
+then
+rm lmod1.mac
+fi
+if test -f savemac
+then
+rm savemac
+fi
+
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+echo ===== lmod3, lmod4 ====================================
+mycopy lmod4.mob x.y
+if linv1m ./lmod3 x.y
+then
+echo
+else
+echo ERROR: linv1m failure on lmod3, lmod4
+echo        Check linv1m, lmod3, and lmod4
+exit
+fi
+
+mycopy lmod3.mac savemac
+rm lmod3.mac
+echo -----
+if $1 linv1 ./lmod3 x.y
+then 
+echo -----
+if myfc lmod3.mac savemac
+then
+echo lmod3, lmod4 ok
+else
+echo -----
+echo ERROR: linv1m/linv1 discrepancy on lmod3 and lmod3
+fi
+else
+echo -----
+echo ERROR: linv1 link of lmod3 and lmod4 failed
+fi
+if test -f lmod3.mac
+then
+rm lmod3.mac
+fi
+if test -f savemac
+then
+rm savemac
+fi
+if test -f x.y
+then
+rm x.y
+fi
+
+echo =======================================================
+echo =======================================================
+echo Test cases with errors now follow.
+echo The error messages from the two linkers should be similar.
+echo Hit enter to continue
+read junk
+
+
+echo ===== lmod5, lmod6 ====================================
+linv1m lmod5 lmod6
+echo -----
+if $1 linv1 lmod5 lmod6
+then
+echo ERROR: linv1 should return a bad return code on lmod5, lmod6
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+
+echo ===== lmod7, lmod8, lmod 9 ============================
+linv1m lmod7 lmod8 lmod9
+echo -----
+if $1 linv1 lmod7 lmod8 lmod9
+then
+echo ERROR: linv1 should return a bad return code on lmod7, lmod8, lmod9
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+echo ===== lmod10, lmod11 ==================================
+linv1m lmod10 lmod11
+echo -----
+if $1 linv1 lmod10 lmod11
+then
+echo ERROR: linv1 should return a bad return code on lmod10, lmod11
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+echo ===== lmod12, lmod13 ==================================
+linv1m lmod12 lmod13
+echo -----
+if $1 linv1 lmod12 lmod13
+then
+echo ERROR: linv1 should return a bad return code on lmod12, lmod13
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+echo ===== lmod14, lmod15 ==================================
+linv1m lmod14 lmod15
+echo -----
+if $1 linv1 lmod14 lmod15
+then
+echo ERROR: linv1 should return a bad return code on lmod14, lmod15
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+echo ===== lmod16 ==========================================
+linv1m lmod16
+echo -----
+if $1 linv1 lmod16
+then
+echo ERROR: linv1 should return a bad return code on lmod16
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+echo ===== lmod17 ==========================================
+linv1m lmod17
+echo -----
+if $1 linv1 lmod17
+then
+echo ERROR: linv1 should return a bad return code on lmod17
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+echo ===== lmod18 ==========================================
+linv1m lmod18
+echo -----
+if $1 linv1 lmod18
+then
+echo ERROR: linv1 should return a bad return code on lmod18
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+echo ===== no module specified on command line =============
+linv1m
+echo -----
+if $1 linv1
+then
+echo ERROR: linv1 should return a bad return code
+fi
+echo =======================================================
+echo Hit enter to continue
+read junk
+
+
+echo ===== non-existent input module =======================
+if test -f garbage.ggg
+then
+rm garbage.ggg
+fi
+linv1m garbage.ggg
+echo -----
+if $1 linv1 garbage.ggg
+then
+echo ERROR: linv1 should return a bad return code
+fi
+echo =======================================================
+echo Hit enter to finish
+read junk
+
+
+
+if test -f x.y
+then
+rm x.y
+fi
+if test -f savemac
+then
+rm savemac
+fi
+if test -f lmod1.mob
+then
+rm lmod1.mob
+fi
+if test -f lmod2.mob
+then
+rm lmod2.mob
+fi
+if test -f lmod3.mob
+then
+rm lmod3.mob
+fi
+if test -f lmod4.mob
+then
+rm lmod4.mob
+fi
+if test -f lmod5.mob
+then
+rm lmod5.mob
+fi
+if test -f lmod6.mob
+then
+rm lmod6.mob
+fi
+if test -f lmod7.mob
+then
+rm lmod7.mob
+fi
+if test -f lmod8.mob
+then
+rm lmod8.mob
+fi
+if test -f lmod9.mob
+then
+rm lmod9.mob
+fi
+if test -f lmod10.mob
+then
+rm lmod10.mob
+fi
+if test -f lmod11.mob
+then
+rm lmod11.mob
+fi
+if test -f lmod12.mob
+then
+rm lmod12.mob
+fi
+if test -f lmod13.mob
+then
+rm lmod13.mob
+fi
+if test -f lmod16.mob
+then
+rm lmod16.mob
+fi
+if test -f lmod17.mob
+then
+rm lmod17.mob
+fi
+if test -f lmod18.mob
+then
+rm lmod18.mob
+fi
+
+if test -f lmod1.mac
+then
+rm lmod1.mac
+fi
+if test -f lmod2.mac
+then
+rm lmod2.mac
+fi
+if test -f lmod3.mac
+then
+rm lmod3.mac
+fi
+if test -f lmod4.mac
+then
+rm lmod4.mac
+fi
+if test -f lmod5.mac
+then
+rm lmod5.mac
+fi
+if test -f lmod6.mac
+then
+rm lmod6.mac
+fi
+if test -f lmod7.mac
+then
+rm lmod7.mac
+fi
+if test -f lmod8.mac
+then
+rm lmod8.mac
+fi
+if test -f lmod9.mac
+then
+rm lmod9.mac
+fi
+if test -f lmod10.mac
+then
+rm lmod10.mac
+fi
+if test -f lmod11.mac
+then
+rm lmod11.mac
+fi
+if test -f lmod12.mac
+then
+rm lmod12.mac
+fi
+if test -f lmod13.mac
+then
+rm lmod13.mac
+fi
+if test -f lmod16.mac
+then
+rm lmod16.mac
+fi
+if test -f lmod17.mac
+then
+rm lmod17.mac
+fi
+if test -f lmod18.mac
+then
+rm lmod18.mac
+fi

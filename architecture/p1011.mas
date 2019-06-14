@@ -1,0 +1,7 @@
+            ld     x
+            public x
+            add    y
+            extern y
+            end    25
+        x:  st     6
+            halt

@@ -1,0 +1,14 @@
+; #838c
+;Use p619.has for you microcode
+;Create config file p619.cfg
+;Insert !p619 at beginning of assembly language program
+;Display should look exactly like this:
+;Sum = 2138
+n
+o
+ln
+g
+SD
+enable
+sd
+q

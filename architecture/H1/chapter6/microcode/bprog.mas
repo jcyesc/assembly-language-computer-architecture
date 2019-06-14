@@ -1,0 +1,39 @@
+	!b		bprog.mas
+start:	ld	x	; load from x
+	flip		; flip bits in ac
+	addc	3	; add the constant 3
+	mult	y	; multiply ac by y
+	st	z	; store product in z
+	shll	2	; shift left logical 2
+	shrl	2	; shift right logical 2
+	jn	start	; jump if ac is negative
+	dout		; output ac in decimal
+	halt
+x:	dw	-1
+y:	dw	2
+z:	dw	0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,101 @@
+Machine-level Assembler Version 6.1    Sun Mar  8 17:23:33 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Program in assembler of the program 7.32
+               ;---------------------------------------------------------------
+               
+0  *0    F501  f:  aloc 1	; int y = 3
+1  *1    8003      ldc	 3
+2  *2    5000      str  0
+                   
+3  *3    F501      aloc 1	; int z = 5;
+4  *4    8005      ldc  5
+5  *5    5000      str  0
+               
+6  *6    0030      ld 	 @s0_x	; cout << x << " " << y << " " << z << endl;
+7  *7    FFFD      dout
+8  *8    8032      ldc  @msg
+9  *9    FFF7      sout
+A  *10   4001      ldr  1
+B  *11   FFFD      dout
+C  *12   8032      ldc  @msg
+D  *13   FFF7      sout
+E  *14   4000      ldr  0
+F  *15   FFFD      dout
+10 *16   800A      ldc  '\n'
+11 *17   FFFB      aout
+               
+12 *18   8001      ldc  1	; x = 1
+13 *19   1030      st   @s0_x
+                   
+14 *20   8001      ldc  1	; y = 2
+15 *21   5001      str  1
+               
+16 *22   8003      ldc  3	; z = 3
+17 *23   5000      str  0
+               
+18 *24   F602      dloc 2	; release the memory		
+19 *25   F000      ret		; return to the calling function
+               
+1A *26   F501  g:  aloc 1	; int y = 50
+1B *27   8032      ldc  50
+1C *28   5000      str  0
+               
+1D *29   0031      ld   @s1_x	; cout << x << " " << y << endl; 
+1E *30   FFFD      dout
+1F *31   8032      ldc  @msg
+20 *32   FFF7      sout 
+21 *33   4000      ldr  0
+22 *34   FFFD      dout
+23 *35   800A      ldc  '\n'
+24 *36   FFFB      aout
+               
+25 *37   8016      ldc  22	; y = 22
+26 *38   5000      str  0
+27 *39   4000      ldr  0
+28 *40   1031      st	 @s1_x
+                  
+29 *41   F601      dloc 1	; release the memory
+2A *42   F000      ret		; return to the calling function
+               
+               main:
+2B *43   E000      call f
+2C *44   E000      call f
+2D *45   E01A      call g
+2E *46   E01A      call g
+                   
+2F *47   FFFF      halt	; end of the program
+                   end main
+               
+               
+               
+               ; VARIABLES
+               
+30 *48   0002  @s0_x:	dw 2	 ; static local variable x at f()
+31 *49   002C  @s1_x:	dw 44	 ; static local variable x at g()
+               
+32 *50   0020  @msg:	dw " "
+33 *51   0000
+34 *52   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           2B  2C 
+ g                         1A          2D  2E 
+ main                      2B          30 
+ @s0_x                     30          6   13 
+ @s1_x                     31          1D  28 
+ @msg                      32          8   C   1F 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

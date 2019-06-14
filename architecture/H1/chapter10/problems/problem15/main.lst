@@ -1,0 +1,36 @@
+Machine-level Assembler Version 6.1    Wed May  6 21:15:56 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; 10.15 What happends when the following program, which consists
+               ; modules, is asseble, linked, and run?
+               ;---------------------------------------------------------------
+               
+               	extern	x
+               	extern	y
+0  *0    0001  ok:	ld	x + 1
+1  *1    2FFF  	add	y - 1
+2  *2    FFFD  	dout
+3  *3    800A  	ldc	'\n'
+4  *4    FFFB  	aout
+5  *5    FFFF  	halt
+               	end	ok
+6  *6    ========= end of main.mas ===============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ ok                        0           6  
+ x                         ext         0   0  
+ y                         ext         0   1  
+
+Input file   = main.mas
+Output file  = main.mob
+List file    = main.lst 
+Number base  = decimal
+Label status = case sensitive

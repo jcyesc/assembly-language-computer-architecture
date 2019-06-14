@@ -1,0 +1,185 @@
+;----------------------------------------------------------
+; Version	: 1.0
+; Created	: 26-december-2008
+; Author	: Juan Carlos Yescas
+; Description	:
+;
+;	Program that reads in 10 decimal numbers and 
+;	displays the largest and smallest.
+;
+;----------------------------------------------------------
+
+main:
+	ldc     msg		; load the address of msg
+	sout  			; String output
+	call    printLine	; call printLine
+	
+capture:
+	ldc     numbers		; load the address of numbers(array)
+	add     index		; add index to the address of numbers
+	st  	address		; store the current address
+	din			; decimal input
+	push			; push the value in the stack
+	ld	address		; load address
+	sti			; store in the address that points "address" the content of the stack
+	ld	index		; load index
+	add	@1		; increment index
+	st      index		; store the value of index
+	sub	@10		; subtract 10 to index to verify if we finish the capture
+	jnz     capture		; if it's no ZERO jump to capture
+	
+	call	printLine	; call printLine
+	call	sort		; call sort
+	
+	; the largest number is the last position (10) and the smallest is in the first position.
+	; SMALLEST
+	ldc	smallest	; load the addres of the smallest
+	sout			; string output
+	ldc	numbers		; load the address of numbers
+	ldi			; load the content that is in the address pointed by ac
+	dout			; decimal output
+	
+	; LARGEST
+	call 	printLine	; call printLine
+	ldc	largest		; load the address of the largest number
+	sout			; string output
+	ldc	numbers		; load the address of numbers
+	add	@9		; add 9 to the address of numbers to get the largest
+	ldi			; load the content that is in the address pointed by ac
+	dout			; decimal input
+	
+	halt			; end of the program
+
+smallest:	dw 	"Smallest -> "
+largest:	dw	"Largest -> "
+
+;----------------------------------------------------------
+; sort()
+;
+; Function that is in charge to sort all the numbers in the
+; array called numbers.
+;
+; The algorith that is used is the bubble sort.
+;----------------------------------------------------------
+sort:
+	ldc     0		; load zero to initializate i
+	st	i		; initialize i to zero
+for_ex: 			; OUTER FOR
+	ld	i		; load i
+	sub	@9		; subtract 9 to verify if we end the iteration
+	jz	end_sort	; if ZERO, jump end_sort
+
+	ldc	0		; load zero to initializate j
+	st	j		; initialize j to zero
+for_in:				; INNER FOR
+	ld	j		; load j
+	sub	@9		; subtract 9 to j to verify if the cycle is ended
+	jz	incr_i		; if ZERO, jump to incr_i
+	
+	ldc	numbers		; load the address of numbers
+	add	j		; add j to the address of numers
+	st	x_add		; store the address of numbers
+	add	@1		; add 1 to the address of numbers
+	st	y_add		; store the address of numbers + 1
+
+	; load the value that is in the address y_add to y
+	ld	y_add		; load the value of y_add, that is an address
+	ldi			; load the value that is in the address
+	st	y		; store the value in y
+	
+	; load the value that is in the address x_add to x
+	ld	x_add		; load the value of x_add, that is an address
+	ldi			; load the value that is in the address
+	st	x		; store the value in x
+		
+	sub	y		; subtract x-y
+	jzop	interchange	; if it's zero or positive, jump to interchange
+	ja	incr_j		; jump to incr_j
+	
+incr_j:
+	; increment j		
+	ld	@1		; load 1
+	add	j		; add 1 to j
+	st	j		; store the value of j
+	ja	for_in		; jump to for_in
+
+interchange:
+	ld	x_add		; load the address that is in x_add
+	ldi			; load the content that is in the address
+	st	tmp		; store the address in tmp
+	ld	y_add		; load the addres that is in y_add
+	ldi			; load the content that is in the address
+	push			; push te value in the stack
+	ld	x_add		; load the address that is in  x_add
+	sti			; store the value that is in the stack in the address that is in ac
+	ld	tmp		; load the value of tmp
+	push			; push the value in the stack
+	ld	y_add		; load the address that is in y_add
+	sti			; store the value that is in the stack in the address that points ac
+	ja	incr_j		; jump to incr_j
+
+incr_i:
+	ld	@1		; load 1
+	add	i		; add 1 to i
+	st	i		; store the new value of i
+	ja	for_ex		; jump to for_ex
+	
+end_sort:	
+	ret			; return to the caller
+
+tmp:	dw 	0
+x:	dw	0
+y: 	dw	0
+x_add:  dw	0
+y_add:	dw	0
+i:	dw  	0
+j:	dw  	0
+
+;----------------------------------------------------------
+; printNumbers()
+;
+; Function that prints the 10 numbers that are in the array
+; numbers.
+;---------------------------------------------------------
+
+printNumbers:
+	ldc	0	; load zero to initialize index
+	st	index	; store zero in index
+	
+printN:	
+	ldc     numbers	; load the address of numbers
+	add	index	; add index to the address
+	ldi		; load the value that is contented in the address
+	dout		; print the value
+	call	printLine ; call printLine
+	ld	index	; load index
+	add	@1	; add 1 to index
+	st	index	; store index
+	sub	@10	; substract 10 to index to figure out if we finish to print
+	jnz	printN	; if the result is no zero, jump to printN
+	ret		; return to the caller
+
+;-------------------------------------------------------------
+; printLine()
+;
+; Print a line feed
+;-------------------------------------------------------------
+printLine:
+	ldc  '\n'	; load the character '\n'
+	aout		; ASCII output
+	ret		; return to the caller
+
+;------------------------------------
+; VARIABLES
+;------------------------------------
+msg:	 dw   "Write ten numbers"
+numbers: dw   10 dup 0
+address: dw   0
+counter: dw   10
+@1:	 dw   1
+@10:	 dw   10
+index:   dw   0
+@9:	 dw   9
+@8:	 dw   8
+msg_unsorted:	dw	"Unsorted numbers"
+msg_sorted:	dw	"Sorted numbers"

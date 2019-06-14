@@ -1,0 +1,9 @@
+            extern sub
+            ldc  0
+            push
+            ldc  msg
+            call sub
+            call sub
+            halt
+     msg:   dw   "Programming is fun"
+            end  0

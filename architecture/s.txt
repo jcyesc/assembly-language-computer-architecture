@@ -1,0 +1,73 @@
+                                                 s.txt
+
+Standard Instruction Set (s.has, s.hor, s.vas, s.ver, s.cfg)
+
+Opcode  Assembly    Name            Description
+(hex)    Form
+
+ 0     ld   x    Load               ac = mem[x];
+ 1     st   x    Store              mem[x] = ac;
+ 2     add  x    Add                ac = ac + mem[x];
+ 3     sub  x    Subtract           ac = ac - mem[x];
+
+ 4     ldr  x    Load relative      ac = mem[sp+x];
+ 5     str  x    Store relative     mem[sp+x] = ac;
+ 6     addr x    Add relative       ac = ac + mem[sp+x];
+ 7     subr x    Subtract relative  ac = ac - mem[sp+x];
+
+ 8     ldc  x    Load constant      ac = x;
+
+ 9     ja   x    Jump always        pc = x;
+ A     jzop x    Jump zero or pos   if (ac >= 0) pc = x;
+ B     jn   x    Jump negative      if (ac < 0)  pc = x;
+ C     jz   x    Jump zero          if (ac == 0) pc = x;
+ D     jnz  x    Jump nonzero       if (ac != 0) pc = x;
+
+ E     call x    Call procedure     mem[--sp] = pc; pc = x;
+ F0    ret       Return             pc = mem[sp++];
+
+ F1    ldi       Load indirect      ac =  mem[ac];
+ F2    sti       Store indirect     mem[ac] = mem[sp++];
+
+ F3    push      Push onto stack    mem[--sp] = ac;
+ F4    pop       Pop from stack     ac = mem[sp++];
+
+ F5    aloc y    Allocate           sp = sp - y;
+ F6    dloc y    Deallocate         sp = sp + y;
+
+ F7    swap      Swap ac, sp        temp = ac; ac = sp; sp = temp;
+
+ FFF5  uout      Unsigned out       Output number in ac reg as
+                                    unsigned decimal number
+
+ FFF6  sin       String input       Input string to address in ac
+ FFF7  sout      String output      Output string pointed to by ac
+
+ FFF8  hin       Hex input          Input hex number to ac register
+ FFF9  hout      Hex output         Output number in ac in hex
+
+ FFFA  ain       ASCII input        Input ASCII char to ac register
+ FFFB  aout      ASCII output       Output ASCII char in ac register
+
+ FFFC  din       Decimal input      Input decimal number (signed
+                                    or unsigned) to ac register
+ FFFD  dout      Decimal output     Output number in ac reg as
+                                    a signed decimal number
+
+ FFFE  bkpt      Breakpoint         Trigger breakpoint
+ FFFF  halt      Halt               Trigger halt
+
+-----------------------------------------------------------------
+Instruction Fields
+
+  x:   12 rightmost bits of instruction, 0 <= x <= 4095 (FFF hex)
+  y:   8  rightmost bits of instruction, 0 <= y <= 255  (FF hex)
+  z:   4  rightmost bits of instruction, 0 <= z <= 15   (F dec)
+
+-----------------------------------------------------------------
+Registers
+
+pc:    program counter register
+sp:    stack pointer register
+ac:    accumulator register
+temp:  designates a work register within the CPU

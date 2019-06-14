@@ -1,0 +1,12 @@
+                         ;                       fpoly.mas
+poly:    ldr    1        ; get parameter to poly
+         push            ; create parameter to square
+         call   square
+         dloc   1        ; remove parameter
+         push            ; create parameter to mult15
+         call   mult15
+         dloc   1        ; remove parameter
+         ret             ; return result
+         public poly
+         extern square
+         extern mult15

@@ -1,0 +1,103 @@
+Machine-level Assembler Version 6.1    Fri May  1 23:31:17 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 9.21 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;--------------------------
+               ; void f(int &m)
+               ;--------------------------
+               
+0  *0    802B  @f$ri:	ldc	msg	; cout << "enter\n";
+1  *1    FFF7  	sout
+               
+2  *2    FFFC  	din		; cin >> x >> y;
+3  *3    1029  	st	x
+4  *4    FFFC  	din
+5  *5    102A  	st	y
+               
+6  *6    0029  	ld	x	; m = x;
+7  *7    F300  	push
+8  *8    4002  	ldr	2
+9  *9    F200  	sti
+               
+A  *10   0029  	ld	x	; if(x != y)
+B  *11   302A  	sub	y
+C  *12   C019  	jz	en
+               
+D  *13   F501  	aloc	1	; int tmp = x + y;
+E  *14   0029  	ld	x
+F  *15   202A  	add	y
+10 *16   5000  	str	0
+               	
+11 *17   F700  	swap		; f(tmp);
+12 *18   1032  	st	sp_save	; save the address of tmp
+13 *19   F700  	swap
+14 *20   0032  	ld	sp_save
+15 *21   F300  	push	
+16 *22   E000  	call	@f$ri
+17 *23   F601  	dloc	1	
+               
+18 *24   F601  	dloc	1	; deallocate tmp
+               
+19 *25   4001  en:	ldr	1	; cout << m << endl;
+1A *26   F100  	ldi
+1B *27   FFFD  	dout
+1C *28   800A  	ldc	'\n'
+1D *29   FFFB  	aout
+               
+1E *30   F000  	ret
+               
+               ;-----------------------------
+               ; int main()
+               ;-----------------------------
+1F *31   8003  main:	ldc	3	; int tmp = 3;
+20 *32   F300  	push
+               	
+21 *33   F700  	swap		; f(tmp);
+22 *34   1032  	st	sp_save	; save the address of tmp
+23 *35   F700  	swap
+24 *36   0032  	ld	sp_save
+25 *37   F300  	push
+26 *38   E000  	call	@f$ri
+27 *39   F601  	dloc	1
+               
+28 *40   FFFF  	halt
+               	end main
+               
+               ; Global variables
+               
+29 *41   0000  x:	dw	0
+2A *42   0000  y:	dw	0
+2B *43   0065  msg:	dw	"enter\n"
+2C *44   006E
+2D *45   0074
+2E *46   0065
+2F *47   0072
+30 *48   000A
+31 *49   0000
+32 *50   0000  sp_save:	dw	0
+33 *51   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$ri                     0           16  26 
+ en                        19          C  
+ main                      1F          29 
+ x                         29          3   6   A   E  
+ y                         2A          5   B   F  
+ msg                       2B          0  
+ sp_save                   32          12  14  22  24 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,16 @@
+; Write, assemble using the sim assembler, and run on sim a program
+; that subtracts the ASCII code for 'A' from the ASCII code for 'a' and stores
+; the result. Your program should also do the same for 'B' and 'b'.
+
+
+	ld   A
+	sub  a
+	dout
+	ld   B
+	sub  b
+	dout
+
+a:	dw   'a'
+A:	dw   'A'
+b:	dw   'b'
+B:	dw   'B'

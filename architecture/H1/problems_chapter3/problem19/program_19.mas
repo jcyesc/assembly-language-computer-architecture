@@ -1,0 +1,14 @@
+; Program that computes the sum of the ASCII
+; codes for the characteres 'A', 'P', and 'Z'.
+	ld   a
+	add  f
+	add  z
+	st   result
+	halt	
+
+; Data area
+a:	dw  'A'
+f:	dw  'F'
+z:	dw  'Z'
+result: dw  0
+

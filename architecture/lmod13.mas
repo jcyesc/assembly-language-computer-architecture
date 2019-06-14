@@ -1,0 +1,6 @@
+         ;                                       lmod13.mas
+         ; Test module for linv1
+         ; Link with lmod12.mas
+         ; Generates link error
+x:       dw     5
+         public x

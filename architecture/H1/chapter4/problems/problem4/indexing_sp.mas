@@ -1,0 +1,33 @@
+; Point the sp register to the first number in the table. On each
+; iteration of the loop, pop the number to be added into the ac register.
+
+	ldc    table
+	swap		; swap is the equal to :  temp = ac; ac = sp; sp = temp;
+loop:	pop
+	add    sum
+	st     sum
+	ld     count
+	sub    @1	; decrement counter
+	st     count
+	jnz    loop	; jump if counter not zero
+	ldc    message	; display sum
+	sout
+	ld     sum
+	dout
+	ldc    '\n'
+	aout
+	halt
+message:dw     "sum = "
+@1:	dw     1
+count:	dw     10
+sum:    dw     0
+table:  dw     56
+	dw     -8
+	dw     444
+	dw     23
+	dw     -233
+	dw     16
+	dw     45
+	dw     -11
+	dw     5
+	dw     7	

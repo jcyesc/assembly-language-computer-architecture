@@ -1,0 +1,53 @@
+;-----------------------------------------------------------------------
+; Translate the program 9.22 to assembly language.
+;-----------------------------------------------------------------------
+
+;-------------------------------------
+; void f(const int &m)
+;-------------------------------------
+
+@f$ri:	ldr	1	; if(m != 0)
+	ldi
+	jz	en
+
+	aloc	1	; int tmp = m - 1;
+	ldr	2
+	ldi
+	sub	@1
+	str	0
+
+	swap		; f(tmp);
+	st	sp_save	; save the address of sp
+	swap
+	ld	sp_save
+	push
+	call	@f$ri
+	dloc	1
+	dloc	1	; deallocate memory of tmp.
+
+en:	ldr	1	; cout << m << endl;
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	ret
+
+;-------------------------------
+; int main()
+;-------------------------------
+
+main:	ldc	x	; f(x);
+	push
+	call	@f$ri
+	dloc	1
+	
+	halt
+	end main
+; Global variables
+
+x:	dw	5
+sp_save:	dw	0
+@1:	dw	1
+
+

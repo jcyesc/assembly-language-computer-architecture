@@ -1,0 +1,8 @@
+	ld   add
+	add  ld
+st	halt
+st:	halt
+add:	dw    2
+ld:	dw    3
+halt:	dw    0
+

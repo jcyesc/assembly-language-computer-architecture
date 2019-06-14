@@ -1,0 +1,23 @@
+                         ;                       fsquare.mas
+square:  aloc   2        ; create local variables sum, odd
+         ldc    0
+         str    1        ; initialize sum to 0
+         ldc    1        ; initialize odd to 1
+         str    0
+loop:    ldr    3        ; get parameter (count)
+         jz     done     ; all done if count = 0
+         sub    @1       ; subtract 1 from count
+         str    3        ; save count
+         ldr    1        ; get sum
+         addr   0        ; add odd to sum
+         str    1        ; save sum
+         ldr    0        ; get odd
+         add    @2       ; add 2 to odd
+         str    0        ; save odd
+         ja     loop
+done:    ldr    1        ; get sum
+         dloc   2        ; deallocate local variable temp
+         ret             ; square returned in ac reg
+@1:      dw     1
+@2:      dw     2
+         public square

@@ -1,0 +1,18 @@
+; #154d
+; use p616.has for you microcode
+; create p616.cfg
+; reassemble sprog with
+;     mas sprog /cp616
+; invoke sim with
+;     sim sprog /mp616 /ap616
+; do same for vertical case
+; invoke sim with
+;     sim sprog /mp616.ver /ap616
+n 
+o
+ln
+g
+SD
+enable
+sd
+q

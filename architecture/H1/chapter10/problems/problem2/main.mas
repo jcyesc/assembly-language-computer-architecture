@@ -1,0 +1,15 @@
+;-------------------------------------------------------------------------------------------
+; Problem 10.2
+;
+; Create a program that consists of three separately assembled modules: main, b, and
+; c. main calls b, b calls c, and c displays "in c". Assemble, link, and run your program
+; in sim.
+;-------------------------------------------------------------------------------------------
+
+
+main:	call b;
+
+	halt
+	end main
+	extern b	; b is external
+

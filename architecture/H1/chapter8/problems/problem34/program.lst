@@ -1,0 +1,159 @@
+Machine-level Assembler Version 6.1    Sun Apr  5 14:47:03 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Program 8.34
+               ;
+               ; Write and run an assembly language program that displays "TRUE
+               ; "FALSE" depending of the value of x >= y, where x and y are si
+               ; Test your code with the following(x, y) hex pairs: (7FFF, FFFF
+               ; (7FFF, 0001), and (8000, FFFF).
+               ;---------------------------------------------------------------
+               
+0  *0    8013  main:	ldc	msg_x	; cout << "Give the value of x HEX: ";
+1  *1    FFF7  	sout
+               
+2  *2    FFF8  	hin		; cin >> x;
+3  *3    1011  	st	x
+               	
+4  *4    8030  	ldc	msg_y	; cout << "Give the value of y HEX: ";
+5  *5    FFF7  	sout
+               	
+6  *6    FFF8  	hin		; cin >> y
+7  *7    1012  	st	y
+               
+8  *8    0011  	ld	x	;(x >= y)
+9  *9    3012  	sub	y
+A  *10   A00E  	jzop	true
+               
+B  *11   805D  	ldc	msg_f
+C  *12   FFF7  	sout
+D  *13   9010  	ja	end_p	
+               true:
+E  *14   804D  	ldc	msg_t
+F  *15   FFF7  	sout	
+               
+10 *16   FFFF  end_p:	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+11 *17   0000  x: 	dw	0
+12 *18   0000  y:	dw	0
+               
+13 *19   0047  msg_x:	dw	"Give the value of x in HEX: "
+14 *20   0069
+15 *21   0076
+16 *22   0065
+17 *23   0020
+18 *24   0074
+19 *25   0068
+1A *26   0065
+1B *27   0020
+1C *28   0076
+1D *29   0061
+1E *30   006C
+1F *31   0075
+20 *32   0065
+21 *33   0020
+22 *34   006F
+23 *35   0066
+24 *36   0020
+25 *37   0078
+26 *38   0020
+27 *39   0069
+28 *40   006E
+29 *41   0020
+2A *42   0048
+2B *43   0045
+2C *44   0058
+2D *45   003A
+2E *46   0020
+2F *47   0000
+30 *48   0047  msg_y:	dw	"Give the value of y in HEX: "
+31 *49   0069
+32 *50   0076
+33 *51   0065
+34 *52   0020
+35 *53   0074
+36 *54   0068
+37 *55   0065
+38 *56   0020
+39 *57   0076
+3A *58   0061
+3B *59   006C
+3C *60   0075
+3D *61   0065
+3E *62   0020
+3F *63   006F
+40 *64   0066
+41 *65   0020
+42 *66   0079
+43 *67   0020
+44 *68   0069
+45 *69   006E
+46 *70   0020
+47 *71   0048
+48 *72   0045
+49 *73   0058
+4A *74   003A
+4B *75   0020
+4C *76   0000
+               
+4D *77   0078  msg_t:	dw	"x >= y is TRUE\n"
+4E *78   0020
+4F *79   003E
+50 *80   003D
+51 *81   0020
+52 *82   0079
+53 *83   0020
+54 *84   0069
+55 *85   0073
+56 *86   0020
+57 *87   0054
+58 *88   0052
+59 *89   0055
+5A *90   0045
+5B *91   000A
+5C *92   0000
+5D *93   0078  msg_f:	dw	"x >= y is FALSE\n"
+5E *94   0020
+5F *95   003E
+60 *96   003D
+61 *97   0020
+62 *98   0079
+63 *99   0020
+64 *100  0069
+65 *101  0073
+66 *102  0020
+67 *103  0046
+68 *104  0041
+69 *105  004C
+6A *106  0053
+6B *107  0045
+6C *108  000A
+6D *109  0000
+6E *110  ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           11 
+ true                      E           A  
+ end_p                     10          D  
+ x                         11          3   8  
+ y                         12          7   9  
+ msg_x                     13          0  
+ msg_y                     30          4  
+ msg_t                     4D          E  
+ msg_f                     5D          B  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

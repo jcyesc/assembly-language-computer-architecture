@@ -1,0 +1,72 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 14:44:20 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------
+               ;main module -- illustrates call instruction
+               ;---------------------------------------------------
+0  *0    E00C  	call   f1
+1  *1    8005  ret1:	ldc    msgmain
+2  *2    FFF7  	sout
+3  *3    E014  	call   f2
+4  *4    FFFF  ret2:	halt
+5  *5    006D  msgmain:dw     "middle"
+6  *6    0069
+7  *7    0064
+8  *8    0064
+9  *9    006C
+A  *10   0065
+B  *11   0000
+               
+               
+               ;------------------------------
+               ; f1 function
+               ;
+               ; outputs string "left"
+               ;------------------------------
+C  *12   800F   f1: 	ldc   msgf1
+D  *13   FFF7  	sout
+E  *14   F000  	ret
+F  *15   006C  msgf1:	dw   "left"
+10 *16   0065
+11 *17   0066
+12 *18   0074
+13 *19   0000
+               
+               ;-----------------------------
+               ; f2 function
+               ; 
+               ; outputs string "right\n"
+               ;-----------------------------
+14 *20   8017  f2:    	ldc   msgf2
+15 *21   FFF7  	sout
+16 *22   F000  	ret
+17 *23   0072  msgf2:  dw    "right\n"
+18 *24   0069
+19 *25   0067
+1A *26   0068
+1B *27   0074
+1C *28   000A
+1D *29   0000
+1E *30   ========= end of main.mas ===============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ ret1                      1          
+ ret2                      4          
+ msgmain                   5           1  
+ f1                        C           0  
+ msgf1                     F           C  
+ f2                        14          3  
+ msgf2                     17          14 
+
+Input file   = main.mas
+Output file  = main.mac
+List file    = main.lst 
+Number base  = decimal
+Label status = case sensitive

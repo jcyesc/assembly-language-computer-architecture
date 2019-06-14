@@ -1,0 +1,37 @@
+Machine-level Assembler Version 6.1    Wed Dec 17 23:26:00 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Program that computes the sum of the ASCII
+               ; codes for the characteres 'A', 'P', and 'Z'.
+0  *0    0005  	ld   a
+1  *1    2006  	add  f
+2  *2    2007  	add  z
+3  *3    1008  	st   result
+4  *4    FFFF  	halt	
+               
+               ; Data area
+5  *5    0041  a:	dw  'A'
+6  *6    0046  f:	dw  'F'
+7  *7    005A  z:	dw  'Z'
+8  *8    0000  result: dw  0
+               
+9  *9    ========= end of program_19.mas =========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ a                         5           0  
+ f                         6           1  
+ z                         7           2  
+ result                    8           3  
+
+Input file   = program_19.mas
+Output file  = program_19.mac
+List file    = program_19.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,18 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 15:18:47 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               &		; configure H1 for memory-mapped I/O
+0  *0    0BBA  ld    3002	; get status word from display monitor
+1  *1    C000  jz    * - 1	; if 0 (not ready), try again
+2  *2    8041  ldc   'A'	; get 'A'
+3  *3    1BBB  st    3003	; store in data word for display monitor
+4  *4    FFFF  halt
+5  *5    ========= end of monitor.mas ============================
+
+Input file   = monitor.mas
+Output file  = monitor.mac
+List file    = monitor.lst 
+Number base  = decimal
+Label status = case sensitive

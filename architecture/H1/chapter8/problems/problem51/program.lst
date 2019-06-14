@@ -1,0 +1,188 @@
+Machine-level Assembler Version 6.1    Sun Mar 29 07:42:43 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.51 to assembly language.
+               ;	
+               ;	Note: This program has a problem, it couldn't work well if
+               ;		more than two process use it, because in the function
+               ;		f() I use two global variables "b" and "pi" to calculate
+               ;		the address of the pointers instead of local variables.
+               ;
+               ;		But this shows me why it's better to use local variables.
+               ;
+               ;---------------------------------------------------------------
+               
+               ;-----------------------------
+               ; void f()
+               ;-----------------------------
+               
+0  *0    F50A  @f$v:	aloc	10	; int b[10]
+1  *1    F700  	swap
+2  *2    107C  	st	b	; initial address of b.
+3  *3    F700  	swap
+               	
+4  *4    F506  	aloc	6	; int *p, *q, *r, *s, *t, *u;
+5  *5    F700  	swap
+6  *6    107D  	st	pi	; initial address of the pointers.
+7  *7    F700  	swap
+               	
+8  *8    8068  	ldc	a	; p = a;
+9  *9    F300  	push
+A  *10   007D  	ld	pi	; get the address of p
+B  *11   F200  	sti		; store the address of a in p
+               
+C  *12   007C  	ld	b	; q = b;
+D  *13   F300  	push
+E  *14   007D  	ld	pi	
+F  *15   2080  	add	@1	; get the address of q
+10 *16   F200  	sti		; store  b in q
+               	
+11 *17   8072  	ldc	s0_c	; r = c;
+12 *18   F300  	push
+13 *19   007D  	ld	pi
+14 *20   2081  	add	@2	; get the address of r
+15 *21   F200  	sti
+               	
+16 *22   800A  	ldc	10	; *p = 10;
+17 *23   F300  	push
+18 *24   007D  	ld	pi	; load the address that is stored in pi
+19 *25   F100  	ldi		; load the address that is being pointed by p
+1A *26   F200  	sti
+               
+1B *27   800B  	ldc	11	; *q = 11;		
+1C *28   F300  	push
+1D *29   007D  	ld	pi	; load the address that is stored in pi
+1E *30   2080  	add	@1	; get the address of g
+1F *31   F100  	ldi		; load the address that is being pointed by g
+20 *32   F200  	sti		
+               
+21 *33   800C  	ldc	12	; *r = 12
+22 *34   F300  	push
+23 *35   007D  	ld	pi	; load the address that is store in pi
+24 *36   2081  	add	@2	; get the address of r
+25 *37   F100  	ldi		; load the address that is being pointed by r
+26 *38   F200  	sti
+               
+27 *39   806B  	ldc	a + 3	; s = &a[3];
+28 *40   F300  	push
+29 *41   8003  	ldc	3	; calculate the address of s.
+2A *42   207D  	add	pi
+2B *43   F200  	sti
+               
+2C *44   8003  	ldc	3	; t = &b[3];
+2D *45   207C  	add	b
+2E *46   F300  	push
+2F *47   8004  	ldc	4	; get the address of t
+30 *48   207D  	add	pi
+31 *49   F200  	sti
+               
+32 *50   8075  	ldc	s0_c + 3	; u = &c[3];
+33 *51   F300  	push
+34 *52   8005  	ldc	5	; get the address of u
+35 *53   207D  	add	pi
+36 *54   F200  	sti
+               
+37 *55   8001  	ldc	1	; *s = 1;
+38 *56   F300  	push
+39 *57   8003  	ldc	3	; get the address of s
+3A *58   207D  	add	pi
+3B *59   F100  	ldi		; get the address that is being pointed by s
+3C *60   F200  	sti
+               
+3D *61   8002  	ldc	2	; *t = 2;
+3E *62   F300  	push
+3F *63   8004  	ldc	4	; get the address of t
+40 *64   207D  	add	pi
+41 *65   F100  	ldi		; get the address that is being pointed by t
+42 *66   F200  	sti
+               
+43 *67   8003  	ldc	3	; *u = 3;
+44 *68   F300  	push
+45 *69   8005  	ldc	5	; get the address of u
+46 *70   207D  	add	pi
+47 *71   F100  	ldi		; get the address that is being pointed by u
+48 *72   F200  	sti
+               
+49 *73   0068  	ld	a	; cout << a[0] << " " << a[3] << endl;
+4A *74   FFFD  	dout
+4B *75   807E  	ldc	msg
+4C *76   FFF7  	sout
+4D *77   006B  	ld	a + 3
+4E *78   FFFD  	dout
+4F *79   800A  	ldc	'\n'
+50 *80   FFFB  	aout
+               
+51 *81   007C  	ld	b	; cout << b[0] << " " << b[3] << endl;
+52 *82   F100  	ldi
+53 *83   FFFD  	dout
+54 *84   807E  	ldc	msg
+55 *85   FFF7  	sout
+56 *86   8003  	ldc	3
+57 *87   207C  	add	b
+58 *88   F100  	ldi
+59 *89   FFFD  	dout
+5A *90   800A  	ldc	'\n'
+5B *91   FFFB  	aout
+               
+5C *92   0072  	ld	s0_c	; cout << c[0] << " " << c[3] << endl;
+5D *93   FFFD  	dout
+5E *94   807E  	ldc	msg
+5F *95   FFF7  	sout
+60 *96   0075  	ld	s0_c + 3
+61 *97   FFFD  	dout
+62 *98   800A  	ldc	'\n'
+63 *99   FFFB  	aout
+               
+64 *100  F610  	dloc	16	; release the memory
+               
+65 *101  F000  	ret		; return to the calling function
+               
+               ;----------------------------
+               ; main()
+               ;----------------------------
+               
+66 *102  E000  main:	call	@f$v	; f();
+               
+67 *103  FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+68 *104  0000  a:	dw	10 dup 0	; int a[10];
+72 *114  0000  s0_c:	dw	10 dup 0	; static int c[10]
+7C *124  0000  b:	dw	0		; store the address of b
+7D *125  0000  pi:	dw	0		; store the address of the pointers
+7E *126  0020  msg:	dw	" "
+7F *127  0000
+80 *128  0001  @1:	dw	1
+81 *129  0002  @2:	dw	2
+               
+               
+82 *130  ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$v                      0           66 
+ main                      66          68 
+ a                         68          8   27  49  4D 
+ s0_c                      72          11  32  5C  60 
+ b                         7C          2   C   2D  51  57 
+ pi                        7D          6   A   E   13  18 
+                                       1D  23  2A  30  35 
+                                       3A  40  46 
+ msg                       7E          4B  54  5E 
+ @1                        80          F   1E 
+ @2                        81          14  24 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

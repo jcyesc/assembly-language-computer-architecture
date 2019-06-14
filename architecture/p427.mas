@@ -1,0 +1,7 @@
+            ld   x
+            add  y
+            st   z
+            halt
+        x:  dw   2
+        y:  dw   3
+        z:  dw   0

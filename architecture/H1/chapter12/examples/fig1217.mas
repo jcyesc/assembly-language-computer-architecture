@@ -1,0 +1,123 @@
+	!o
+	; void traverse(NODE *p)
+@traverse$p4NODE:
+	esba
+
+@L0:	ldr	2	; while(p) {
+	jz	@L1
+
+	ldr	2	; cout << p->data << endl;
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	ldr	2	; p = p->link;
+	addc	1
+	ldi
+	str	2
+
+	ja	@L0
+	
+@L1:	reba
+	ret
+
+;===============================================================
+@get_data$ri:
+	esba
+
+	ldc	@m0	; cout << "Enter positive int ....\n";
+	sout
+
+	din		; cin >> x;
+	push
+	ldr	2
+	sti
+
+	reba
+	ret
+
+;===============================================================
+main:	
+	aloc	1	; NODE *head;
+	
+	aloc	1	; NODE *p;
+
+	aloc	1	; int x;
+
+	ldc	0	; head = NULL;
+	str	-1
+
+	ldc	-3	; get_data(x);
+	cora
+	push
+	call	@get_data$ri
+	dloc	1
+
+@L2:	ldr	-3	; while(x >= 0) {
+	jn	@L3
+
+	ld	@avail_ptr	; p = new NODE;
+	str	-2
+	addc	2
+	st	@avail_ptr
+
+	ldr	-3	; p -> data = x;
+	push
+	ldr	-2
+	sti
+
+	ldr	-1	; p -> link = head;
+	push
+	ldr	-2
+	addc	1
+	sti
+
+	ldr	-2	; head = p;
+	str	-1
+
+	ldc	-3	; get_data(x);
+	cora
+	push
+	call	@get_data$ri
+	dloc	1
+
+	ja	@L2
+
+@L3:	ldc	@m1	; cout << "Traversing list\n";
+	sout
+
+	ldr	-1	; traverse(head);
+	push
+	call	@traverse$p4NODE
+	dloc	1
+
+	ldc	0	; return 0;
+	halt
+
+
+end	main
+;=========================================================
+@m0:	dw	"enter positive int (or negative in to end)\n";
+@m1:	dw	"Traversing list\n";
+@avail_ptr: dw   * + 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

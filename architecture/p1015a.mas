@@ -1,0 +1,9 @@
+            extern x   
+            extern y   
+        ok: ld   x + 1 
+            add  y - 1 
+            dout       
+            ldc  '\n'  
+            aout       
+            halt       
+            end    ok

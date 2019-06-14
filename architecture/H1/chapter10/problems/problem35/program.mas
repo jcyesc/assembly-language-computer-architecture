@@ -1,0 +1,63 @@
+;---------------------------------------------------------------------------------------
+; Translate the program 10.35 to assembly language.
+;---------------------------------------------------------------------------------------
+
+;-----------------------------
+; void exit(int rc)
+;-----------------------------
+
+@exit$i:
+	ldc	msg_exit	; cout << "exit\n";
+	sout
+		ret;
+
+;----------------------------
+; void f()
+;----------------------------
+
+@f$v:	ldc	msg_f	; cout << "in f\n";
+	sout
+	
+	ldc	1	; exit(1);
+	push
+	call	@exit$i
+	dloc	1
+
+	ldc	msg_b	; cout << "bug\n";
+	sout
+	
+	ret;
+
+;----------------------------
+; void g()
+;----------------------------
+
+@g$v:	ldc	msg_g	; cout << "in g\n";
+	sout
+
+	call	@f$v	; f();
+	
+	ldc	msg_b	; cout << "bug\n";
+	sout	
+
+	ret
+
+;----------------------------------------------
+; int main()
+;	Function called by the start-up code 
+;----------------------------------------------
+
+main:	call	@g$v	; g();
+	
+	ldc	0	; return 0;
+	ret
+
+; Global variables
+msg_f:	dw	"in f\n"
+msg_g:	dw	"in g\n"
+msg_b:	dw	"bug\n"
+msg_exit:	dw	"exit\n";
+
+public main
+public @exit$i
+

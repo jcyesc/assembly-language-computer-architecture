@@ -1,0 +1,86 @@
+;------------------------------------------------------------------
+; Translate the program 7.44 to assembly language
+;------------------------------------------------------------------
+
+;-----------------------------------
+; void f1(int x, int y, short z)
+;-----------------------------------
+
+f1:	ldc	1	; x = 1
+	str	1
+
+	ldc	2	; y = 2
+	str	2
+
+	ldc	3	; z = 3
+	str	3
+	
+	ldr	1	; cout << x << " " << y << " " << z << endl;
+	dout
+	ldc	msg
+	sout
+	ldr	2
+	dout
+	ldc	msg
+	sout
+	ldr	3
+	dout
+	ldc	'\n'
+	aout
+
+	ret		; return to the calling function
+
+f2:	ldc	4	; x = 4;
+	str	1
+
+	ldc	5	; y = 5;
+	str	2	
+	
+	ldc	6	; z = 6
+	str	3
+
+	ldr	1	; cout << x << " " << y << " " << z << endl;
+	dout
+	ldc	msg
+	sout
+	ldr	2
+	dout
+	ldc	msg
+	sout
+	ldr	3
+	dout
+	ldc	'\n'
+	aout
+
+	ret		; return to the calling function
+
+main:
+	ldc	12	; f1(10, 11, 12);
+	push
+	ldc	11
+	push
+	ldc	10
+	push
+	call	f1
+	dloc	3
+
+	ldc	22	; f2(20, 21, 22);
+	push
+	ldc	21
+	push	
+	ldc	20
+	push
+	call	f2
+	dloc	3
+
+	halt		; end of the program
+	end main
+
+
+; GLOBAL VARIABLES
+
+msg:	dw	" "
+
+
+
+

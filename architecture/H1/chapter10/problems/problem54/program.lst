@@ -1,0 +1,133 @@
+Machine-level Assembler Version 6.1    Mon May 11 23:04:08 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;-------------------------------------------------------------
+               ; 10.54 Translate the next C program to assembly language.
+               ;
+               ;	#include<iostream>
+               ;	using namesace std;
+               ;	int x = 5;
+               ;	static int y;
+               ;	static f(int *p)
+               ;	{
+               ;	   *p = 5;
+               ;	}
+               ;	
+               ;	int main()
+               ;	{
+               ;	    static int a = 1;
+               ;	   int b = 2;
+               ;	   f(&x);
+               ;	   f(&y);
+               ;	   f(&a);
+               ;	   f(&b);
+               ;	   cout <<  a << " " << b << " " << x << " " << y << endl;
+               ;	   return 0;
+               ;	}
+               ;
+               ;-------------------------------------------------------------
+               
+               ;----------------------------
+               ; static f(int *p)
+               ;----------------------------
+               
+0  *0    8005  @f$pi:	ldc		5	; *p = 5
+1  *1    F300  		push
+2  *2    4002  		ldr		2
+3  *3    F200  		sti
+               		
+4  *4    F000  		ret
+               
+               ;----------------------------
+               ; int main()
+               ;----------------------------
+               
+               main:
+5  *5    F501  		aloc	1	; int b = 2
+6  *6    8002  		ldc		2
+7  *7    5000  		str		0
+               		
+8  *8    802F  		ldc		x		; f(&x);
+9  *9    F300  		push
+A  *10   E000  		call	@f$pi
+B  *11   F601  		dloc	1
+               		
+C  *12   8030  		ldc		y		; f(&y);
+D  *13   F300  		push
+E  *14   E000  		call	@f$pi				
+F  *15   F601  		dloc	1
+               		
+10 *16   8031  		ldc		@s0_a	; f(&a);
+11 *17   F300  		push
+12 *18   E000  		call	@f$pi
+13 *19   F601  		dloc	1
+               		
+14 *20   F700  		swap			; f(&b); // b is an automatic variable
+15 *21   1034  		st		@tmp	; save the address of &b - 1 in a variable
+16 *22   F700  		swap
+17 *23   0034  		ld		@tmp
+18 *24   F300  		push
+19 *25   E000  		call	@f$pi
+1A *26   F601  		dloc	1		; release the memory of the parameter and the address.
+               				
+1B *27   0031  		ld		@s0_a	; cout << a << " " << b << " " << x << " " << y << e
+1C *28   FFFD  		dout
+1D *29   8032  		ldc		@msg
+1E *30   FFF7  		sout
+1F *31   4000  		ldr		0
+20 *32   FFFD  		dout
+21 *33   8032  		ldc		@msg
+22 *34   FFF7  		sout
+23 *35   002F  		ld		x
+24 *36   FFFD  		dout
+25 *37   8032  		ldc		@msg
+26 *38   FFF7  		sout
+27 *39   0030  		ld		y
+28 *40   FFFD  		dout
+29 *41   800A  		ldc		'\n'
+2A *42   FFFB  		aout		
+               		
+2B *43   F601  		dloc	1	; release memory of b	
+               		
+2C *44   8000  		ldc		0	; return 0;
+2D *45   F000  		ret
+               
+               ; Global variables
+               
+2E *46   0001  @1:		dw		1
+2F *47   0005  x:		dw		5
+30 *48   0000  y:		dw		0
+31 *49   0001  @s0_a:	dw		1	; static int a = 1;
+32 *50   0020  @msg:	dw		" "
+33 *51   0000
+34 *52   0000  @tmp:	dw		0
+               
+               ; Public declarations
+               
+               public	x
+               public	main
+               
+35 *53   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$pi                     0           A   E   12  19 
+ main                      5           35 
+ @1                        2E         
+ x                         2F          35  8   23 
+ y                         30          C   27 
+ @s0_a                     31          10  1B 
+ @msg                      32          1D  21  25 
+ @tmp                      34          15  17 
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

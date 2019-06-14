@@ -1,0 +1,9 @@
+x:	ldc	msg
+	aout	
+	ldc	'\n'
+	aout
+	halt
+
+msg:	dw	"hola"
+
+public	x

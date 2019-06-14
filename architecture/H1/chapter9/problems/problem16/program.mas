@@ -1,0 +1,43 @@
+;-------------------------------------------------------------------
+; Translate the program 9.16 to assembly language.
+;-------------------------------------------------------------------
+
+;----------------------------
+; void f(int **p)
+;----------------------------
+
+@f$ppi:	ldc	x	; *p = &x;
+	push
+	ldr	2
+	sti
+	
+	ret
+
+;----------------------------
+; int main()
+;----------------------------
+
+main:	ldc	q	; f(&q);
+	push
+	call	@f$ppi
+	dloc	1
+	
+	ldc	55	; *q = 55;
+	push
+	ld	q
+	sti	
+		
+	ld	x	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt
+	end main
+
+; Global variables
+
+q:	dw	0	; int *q
+x:	dw	0
+
+

@@ -1,0 +1,7 @@
+	ld   x
+	add  y
+	st   z
+	halt
+x:	dw   55h
+y:	dw   10h dup 22h
+z:	dw   0

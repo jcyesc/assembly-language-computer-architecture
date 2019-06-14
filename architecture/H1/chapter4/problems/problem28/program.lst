@@ -1,0 +1,28 @@
+Machine-level Assembler Version 6.1    Thu Jan  1 20:45:51 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; 4.29 What happens when the following program is executed:
+               
+0  *0    8004  	ldc	y
+1  *1    F700  	swap
+2  *2    E003  	call	x
+3  *3    FFFF  x:	halt
+4  *4    FFFF  y:	dw	-1
+5  *5    ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         3           2  
+ y                         4           0  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

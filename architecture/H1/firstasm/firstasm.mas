@@ -1,0 +1,10 @@
+	ld  n1	   ; get first number
+	add n2	   ; add second number
+	st  result ; store sum in memory
+	halt       ; return to operating system
+
+	; Data area
+n1:	dw 15	   ; first number
+n2:	dw 1	   ; second number
+result: dw 0	   ; store sum here
+ 

@@ -1,0 +1,28 @@
+; #f3d1
+;Display should look exactly like this (with data from test 
+;cases replacing the numbers):
+;Enter hex number
+;ff00
+;Enter hex number
+;0100
+;OVERFLOW            (output NO OVERFLOW for other case)
+n
+o
+ln
+g
+ff00
+0100
+o
+g
+ffff
+0001
+o
+g
+7fff
+0001
+o
+g
+8000
+7fff
+SD
+q

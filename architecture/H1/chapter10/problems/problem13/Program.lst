@@ -1,0 +1,117 @@
+Machine-level Assembler Version 6.1    Mon May  4 23:54:04 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Create a library that contains everything in fmult15.lib, as w
+               ; that computes fourth powers. Write and run an assembly languag
+               ; computes and displays the value of :
+               ;
+               ;	(x*x*x*x) - (x*x) + 6 
+               ;
+               ; for x = 0, 1, 2, 3, 4
+               ;
+               ; This module uses the library fmult15.lib and the start up code
+               ; 
+               ;---------------------------------------------------------------
+               
+               ;---------------------------------------------------------------
+               ; int polynomio(int x)
+               ;
+               ;   Function that calculates the next equation:
+               ;
+               ;	(x*x*x*x) - (x*x) + 6
+               ;---------------------------------------------------------------
+               
+               polynomio:
+0  *0    F501  	aloc	1	; temporal variable
+1  *1    4002  	ldr	2
+2  *2    F300  	push
+3  *3    E000  	call	square
+4  *4    F601  	dloc	1
+5  *5    5000  	str	0	; save the result return by square (x*x)
+6  *6    F300  	push
+7  *7    E000  	call	square
+8  *8    F601  	dloc	1
+9  *9    7000  	subr	0	
+A  *10   2031  	add	@6
+               	
+B  *11   F601  	dloc	1	; release the memory for the temporal variable
+C  *12   F000  	ret
+               
+               ;---------------------------------------------------------------
+               ; int main()
+               ;	Evalue the function represented by polynomio for the 
+               ;	values x = 0, 1, 2, 3, 4
+               ;---------------------------------------------------------------
+               
+               main:	; This is implemented better using a cycle.
+D  *13   8000  	ldc	0		; cout << polynomio(0) << endl;
+E  *14   F300  	push
+F  *15   E000  	call	polynomio
+10 *16   F601  	dloc	1
+11 *17   FFFD  	dout
+12 *18   800A  	ldc	'\n'
+13 *19   FFFB  	aout
+               
+14 *20   8001  	ldc	1		; cout << polynomio(1) << endl;
+15 *21   F300  	push
+16 *22   E000  	call	polynomio
+17 *23   F601  	dloc	1
+18 *24   FFFD  	dout
+19 *25   800A  	ldc	'\n'
+1A *26   FFFB  	aout
+               
+1B *27   8002  	ldc	2		; cout << polyomio(2) << endl;
+1C *28   F300  	push
+1D *29   E000  	call	polynomio
+1E *30   F601  	dloc	1
+1F *31   FFFD  	dout
+20 *32   800A  	ldc	'\n'
+21 *33   FFFB  	aout
+               
+22 *34   8003  	ldc	3		; cout << polynomio(3) << endl;
+23 *35   F300  	push
+24 *36   E000  	call	polynomio
+25 *37   F601  	dloc	1
+26 *38   FFFD  	dout
+27 *39   800A  	ldc	'\n'
+28 *40   FFFB  	aout
+               
+29 *41   8004  	ldc	4
+2A *42   F300  	push
+2B *43   E000  	call	polynomio
+2C *44   F601  	dloc	1
+2D *45   FFFD  	dout
+2E *46   800A  	ldc	'\n'
+2F *47   FFFB  	aout
+               
+30 *48   F000  	ret
+               
+               ; Global variables
+31 *49   0006  @6:	dw	6
+               
+               public	main
+               public	polynomio
+               extern	square
+               
+32 *50   ========= end of Program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ polynomio                 0           32  F   16  1D  24 
+                                       2B 
+ main                      D           32 
+ @6                        31          A  
+ square                    ext         32  3   7  
+
+Input file   = Program.mas
+Output file  = Program.mob
+List file    = Program.lst 
+Number base  = decimal
+Label status = case sensitive

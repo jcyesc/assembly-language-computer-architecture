@@ -1,0 +1,28 @@
+; #27b6
+;Display should look exactly like this (with data from test 
+;cases replacing the numbers):
+;Enter hex number
+;8000
+;Enter hex number
+;0001
+;OVERFLOW            (output NO OVERFLOW for other case)
+n
+o
+ln
+g
+8000
+0001
+o
+g
+7fff
+ffff
+o
+g
+ffff
+ffff
+o
+g
+8000
+7fff
+SD
+q

@@ -1,0 +1,86 @@
+;--------------------------------------------------------------------------------------
+; Version 	: 1.0
+; Created	: 4-December-2009
+; Author	: Juan Carlos Yescas
+; Description	: Program that consists of four modules: main,
+;		  input, mult and output. main should call input, mult
+;		  and output, and then halt. input should prompt for and
+;		  read in two positive decimal numers. mult should multiply
+;		  the two decimal numbers read in by input by means of a loop that
+;		  repeatedly adds. output should output the product computed by
+;		  mult. It's asumed that the product will fit into 16 bits.
+;-------------------------------------------------------------------------------------
+
+main:
+	call input
+	call mult
+	call output
+
+	halt
+
+;--------------------------------------------------------------------------
+; input()
+;
+;	Input the values to number1 and number2.
+;--------------------------------------------------------------------------
+input:
+	ldc	msg	; load the address of msg
+	sout		; string output
+	din		; decimal input
+	st	number1 ; store the value of ac in number1
+	ldc	msg	; load the address of msg
+	sout		; string output
+	din		; decimal input
+	st	number2	; store the value of ac in number2
+	ret		; return to the caller
+
+;--------------------------------------------------------------------------
+; mult()
+;
+;	Multiply number1 with number2 by adding number2 n times, depending 
+; 	of the value of number1.
+;--------------------------------------------------------------------------
+
+mult:	
+for:	ld	result		; load the value of result
+	add	number2		; add number2 to result
+	st	result		; store the new value in result
+	
+	ld	number1		; load the value of number1
+	sub	@1		; subtract 1 to number1
+	st	number1		; store the new value in number1
+	jn	end_mult	; if the subtract is negative ( 0 - 1) jump to end_mult
+	jnz	for		; if NOT ZERO, jump to for
+
+end_mult:
+	ret			; return to the caller
+
+;--------------------------------------------------------------------------
+; output()
+;
+;	Show the result of the multiplication
+;--------------------------------------------------------------------------
+
+output:
+	ldc	'\n'		; load the value of '\n'
+	aout			; string output
+	ldc	msg_result	; load the address of msg_result
+	sout			; string output
+	ld	result		; load the value of result
+	dout			; decimal output
+	ret			; return to the caller
+
+
+;-----------------------
+; VARIABLES
+;-----------------------
+
+number1:	dw	0
+number2:	dw	0
+result:		dw	0
+msg:		dw	"Write a number "
+counter:	dw	0
+msg_result:	dw	"The result is "
+@1:		dw	1
+
+

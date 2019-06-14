@@ -1,0 +1,12 @@
+; #5695 13 31 10 69 35340
+; Use the file p67.has for your microcode.
+; Invoke sim with
+;    sim bprog /mp67 /ap67
+n   
+o
+ln
+g
+SD
+enable
+sd
+q

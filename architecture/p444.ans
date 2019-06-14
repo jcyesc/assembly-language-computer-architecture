@@ -1,0 +1,20 @@
+; #8af4
+;Your display should look exactly like this (with the data from 
+;the test cases replacing the numbers):
+;Enter decimal number using memory-mapped I/O
+;34
+;Echo with dout
+;34
+n
+o
+ln
+g
+34
+o
+g
+1
+o
+g
+12345
+SD
+q

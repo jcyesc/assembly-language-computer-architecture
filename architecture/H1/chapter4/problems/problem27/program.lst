@@ -1,0 +1,33 @@
+Machine-level Assembler Version 6.1    Thu Jan  1 20:40:53 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; What happens if the machine language corresponding to the next
+               ; is loaded into memory starting at location 400 hex.
+0  *0    0004  	ld	x
+1  *1    2005  	add	y
+2  *2    1006  	st	z
+3  *3    FFFF  	halt	
+4  *4    0002  x:	dw	2
+5  *5    0003  y:	dw	3
+6  *6    0000  z:	dw	0
+               
+               ; If the program is loaded in the 400 address, the program is ex
+7  *7    ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         4           0  
+ y                         5           1  
+ z                         6           2  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

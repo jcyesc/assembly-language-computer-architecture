@@ -1,0 +1,39 @@
+Machine-level Assembler Version 6.1    Wed Apr  1 07:05:00 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.66 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;-----------------------
+               ; void f()
+               ;-----------------------
+               
+0  *0    8041  @f$v:	ldc	'A'	; cout << 'A';
+1  *1    FFFB  	aout
+2  *2    E000  	call	@f$v	; f(); recursive call
+               	
+3  *3    F000  	ret		; never return to the calling function
+               
+4  *4    E000  main:	call	@f$v	; f();
+               
+5  *5    FFFF  	halt		; end of the program
+               	end main
+6  *6    ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$v                      0           2   4  
+ main                      4           6  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

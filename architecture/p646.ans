@@ -1,0 +1,14 @@
+; #6e96
+;multiply 3 by 10
+;use p646.has for your microcode
+;The display should look exactly like this:
+;Product = 30 (good)
+;Product = 30 (ugly)
+n
+o
+ln
+g
+SD
+enable
+sd
+q

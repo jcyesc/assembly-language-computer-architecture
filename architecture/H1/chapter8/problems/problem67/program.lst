@@ -1,0 +1,97 @@
+Machine-level Assembler Version 6.1    Thu Apr  2 00:04:44 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.67 to assembly languague.
+               ;---------------------------------------------------------------
+               
+               ;----------------------------------
+               ; int mult(int x, int y)
+               ;----------------------------------
+               
+0  *0    4002  @mult$ii:	ldr	2	; if( y == 0)
+1  *1    D003  		jnz	next_rm	
+2  *2    F000  		ret		; return 0;		
+               
+3  *3    4002  next_rm:	ldr	2	; return mult(x, y - 1) + x
+4  *4    302A  		sub	@1			
+5  *5    F300  		push
+6  *6    4002  		ldr	2
+7  *7    F300  		push
+8  *8    E000  		call	@mult$ii
+9  *9    F602  		dloc	2
+A  *10   6001  		addr	1
+               			
+B  *11   F000  		ret		; return to the calling function.
+               
+               ;----------------------------------
+               ; int exp(int x, int y)
+               ;----------------------------------
+               
+C  *12   4002  @exp$ii:	ldr	2	; if(y == 0)
+D  *13   D010  		jnz	next_ex
+E  *14   8001  		ldc	1	; return 1;
+F  *15   F000  		ret
+               
+10 *16   4002  next_ex:	ldr	2	; return mult(exp(x, y - 1), x);
+11 *17   302A  		sub	@1
+12 *18   F300  		push
+13 *19   4002  		ldr	2
+14 *20   F300  		push
+15 *21   E00C  		call	@exp$ii
+16 *22   F602  		dloc	2
+               			
+17 *23   F501  		aloc	1	; store the value return by exp(x, y - 1)
+18 *24   5000  		str	0	
+               
+19 *25   4002  		ldr	2	; mult(value, x)
+1A *26   F300  		push
+1B *27   4001  		ldr	1
+1C *28   F300  		push
+1D *29   E000  		call	@mult$ii
+1E *30   F603  		dloc	3
+               
+1F *31   F000  		ret	
+               
+               ;---------------------------------
+               ; main()
+               ;---------------------------------
+               
+20 *32   8003  main:	ldc	3	; cout << exp(2, 3) << endl;
+21 *33   F300  	push
+22 *34   8002  	ldc	2
+23 *35   F300  	push
+24 *36   E00C  	call	@exp$ii
+25 *37   F602  	dloc	2
+26 *38   FFFD  	dout
+27 *39   800A  	ldc	'\n'
+28 *40   FFFB  	aout
+               
+29 *41   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+2A *42   0001  @1:	dw	1
+2B *43   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @mult$ii                  0           8   1D 
+ next_rm                   3           1  
+ @exp$ii                   C           15  24 
+ next_ex                   10          D  
+ main                      20          2A 
+ @1                        2A          4   11 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

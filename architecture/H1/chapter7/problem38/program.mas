@@ -1,0 +1,69 @@
+;-----------------------------------------------------------
+; Translate the program 7.38 to assembly language
+;-----------------------------------------------------------
+
+;--------------------
+; void f(int x)
+;--------------------
+
+
+f:	aloc   1	; int y
+	
+	ldc    3	; y = x + 3
+	addr   2
+	str    0
+
+	ldr    2	; cout << x << " " << y << endl;
+	dout
+	ldc    msg
+	sout
+	ldr    0
+	dout
+	ldc    '\n'	
+	aout
+
+	dloc	1
+
+	ret		; return to the calling function
+
+
+;---------------------
+; main()
+;---------------------
+
+main:	ld      x	; cout << x << " " << y << endl;
+	dout
+	ldc	msg
+	sout
+	ld	y
+	dout
+	ldc	'\n'
+	aout
+
+	din		; cin >> y
+	st	y
+
+	ld	y	; f(y);
+	push
+	call	f
+	dloc	1
+
+	ld	x	; cout << x << " " << y << end;
+	dout
+	ldc	msg
+	sout
+	ld	y
+	dout
+	ldc	'\n'
+	aout
+
+	halt
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	0
+y:	dw	5
+msg:	dw	" "
+
+

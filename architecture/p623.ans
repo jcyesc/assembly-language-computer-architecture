@@ -1,0 +1,12 @@
+; #2689
+;Use p623.has for your microcode
+;Create config file p623.cfg
+;Insert !p623 at beginning of assembly language program
+n
+o
+ln
+g
+SD
+enable
+sd
+q

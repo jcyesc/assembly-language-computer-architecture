@@ -1,0 +1,66 @@
+;-----------------------------------------------------------------------
+; 10.40 Write and run an assembly language program that computes and
+; outputs the sum of two positive integers, each a single digit, 
+; given on the command line when sim is invoked.
+;------------------------------------------------------------------------
+
+;------------------------------------
+; int main(int argc, char **argv)
+;------------------------------------
+
+main:	  ldr     1       ; load the number of parameters
+	  sub     @3
+	  jnz     error
+
+	  ldr     2
+	  add     @1
+	  ldi
+	  ldi
+	  sub     @48     ; to convert char to number
+  	  st      @n1
+
+	  dout
+          ldc     '\n'
+	  aout
+
+	  ldr     2
+	  add     @2
+	  ldi
+	  ldi
+	  sub     @48     ; to convert char to number
+	  st      @n2
+
+	  dout
+	  ldc     '\n'
+	  aout
+
+	  ldc     @m2     ; cout << "The sum is -> " << sum;
+	  sout
+
+	  ld      @n1
+	  add   @n2
+	  dout
+
+	  ldc     '\n'
+	  aout
+
+	  ldc     0       ; return 0;
+	  ja      en
+
+	  error:   ldc     @m1     ; if the number the parameters is not 3, prints t
+	  sout
+	  ldc     1       ; return 1;
+	  en:      ret
+
+; Global variables
+
+@m1:     dw      "The number of parameters must be three.\n"
+@m2:     dw      "The sum is -> "
+@1:      dw      1
+@2:      dw      2
+@3:      dw      3       ; Number the parameters to be processed.
+@48:     dw      48      ; It's used to convert '3' to 3 (ASCII to number)
+@n1:     dw      0
+@n2:     dw      0
+
+public	main

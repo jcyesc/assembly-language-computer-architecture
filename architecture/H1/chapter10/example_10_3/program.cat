@@ -1,0 +1,10 @@
+cat file program.cat
+0  *0    9004  	ja	add
+1  *1    0001  x:	dw	1
+2  *2    0008  y:	dw	8
+3  *3    0000  z:	dw	0
+4  *4    0001  add:	ld	x
+5  *5    2002  	add	y
+6  *6    1003  	st	z
+7  *7    FFFF  	halt
+8  *8    ========= end of program.mas ============================

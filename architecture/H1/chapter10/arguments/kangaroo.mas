@@ -1,0 +1,40 @@
+;---------------------------------------------------------------
+; kangaroo.mas
+;---------------------------------------------------------------
+
+main:	ldc	@m0	; cout << "argc = " << argc << endl;
+	sout
+	ldr	1
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	@m1	; cout << "argv[0]" << argv[0] << endl;
+	sout
+	ldr	2
+	ldi
+	sout
+	ldc	'\n'
+	aout
+
+	ldc	@m2	; cout << "argv[1] = " << argv[1] << endl;
+	sout
+	ldr	2
+	add	@1
+	ldi
+	sout
+	ldc	'\n'
+	aout
+
+	ldc	0
+	ret
+@m0:	dw	"argc    = "
+@m1:	dw	"argv[0] = "
+@m2:	dw	"argv[1] = "
+@1:	dw	1
+
+	public main
+
+
+
+

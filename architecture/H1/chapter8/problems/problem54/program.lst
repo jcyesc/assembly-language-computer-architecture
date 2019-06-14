@@ -1,0 +1,55 @@
+Machine-level Assembler Version 6.1    Sun Mar 29 12:52:58 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.54 to assembly languague.
+               ;---------------------------------------------------------------
+               
+               
+               ;--------------------
+               ; main()
+               ;--------------------
+               
+0  *0    8005  main:	ldc	5	; int table[] = { 5, 6, 7 }
+1  *1    100F  	st	table
+2  *2    8006  	ldc	6
+3  *3    1010  	st	table + 1
+4  *4    8007  	ldc	7
+5  *5    1011  	st	table + 2
+               
+6  *6    8010  	ldc	table + 1	; p = &table[1];
+7  *7    1012  	st	p
+               	
+8  *8    8001  	ldc	1	; cout << p[1] << endl;
+9  *9    2012  	add	p
+A  *10   F100  	ldi
+B  *11   FFFD  	dout
+C  *12   800A  	ldc	'\n'
+D  *13   FFFB  	aout
+               
+E  *14   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+F  *15   0000  table:	dw	3 dup 0		; int table[3];
+12 *18   0000  p:	dw	0		; int *p
+13 *19   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           F  
+ table                     F           1   3   5   6  
+ p                         12          7   9  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

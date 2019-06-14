@@ -1,0 +1,5 @@
+&		; Configure H1 for memory-mapped I/O
+ld    3000	; get keyboard status
+jz    * -1	; jump if not ready
+ld    3001	; get character from keyboard
+halt

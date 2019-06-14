@@ -1,0 +1,46 @@
+;----------------------------------------------------------------
+; Translate program 7.56 to assembly language program
+;----------------------------------------------------------------
+
+;----------------
+; void f()
+;----------------
+
+f:	aloc	3	; int x, y, z;
+	
+	ldc	msg	; cout << "Enter 3 integers\n";
+	sout
+
+	din		; cin >> x >> y >> z;
+	str	2
+	din
+	str	1
+	din
+	str	0
+
+	ldr	2	; cout << x << y << z << endl;
+	dout
+	ldr	1
+	dout
+	ldr	0
+	dout
+	ldc	'\n'
+	aout
+
+	dloc	3
+
+	ret		; return to the calling function
+
+;-----------------
+; main()
+;-----------------
+
+main:	call	f	; f();
+	
+	halt		; end of the program
+
+	end main
+
+; GLOBAL VARIABLES
+
+msg:	dw	"Enter 3 integers\n"

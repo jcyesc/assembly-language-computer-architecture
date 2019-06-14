@@ -1,0 +1,183 @@
+;--------------------------------------------------------------------
+; Version	: 1.0
+; Created	: 27-dic-2008
+; Author	: Juan Carlos Yescas
+; Description	:
+;		Program that reads in a string, determines
+;		if it's a palindrome, and displays "yes" or "no"
+;		accordingly.
+;	
+;--------------------------------------------------------------------
+
+main:
+	ldc	msg		; load the address of msg
+	sout			; string output
+	call	printLine	; call printLine
+	ldc	pali		; load the address of pali
+	sin			; string input
+	
+	call	getLength	; call length to calculate the length of the string
+	call	printLine	; call printLine
+	ldc	msg_len		; load the address of msg_len
+	sout			; string output
+	ld	length		; load the value of length
+	dout			; decimal output
+
+	call	inverse		; call inverse to turn around the string
+	call 	compare		; call compare strings, to identify if they are equals
+	
+	call	printLine	; call printLine
+	ld	isPalindromo	; load the value of isPalindromo
+	jz	printYes	; if zero, jump to printYes
+	ja	printNo		; Jump always to printNo
+
+printNo:
+	ldc	no		; load the address of no
+	sout			; string output
+	ja	end		; jump always to end
+
+printYes:
+	ldc	yes		; load the address of yes
+	sout			; string output
+	ja	end		; jump always to end
+
+end:
+	halt			; end of the program
+
+;----------------------------------------------------------
+; compare()
+;
+; Function that compares the string "pali" and "inver" and
+; verify if they are equals.
+;
+; If they are equals, store ZERO in "isPalindromo" otherwise
+; store A NOZERO value.
+;----------------------------------------------------------
+
+compare:
+	ld	length		; load the length of pali
+	sub	@1		; subtract 1 to the lenght, to avoid an index out of bounds
+	st	index_c		; store the value in index_c
+	
+	; start the comparison from the last character to the first one
+for_c:	ldc	pali		; load th address of pali
+	add	index_c		; add index_c to the address
+	ldi			; load the content that is stored in the address of ac
+	st	char_p		; store the value in char_p
+
+	ldc	inver		; load the address of inver
+	add	index_c		; add index_c to the address of inver
+	ldi			; load the content that is stored in the address of ac
+	st	char_i		; store the value in char_i
+	
+	; decrement index_c--
+	ld	index_c		; load the value of index_c
+	sub	@1		; subtract one to index_c
+	st	index_c		; store the value in index_c
+	
+	; compare the values of the characters
+	ld	char_p		; load the value of char_p
+	sub	char_i		; subtract the value of char_i (char_p - char_i)
+	st	isPalindromo	; store the result in isPalindromo
+	jnz	end_comp	; if it's no zero, it's not a palindromo
+
+	ld	index_c		; load index_c
+	jzop	for_c		; if it's zero or positive jump to for_c
+end_comp:
+	ret			; return to the caller
+
+index_c: dw 	0
+char_p:	 dw	0	; store the character of pali
+char_i:  dw	0	; store the character of inver
+
+;----------------------------------------------------------------
+; inverse()
+;
+; Function that turns around the pali "string", for doing that,
+; it's necessary to know the length, so before to call this
+; function is necessary to store the length in the variable
+; "length"
+;
+; The inverse string is store
+; This function doesn't validate if the length is zero.
+; To turn around  the string we copy the last character of pali 
+; to the first position of inver, and we do that in a loop.
+;----------------------------------------------------------------
+
+inverse:
+	ld	length		; load the length of the string
+	sub	@1		; subtract 1 to the length ( length - 1)
+	st	index_p		; store the result in index_p
+	
+for_in:
+	ldc	pali		; load the address of pali
+	add	index_p		; add to the address of pali the value of index_p
+	ldi			; load the value that is in the address pointed by ac
+ 	push			; push the value in the stack
+	
+	ldc	inver		; load the address of inver
+	add	index_i		; add to the adderss of inver the value of index_i
+	sti			; store the value that is in stack in the address pointed by ac
+
+	; index_i++		
+	ld	index_i		; load the value of index_i
+	add	@1		; increment index_i
+	st	index_i		; store the value of index_i
+	
+	; index_p--		
+	ld	index_p		; load the value of index_p
+	sub	@1		; decement index_p
+	st	index_p		; store the value of index_p
+
+	jzop	for_in		; if zero or positive, jump to for_in
+
+	ret			; return to the caller
+
+index_p:dw	0
+index_i:dw	0
+
+;---------------------------------------------------------------------
+; getLength()
+;
+; Function that calculate the length of pali. The length
+; is then store in the var "length". This function is going to
+; adding 1 for each character that finds. If it finds ZERO or
+; NULL, that means we're in the final of the string.
+;---------------------------------------------------------------------
+
+getLength:
+	ldc	pali		; load the address of pali
+	add	length		; add length to pali
+	ldi			; load the content that is in the address that points ac
+	jz	endLength	; if the content is ZERO or NULL, jump to endLenght. 
+				; We're in the end of the string
+	ld	@1		; load @1
+	add	length		; add 1 to length
+	st	length		; store the new value of length in length
+	ja	getLength	; jump always to getLength
+endLength:
+	ret			; return to the caller
+
+;---------------------------------------------------------------------
+; printLine()
+;
+; Funtion that prints a line feed
+;---------------------------------------------------------------------
+
+printLine:
+	ldc	'\n'	; load the value in ASCII of '\n'
+	aout		; ASCII output
+	ret		; return to the caller	
+
+;---------------------
+; VARIABLES
+;---------------------
+pali:	dw  80 dup 0	; store the string to verify (PALINDROMO)
+inver:  dw  80 dup 0	; store the string INVERSE
+length: dw  0
+msg:	dw "Introduce the string to verify"
+msg_len:dw "Length: "
+@1:	dw  1
+isPalindromo: dw	0	; store if it is palindromo or no
+yes:	dw  "YES"
+no:	dw  "NO"

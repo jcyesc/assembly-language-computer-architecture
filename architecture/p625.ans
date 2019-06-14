@@ -1,0 +1,14 @@
+; #0421 25 147 165 1600 61372
+;Use p625.has for your microcode
+;Create config file p625.cfg
+;Use anew.mas for your assembly code
+;Invoke sim with
+;   sim anew /mp625 /ap625
+n
+o
+ln
+g
+SD
+enable
+sd
+q

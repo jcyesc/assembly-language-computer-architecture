@@ -1,0 +1,73 @@
+Machine-level Assembler Version 6.1    Sun Mar 15 22:01:44 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate program 7.54 to assembly language
+               ;---------------------------------------------------------------
+               
+               ;--------------------
+               ; void f()
+               ;--------------------
+               
+0  *0    F501  f:	aloc	1	; int x;
+               	
+1  *1    FFFC  	din		; cin >> x;
+2  *2    5000  	str	0
+               
+3  *3    0014  	ld	ini_y	; static int y = x;
+4  *4    C006  	jz	init_y	; y initialize only once
+5  *5    900A  	ja	next
+               
+               init_y:
+6  *6    4000  	ldr	0
+7  *7    1013  	st	s0_y
+8  *8    8001  	ldc	1
+9  *9    1014  	st	ini_y
+               
+               next:	
+A  *10   0013  	ld	s0_y	; cout << y << endl	
+B  *11   FFFD  	dout
+C  *12   800A  	ldc	'\n'
+D  *13   FFFB  	aout
+               	
+E  *14   F601  	dloc	1
+F  *15   F000  	ret		; return to the calling function
+               
+               ;--------------------
+               ; main()
+               ;--------------------
+               
+10 *16   E000  main:	call	f	; f()
+11 *17   E000  	call	f	; f()
+               
+12 *18   FFFF  	halt	
+               	
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+13 *19   0000  s0_y:	dw	0
+14 *20   0000  ini_y:	dw	0	; Variable that knows if y is initiliazed or no
+               
+15 *21   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           10  11 
+ init_y                    6           4  
+ next                      A           5  
+ main                      10          13 
+ s0_y                      13          7   A  
+ ini_y                     14          3   9  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

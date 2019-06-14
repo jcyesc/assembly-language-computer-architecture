@@ -1,0 +1,13 @@
+; #fe9d
+;Display should look exactly like this:
+;Sum = 83
+n
+o
+a3900t
+dw "30 53" ; set up command line arguments
+
+o#
+ln
+g
+SD
+q

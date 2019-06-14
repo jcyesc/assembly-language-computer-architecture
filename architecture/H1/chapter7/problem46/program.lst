@@ -1,0 +1,79 @@
+Machine-level Assembler Version 6.1    Sun Mar 15 07:23:59 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 7.46 to assembly language.
+               ;
+               ; In this program we are assuming that this is computer is littl
+               ; endian, so first we save the low part and then the high part.
+               ; 
+               ; This program uses a lot of pointers.
+               ;---------------------------------------------------------------
+               
+               ;---------------------
+               ; main()
+               ;---------------------
+               
+0  *0    801B  main:	ldc	x	; p = &x;
+1  *1    101D  	st	p_p
+               
+2  *2    8002  	ldc	2	; *p = 2
+3  *3    F300  	push
+4  *4    001D  	ld	p_p
+5  *5    F200  	sti		; *p is a long pointer an uses two words (32 bits)
+6  *6    8000  	ldc     0
+7  *7    F300  	push
+8  *8    8001  	ldc	1
+9  *9    201D  	add	p_p
+A  *10   F200  	sti
+               
+B  *11   001D  	ld	p_p	; q = (int *)p;
+C  *12   101E  	st	p_q
+               
+D  *13   001E  	ld	p_q	; r = q + 1;
+E  *14   2020  	add	@1
+F  *15   101F  	st	p_r
+               
+10 *16   001E  	ld	p_q	; cout << *q << endl;
+11 *17   F100  	ldi
+12 *18   FFFD  	dout
+13 *19   800A  	ldc	'\n'
+14 *20   FFFB  	aout
+               
+15 *21   001F  	ld	p_r	; cout << *r << endl;
+16 *22   F100  	ldi
+17 *23   FFFD  	dout
+18 *24   800A  	ldc	'\n'
+19 *25   FFFB  	aout
+               
+1A *26   FFFF  	halt		; end of the program
+               
+               ; GLOBAL VARIABLES
+               
+1B *27   0000  x:	dw	2 dup 0		; long x
+1D *29   0000  p_p:	dw	0		; long *p
+1E *30   0000  p_q:	dw	0		; int *q
+1F *31   0000  p_r:	dw	0		; int *r
+20 *32   0001  @1:	dw	1
+21 *33   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ x                         1B          0  
+ p_p                       1D          1   4   9   B  
+ p_q                       1E          C   D   10 
+ p_r                       1F          F   15 
+ @1                        20          E  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

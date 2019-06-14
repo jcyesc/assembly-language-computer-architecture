@@ -1,0 +1,4 @@
+            extern x
+            ld   x
+            ld   x + 2
+            ld   x - 2

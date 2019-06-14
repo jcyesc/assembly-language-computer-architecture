@@ -1,0 +1,8 @@
+Suppose p1.mas and p2.mas are assembled and the following two commands are
+then entered:
+
+	lin p1 p2
+	lib p1 p2
+
+Show the contents of p1.mob, p2.mob, p1.mac, and p1.lib. Use the same format
+that pic uses.

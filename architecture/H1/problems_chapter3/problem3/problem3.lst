@@ -1,0 +1,23 @@
+Machine-level Assembler Version 6.1    Mon Dec 15 23:06:43 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0002  ld ld
+1  *1    FFFF  halt
+2  *2    0002  ld: ld ld
+3  *3    ========= end of problem3.mas ===========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ ld                        2           0   2  
+
+Input file   = problem3.mas
+Output file  = problem3.mac
+List file    = problem3.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,26 @@
+;---------------------------------------------------------
+; Translate program 8.57 to assembly language.
+;---------------------------------------------------------
+
+main:	ld	@11	; x <= 10
+	sub	x
+	jz	end_for
+	
+	ldc	msg	; cout << "hello\n";
+	sout
+	
+	ldc	1	; x++
+	add	x
+	st	x
+
+	ja	main
+
+end_for:
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	0		; x = 0;
+msg:	dw	"hello\n"
+@11:	dw	11

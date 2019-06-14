@@ -1,0 +1,15 @@
+; #0225
+;Use p626.has for your microcode
+;Create config file p626.cfg
+;Use p626s.mas and p626.mas for your assembly code
+;Put !p626 in p626.mas (the program with decm)
+;Display should be exactly like
+Sum = 31
+n
+o
+ln
+g
+SD
+enable
+sd
+q

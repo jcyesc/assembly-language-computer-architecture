@@ -1,0 +1,6 @@
+&		; configure H1 for memory-mapped I/O
+ld    3002	; get status word from display monitor
+jz    * - 1	; if 0 (not ready), try again
+ldc   'A'	; get 'A'
+st    3003	; store in data word for display monitor
+halt

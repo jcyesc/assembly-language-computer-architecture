@@ -1,0 +1,12 @@
+; #8790 23 153 61 614 56238
+;use p621.has for your microcode
+;Display should look exactly like this:
+;Sum = 1068
+n
+o
+ln
+g
+SD
+enable
+sd
+q

@@ -1,0 +1,150 @@
+Machine-level Assembler Version 6.1    Sun May 10 15:17:56 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; 10.40 Write and run an assembly language program that computes
+               ; outputs the sum of two positive integers, each a single digit,
+               ; given on the command line when sim is invoked.
+               ;---------------------------------------------------------------
+               
+               ;------------------------------------
+               ; int main(int argc, char **argv)
+               ;------------------------------------
+               
+0  *0    4001  main:	  ldr     1       ; load the number of parameters
+1  *1    305C  	  sub     @3
+2  *2    D01E  	  jnz     error
+               
+3  *3    4002  	  ldr     2
+4  *4    205A  	  add     @1
+5  *5    F100  	  ldi
+6  *6    F100  	  ldi
+7  *7    305D  	  sub     @48     ; to convert char to number
+8  *8    105E    	  st      @n1
+               
+9  *9    FFFD  	  dout
+A  *10   800A            ldc     '\n'
+B  *11   FFFB  	  aout
+               
+C  *12   4002  	  ldr     2
+D  *13   205B  	  add     @2
+E  *14   F100  	  ldi
+F  *15   F100  	  ldi
+10 *16   305D  	  sub     @48     ; to convert char to number
+11 *17   105F  	  st      @n2
+               
+12 *18   FFFD  	  dout
+13 *19   800A  	  ldc     '\n'
+14 *20   FFFB  	  aout
+               
+15 *21   804B  	  ldc     @m2     ; cout << "The sum is -> " << sum;
+16 *22   FFF7  	  sout
+               
+17 *23   005E  	  ld      @n1
+18 *24   205F  	  add   @n2
+19 *25   FFFD  	  dout
+               
+1A *26   800A  	  ldc     '\n'
+1B *27   FFFB  	  aout
+               
+1C *28   8000  	  ldc     0       ; return 0;
+1D *29   9021  	  ja      en
+               
+1E *30   8022  	  error:   ldc     @m1     ; if the number the parameters is no
+1F *31   FFF7  	  sout
+20 *32   8001  	  ldc     1       ; return 1;
+21 *33   F000  	  en:      ret
+               
+               ; Global variables
+               
+22 *34   0054  @m1:     dw      "The number of parameters must be three.\n"
+23 *35   0068
+24 *36   0065
+25 *37   0020
+26 *38   006E
+27 *39   0075
+28 *40   006D
+29 *41   0062
+2A *42   0065
+2B *43   0072
+2C *44   0020
+2D *45   006F
+2E *46   0066
+2F *47   0020
+30 *48   0070
+31 *49   0061
+32 *50   0072
+33 *51   0061
+34 *52   006D
+35 *53   0065
+36 *54   0074
+37 *55   0065
+38 *56   0072
+39 *57   0073
+3A *58   0020
+3B *59   006D
+3C *60   0075
+3D *61   0073
+3E *62   0074
+3F *63   0020
+40 *64   0062
+41 *65   0065
+42 *66   0020
+43 *67   0074
+44 *68   0068
+45 *69   0072
+46 *70   0065
+47 *71   0065
+48 *72   002E
+49 *73   000A
+4A *74   0000
+4B *75   0054  @m2:     dw      "The sum is -> "
+4C *76   0068
+4D *77   0065
+4E *78   0020
+4F *79   0073
+50 *80   0075
+51 *81   006D
+52 *82   0020
+53 *83   0069
+54 *84   0073
+55 *85   0020
+56 *86   002D
+57 *87   003E
+58 *88   0020
+59 *89   0000
+5A *90   0001  @1:      dw      1
+5B *91   0002  @2:      dw      2
+5C *92   0003  @3:      dw      3       ; Number the parameters to be processed
+5D *93   0030  @48:     dw      48      ; It's used to convert '3' to 3 (ASCII 
+5E *94   0000  @n1:     dw      0
+5F *95   0000  @n2:     dw      0
+               
+               public	main
+60 *96   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           60 
+ error                     1E          2  
+ en                        21          1D 
+ @m1                       22          1E 
+ @m2                       4B          15 
+ @1                        5A          4  
+ @2                        5B          D  
+ @3                        5C          1  
+ @48                       5D          7   10 
+ @n1                       5E          8   17 
+ @n2                       5F          11  18 
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,108 @@
+Machine-level Assembler Version 6.1    Sat Mar 14 00:05:30 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 7.43 to assembly language
+               ;---------------------------------------------------------------
+               
+               ;-------------------------------------------
+               ; void f(char c, int i, char *cp, int *ip)
+               ;-------------------------------------------
+               
+0  *0    8041  f:	ldc	'A'	; c = 'A'
+1  *1    5001  	str	1
+               	
+2  *2    8002  	ldc	2	; i = 2;
+3  *3    5002  	str	2	
+               
+4  *4    8042  	ldc	'B'	; *cp = 'B'
+5  *5    F300  	push
+6  *6    4004  	ldr	4
+7  *7    F200  	sti	
+               
+8  *8    8003  	ldc	3	; *ip = 3
+9  *9    F300  	push
+A  *10   4005  	ldr	5
+B  *11   F200  	sti
+               
+C  *12   F000  	ret		; return to the calling function
+               
+               ;-------------------
+               ; main()
+               ;-------------------
+               
+D  *13   8023  main:	ldc	gi	; f('X', 5, &gc, &gi);
+E  *14   F300  	push
+F  *15   8022  	ldc	gc
+10 *16   F300  	push
+11 *17   8005  	ldc	5
+12 *18   F300  	push
+13 *19   8058  	ldc	'X'
+14 *20   F300  	push
+15 *21   E000  	call	f
+16 *22   F604  	dloc	4
+               
+17 *23   8024  	ldc	msg_gc	; cout << "gc = " << gc << " gi = " << gi << endl;
+18 *24   FFF7  	sout
+19 *25   0022  	ld	gc
+1A *26   FFFB  	aout
+1B *27   802A  	ldc	msg_gi
+1C *28   FFF7  	sout
+1D *29   0023  	ld	gi
+1E *30   FFFD  	dout
+1F *31   800A  	ldc	'\n'
+20 *32   FFFB  	aout
+               
+21 *33   FFFF  	halt		; end of the program
+               
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+22 *34   0000  gc:	dw	0
+23 *35   0000  gi:	dw	0
+24 *36   0067  msg_gc: dw	"gc = "
+25 *37   0063
+26 *38   0020
+27 *39   003D
+28 *40   0020
+29 *41   0000
+2A *42   0020  msg_gi:	dw	" gi = "
+2B *43   0067
+2C *44   0069
+2D *45   0020
+2E *46   003D
+2F *47   0020
+30 *48   0000
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+31 *49   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           15 
+ main                      D           22 
+ gc                        22          F   19 
+ gi                        23          D   1D 
+ msg_gc                    24          17 
+ msg_gi                    2A          1B 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

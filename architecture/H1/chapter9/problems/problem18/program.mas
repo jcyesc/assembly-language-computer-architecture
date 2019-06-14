@@ -1,0 +1,40 @@
+;--------------------------------------------------------------------------
+; Translate the program 9.18 to assembly language
+;--------------------------------------------------------------------------
+
+;---------------------------------------------------------------------
+; void f(int *x) 
+; 	Function using value-result implemented as call by reference.
+;---------------------------------------------------------------------
+
+@f$pi:	aloc	1	; int tmp = *x;
+	ldr	2
+	ldi	
+	str	0
+
+	ldr	0	; tmp--;
+	sub	@1
+	str	0
+
+	ldr	2	; *x = tmp; // tmp is already in the stack
+	sti
+
+	ret
+
+main:	ldc	y	; f(&y);
+	push
+	call	@f$pi
+	dloc	1
+	
+	ld	y	; cout << y << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt
+	end main
+
+; Global variables
+
+y:	dw	2
+@1:	dw	1

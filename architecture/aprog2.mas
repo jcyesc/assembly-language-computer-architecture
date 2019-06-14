@@ -1,0 +1,21 @@
+a1:      ldc  0
+a2:      ldc  0
+a3:      ldc  0
+a4:      ldc  0
+a5:      ldc  0
+a6:      ldc  0
+a7:      ldc  0
+a8:      ldc  0
+a9:      ldc  0
+a10:     ldc  0
+a11:     ldc  0
+a12:     ldc  0
+a13:     ldc  0
+a14:     ldc  0
+a15:     ldc  0
+a16:     ldc  0
+a17:     ldc  0
+a18:     ldc  0
+a19:     ldc  0
+a20:     ldc  0
+         halt

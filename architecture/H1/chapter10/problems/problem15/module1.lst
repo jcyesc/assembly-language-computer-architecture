@@ -1,0 +1,24 @@
+Machine-level Assembler Version 6.1    Wed May  6 21:14:45 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               	public	x
+0  *0    0005  x:	dw 	5
+1  *1    0006  y:	dw	6
+2  *2    ========= end of module1.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         0           0  
+ y                         1          
+
+Input file   = module1.mas
+Output file  = module1.mob
+List file    = module1.lst 
+Number base  = decimal
+Label status = case sensitive

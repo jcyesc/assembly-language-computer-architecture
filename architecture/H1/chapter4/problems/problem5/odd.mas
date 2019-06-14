@@ -1,0 +1,21 @@
+; Write and run an assembly language program that displays
+; all the odd numbers from 1 to 99 in ascending order.
+
+calculate: 
+
+	ld   number		; load number
+	dout			; print as decimal ac
+printnumbers:
+	ld   number		; load number
+	dout 			; print as decimal ac
+	ldc  blank		; load the address of blank
+	sout			; print the string
+	ld   number		; load number
+	sub  @2			; subtract 2 to ac
+	st   number		; store number
+	jzop printnumbers	; if zero or positive jump to printnumbers.
+	halt			; end of the problem
+
+number:    dw   99		; array of number
+blank:	   dw   " "
+@2:	   dw   2

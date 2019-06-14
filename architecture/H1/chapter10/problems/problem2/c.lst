@@ -1,0 +1,33 @@
+Machine-level Assembler Version 6.1    Sun May  3 14:27:07 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    8003  c:	ldc	msg
+1  *1    FFF7  	sout
+2  *2    F000  	ret
+               
+3  *3    0069  msg:	dw	"in c\n"
+4  *4    006E
+5  *5    0020
+6  *6    0063
+7  *7    000A
+8  *8    0000
+               
+               	public	c	; c is a public symbol
+9  *9    ========= end of c.mas ==================================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ c                         0           9  
+ msg                       3           0  
+
+Input file   = c.mas
+Output file  = c.mob
+List file    = c.lst 
+Number base  = decimal
+Label status = case sensitive

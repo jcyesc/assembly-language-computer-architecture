@@ -1,0 +1,27 @@
+Machine-level Assembler Version 6.1    Thu Dec 25 13:34:41 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Use the comamand d$ to observe the activity on the stack.
+               
+0  *0    8041  	ldc    65    ; loads ac with binary number 1000001
+1  *1    FFFD  	dout 	     ; displays 65
+2  *2    800A  	ldc    '\n'  ; load newline character
+3  *3    FFFB  	aout 	     ; output newline-that is go to next line
+4  *4    8041  	ldc    65    ; restore ac with 65
+5  *5    FFF9  	hout	     ; displays 41
+6  *6    800A  	ldc    '\n'  ; load newline character
+7  *7    FFFB  	aout	     ; output newline-that is go to next line
+8  *8    8041  	ldc    65    ; restore ac with 65
+9  *9    FFFB  	aout	     ; displays A
+A  *10   800A  	ldc    '\n'  ; load newline character
+B  *11   FFFB  	aout	     ; output newline-that is go to next line
+C  *12   FFFF  	halt
+D  *13   ========= end of trace_stack.mas ========================
+
+Input file   = trace_stack.mas
+Output file  = trace_stack.mac
+List file    = trace_stack.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,227 @@
+cat file program.cat
+               main:
+0  *0    F505  	aloc	5		; int a, b[5];
+1  *1    F501  	aloc	1	
+2  *2    802B  	ldc		@msg1	; cout << "enter number\n";
+3  *3    FFF7  	sout
+4  *4    FFFC  	din				; cin >> a
+5  *5    5000  	str		0
+6  *6    8005  	ldc		5		; b[a] = 5;
+7  *7    F300  	push
+8  *8    F700  	swap
+9  *9    103F  	st		@tmp
+A  *10   F700  	swap
+B  *11   003F  	ld		@tmp	; get the address of b
+C  *12   2041  	add		@2
+D  *13   6001  	addr	1
+E  *14   F200  	sti
+F  *15   8039  	ldc		@msg2	; cout << " a = " << a << endl;
+10 *16   FFF7  	sout
+11 *17   4000  	ldr		0
+12 *18   FFFD  	dout
+13 *19   800A  	ldc		'\n'
+14 *20   FFFB  	aout
+15 *21   8000  	ldc		0
+16 *22   5000  	str		0
+               _for:	
+17 *23   8005  	ldc		5
+18 *24   7000  	subr	0
+19 *25   C028  	jz		_end
+1A *26   F700  	swap			; cout << b[a] << endl;
+1B *27   103F  	st		@tmp
+1C *28   F700  	swap
+1D *29   003F  	ld		@tmp
+1E *30   2040  	add		@1
+1F *31   6000  	addr	0
+20 *32   F100  	ldi
+21 *33   FFFD  	dout
+22 *34   800A  	ldc		'\n'
+23 *35   FFFB  	aout
+24 *36   4000  	ldr		0		; a++
+25 *37   2040  	add		@1
+26 *38   5000  	str		0
+27 *39   9017  	ja		_for
+               _end:	
+28 *40   F606  	dloc	6
+29 *41   8000  	ldc		0
+2A *42   F000  	ret
+2B *43   0065  @msg1:	dw		"enter number\n"
+2C *44   006E
+2D *45   0074
+2E *46   0065
+2F *47   0072
+30 *48   0020
+31 *49   006E
+32 *50   0075
+33 *51   006D
+34 *52   0062
+35 *53   0065
+36 *54   0072
+37 *55   000A
+38 *56   0000
+39 *57   0020  @msg2:	dw		" a = "
+3A *58   0061
+3B *59   0020
+3C *60   003D
+3D *61   0020
+3E *62   0000
+3F *63   0000  @tmp:	dw		0
+40 *64   0001  @1:		dw		1
+41 *65   0002  @2:		dw		2
+42 *66   ========= end of program.mas ============================
+42 *66   005A  loc0:      dw   'Z'       ; to test for null pointer assignment
+43 *67   8000  start_up:  ldc  0  
+44 *68   F700             swap
+45 *69   003E  getarg:    ld   clptr     ; get next char in command line
+46 *70   F100             ldi 
+47 *71   C02A             jz   alldone   ; if null char, all done
+48 *72   0041             ld   argc      ; get current count
+49 *73   303D             sub  @20
+4A *74   D00C             jnz  * + 4    
+4B *75   8058             ldc  errmsg1   ; display error message
+4C *76   FFF7             sout
+4D *77   903A             ja   done      ; terminate execution if count at 20 
+4E *78   003E             ld   clptr     ; get address of next arg
+4F *79   F300             push           
+50 *80   003F             ld   vectorptr
+51 *81   F200             sti            ; put address into vector
+52 *82   003E             ld   clptr
+53 *83   F100  getchar:   ldi            ; get next char in command line
+54 *84   C019             jz   endarg    ; ja   if null char
+55 *85   3040             sub  blank  
+56 *86   C019             jz   endarg    ; ja   if space
+57 *87   003E             ld   clptr     ; move command line ptr to next char
+58 *88   203C             add  @1
+59 *89   103E             st   clptr
+5A *90   9011             ja   getchar
+5B *91   8000  endarg:    ldc  0        
+5C *92   F300             push
+5D *93   003E             ld   clptr     ; clptr points to where null char goes
+5E *94   F200             sti 
+5F *95   0041             ld   argc  
+60 *96   203C             add  @1
+61 *97   1041             st   argc
+62 *98   003F             ld   vectorptr
+63 *99   203C             add  @1  
+64 *100  103F             st   vectorptr
+65 *101  003E  nextarg:   ld   clptr 
+66 *102  203C             add  @1
+67 *103  103E             st   clptr
+68 *104  F100             ldi 
+69 *105  3040             sub  blank
+6A *106  C023             jz   nextarg   ; move over blanks
+6B *107  9003             ja   getarg    ; now process next arg
+6C *108  8042  alldone:   ldc  vector    ; push address of vector
+6D *109  F300             push
+6E *110  0041             ld   argc      ; push number of args
+6F *111  F300             push
+70 *112  E000             call main
+71 *113  F602             dloc 2         ; deallocate parameters
+72 *114  1057             st   retcode   ; save return code from main
+73 *115  0000  testloc0:  ld    loc0    
+74 *116  3056             sub   z
+75 *117  C03A             jz    done     ; if still there, ja   to done
+76 *118  0031             ld   testloc0  ; start-up code at loc 0?
+77 *119  C038             jz   atloc0    ; if yes, display null ptr message
+78 *120  807A             ldc  errmsg2   ; if not, display other message
+79 *121  9039             ja   outmsg
+7A *122  8094  atloc0:    ldc  errmsg3
+7B *123  FFF7  outmsg:    sout
+7C *124  0057  done:      ld   retcode   ; restore ret code from main
+7D *125  FFFF             halt           ; return to op sys (sim)
+7E *126  0001  @1:        dw   1
+7F *127  0014  @20:       dw   20
+80 *128  0F3C  clptr:     dw   3900      ; address of command line
+81 *129  0042  vectorptr: dw   vector    ; array of char ptrs to the arguments
+82 *130  0020  blank:     dw   ' '
+83 *131  0000  argc:      dw   0         ; count of the number of arguments
+84 *132  0000  vector:    dw   20 dup 0  ; space for 20 arg pointers
+98 *152  005A  z:         dw   'Z'
+99 *153  0000  retcode:   dw   0
+9A *154  000A  errmsg1:   dw   "\nToo many command line arguments\n"
+9B *155  0054
+9C *156  006F
+9D *157  006F
+9E *158  0020
+9F *159  006D
+A0 *160  0061
+A1 *161  006E
+A2 *162  0079
+A3 *163  0020
+A4 *164  0063
+A5 *165  006F
+A6 *166  006D
+A7 *167  006D
+A8 *168  0061
+A9 *169  006E
+AA *170  0064
+AB *171  0020
+AC *172  006C
+AD *173  0069
+AE *174  006E
+AF *175  0065
+B0 *176  0020
+B1 *177  0061
+B2 *178  0072
+B3 *179  0067
+B4 *180  0075
+B5 *181  006D
+B6 *182  0065
+B7 *183  006E
+B8 *184  0074
+B9 *185  0073
+BA *186  000A
+BB *187  0000
+BC *188  000A  errmsg2:   dw   "\nStart-up code corrupted\n"
+BD *189  0053
+BE *190  0074
+BF *191  0061
+C0 *192  0072
+C1 *193  0074
+C2 *194  002D
+C3 *195  0075
+C4 *196  0070
+C5 *197  0020
+C6 *198  0063
+C7 *199  006F
+C8 *200  0064
+C9 *201  0065
+CA *202  0020
+CB *203  0063
+CC *204  006F
+CD *205  0072
+CE *206  0072
+CF *207  0075
+D0 *208  0070
+D1 *209  0074
+D2 *210  0065
+D3 *211  0064
+D4 *212  000A
+D5 *213  0000
+D6 *214  000A  errmsg3:   dw   "\nNull pointer assignment\n"
+D7 *215  004E
+D8 *216  0075
+D9 *217  006C
+DA *218  006C
+DB *219  0020
+DC *220  0070
+DD *221  006F
+DE *222  0069
+DF *223  006E
+E0 *224  0074
+E1 *225  0065
+E2 *226  0072
+E3 *227  0020
+E4 *228  0061
+E5 *229  0073
+E6 *230  0073
+E7 *231  0069
+E8 *232  0067
+E9 *233  006E
+EA *234  006D
+EB *235  0065
+EC *236  006E
+ED *237  0074
+EE *238  000A
+EF *239  0000
+F0 *240  ========= end of sup.mas ================================

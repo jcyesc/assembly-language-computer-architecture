@@ -1,0 +1,23 @@
+;---------------------------------------------------------------
+; Translate the program 8.59 to assembly language.
+;---------------------------------------------------------------
+
+main:	ldc	msg	; cout << "hello\n";
+	sout
+	
+	ldc	10	; x++ != 10
+	sub	x
+	st	res
+	ldc	1
+	add	x
+	st	x
+	ld	res
+	jnz	main	
+	
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+x:	dw	1
+res:	dw	0
+msg:	dw	"hello\n"

@@ -1,0 +1,10 @@
+; #2ea2
+;Output t and q each on a separate line left justified, ust
+;before the return statement.
+;See figp1334.cpp in software package.
+n
+o
+ln
+g
+SD
+q

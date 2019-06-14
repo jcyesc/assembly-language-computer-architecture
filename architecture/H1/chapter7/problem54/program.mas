@@ -1,0 +1,48 @@
+;---------------------------------------------------------------
+; Translate program 7.54 to assembly language
+;---------------------------------------------------------------
+
+;--------------------
+; void f()
+;--------------------
+
+f:	aloc	1	; int x;
+	
+	din		; cin >> x;
+	str	0
+
+	ld	ini_y	; static int y = x;
+	jz	init_y	; y initialize only once
+	ja	next
+
+init_y:
+	ldr	0
+	st	s0_y
+	ldc	1
+	st	ini_y
+
+next:	
+	ld	s0_y	; cout << y << endl	
+	dout
+	ldc	'\n'
+	aout
+	
+	dloc	1
+	ret		; return to the calling function
+
+;--------------------
+; main()
+;--------------------
+
+main:	call	f	; f()
+	call	f	; f()
+
+	halt	
+	
+	end main
+
+; GLOBAL VARIABLES
+
+s0_y:	dw	0
+ini_y:	dw	0	; Variable that knows if y is initiliazed or no
+

@@ -1,0 +1,119 @@
+Machine-level Assembler Version 6.1    Wed Dec 31 14:10:24 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ;  Version	: 1.0
+               ;  Created	: 31-december-2008
+               ;  Author	: Juan Carlos Yescas
+               ;  Description	: Program that reads in a string and displays its
+               ;		  (not counting the null character)
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    8067  	ldc	msg	; load the address of msg
+1  *1    FFF7  	sout		; string output
+               
+2  *2    8016  	ldc	string	; load the address of string
+3  *3    FFF6  	sin		; string input
+               
+4  *4    E00C  	call	getLength	; call getLength
+               	
+5  *5    800A  	ldc	'\n'	; load the value of '\n'
+6  *6    FFFB  	aout		; ASCII output
+               	
+7  *7    807A  	ldc	msgLen 	; load the address of msgLen
+8  *8    FFF7  	sout		; string output
+9  *9    0066  	ld	length	; load the value of length
+A  *10   FFFD  	dout		; decimal output
+               
+B  *11   FFFF  	halt		; end of the program
+               
+               ;---------------------------------------------------------------
+               ; getLength()
+               ;
+               ; Function that calculate the length of string. The length
+               ; is then store in the var "length". This function is going to
+               ; add 1 for each character that finds. If it finds ZERO or
+               ; NULL, that means we're in the final of the string.
+               ;---------------------------------------------------------------
+               
+               getLength:
+C  *12   8016  for:    ldc     string          ; load the address of string
+D  *13   2066          add     length          ; add length to string
+E  *14   F100          ldi                     ; load the content that is in th
+F  *15   C014          jz      endLength       ; if the content is ZERO or NULL
+                                               ; We're in the end of the string
+10 *16   0015          ld      @1              ; load @1
+11 *17   2066          add     length          ; add 1 to length
+12 *18   1066          st      length          ; store the new value of length 
+13 *19   900C          ja      for	      	; jump always to getLength
+               endLength:
+14 *20   F000          ret                     ; return to the caller
+               
+               ;----------------------------
+               ; VARIABLES
+               ;----------------------------
+15 *21   0001  @1:	dw	1
+16 *22   0000  string:	dw	80 dup 0
+66 *102  0000  length:	dw	0
+67 *103  0057  msg:	dw	"Write a string -> "
+68 *104  0072
+69 *105  0069
+6A *106  0074
+6B *107  0065
+6C *108  0020
+6D *109  0061
+6E *110  0020
+6F *111  0073
+70 *112  0074
+71 *113  0072
+72 *114  0069
+73 *115  006E
+74 *116  0067
+75 *117  0020
+76 *118  002D
+77 *119  003E
+78 *120  0020
+79 *121  0000
+7A *122  0054  msgLen:	dw	"The lenght is : "
+7B *123  0068
+7C *124  0065
+7D *125  0020
+7E *126  006C
+7F *127  0065
+80 *128  006E
+81 *129  0067
+82 *130  0068
+83 *131  0074
+84 *132  0020
+85 *133  0069
+86 *134  0073
+87 *135  0020
+88 *136  003A
+89 *137  0020
+8A *138  0000
+8B *139  ========= end of length.mas =============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ getLength                 C           4  
+ for                       C           13 
+ endLength                 14          F  
+ @1                        15          10 
+ string                    16          2   C  
+ length                    66          9   D   11  12 
+ msg                       67          0  
+ msgLen                    7A          7  
+
+Input file   = length.mas
+Output file  = length.mac
+List file    = length.lst 
+Number base  = decimal
+Label status = case sensitive

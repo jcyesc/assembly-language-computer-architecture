@@ -1,0 +1,9 @@
+Machine-level Assembler Version 6.1    Mon Dec 15 23:01:07 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+
+ERROR on line 1 (decimal) of problem2.mas:
+	ld  x
+Undefined label in operand field

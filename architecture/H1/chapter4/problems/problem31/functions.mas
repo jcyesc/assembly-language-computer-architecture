@@ -1,0 +1,48 @@
+;------------------------------------------------------------------------------
+; Version	: 1
+; Created	: 3-december-2009
+; Author	: Juan Carlos Yescas
+; Description	: Write a program that replaces the call and ret instructions
+;		  with sequences of instructions exluding call and ret that
+;		  have the same effect.
+;
+;		  To simulate the call and ret instructions we have to store
+; 		  the return address in the stack, and then in the function
+;		  we get that instruction and modfify the next instruction.
+;	
+;------------------------------------------------------------------------------
+
+	ldc	siguiente	; load the address of siguiente
+	add	jump		; add the value of jump to built a jump instruction 9 005
+	push			; push the value of the return in the stack
+	ja	function1	; jump to function1
+siguiente:		; next instruction after the function.
+	ldc	'\n'		; load the value of '\n'
+	aout			; ASCII output
+	ldc	msg		; load the address of msg
+	sout			; string output
+
+	halt			; end of the program
+
+;-----------------------------------------
+; function1()
+;
+;-----------------------------------------
+
+function1:
+	ldc	msg1		; load the address of msg1
+	sout			; string output
+ 	pop			; pop the return address
+	st	return		; store the return address in the return variable
+return: dw	0		; the value of return is replaced by the return address that
+				; is in the stack
+	
+msg1:	dw	"Executing function 1";
+
+;-----------------
+; VARIABLES
+;-----------------
+@1:	dw	1
+msg:	dw	"Fin"
+jump:	dw	9000h	; The opcode for the jump instruction(ja) is 9.
+

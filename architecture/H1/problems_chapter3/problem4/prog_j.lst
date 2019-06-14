@@ -1,0 +1,42 @@
+Machine-level Assembler Version 6.1    Tue Dec 16 23:48:09 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0061  s1:	dw   "abc"
+1  *1    0062
+2  *2    0063
+3  *3    0000
+4  *4    0041  s2:	dw   "AB\nC"
+5  *5    0042
+6  *6    000A
+7  *7    0043
+8  *8    0000
+9  *9    0061  s3:	dw   'abc'
+A  *10   0062
+B  *11   0063
+C  *12   0058  s4:	dw   5 dup "XYZ"
+D  *13   0059
+E  *14   005A
+F  *15   0000
+20 *32   000C  p1:	dw   s4
+21 *33   FFFF  	halt
+22 *34   ========= end of prog_j.mas =============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ s1                        0          
+ s2                        4          
+ s3                        9          
+ s4                        C           20 
+ p1                        20         
+
+Input file   = prog_j.mas
+Output file  = prog_j.mac
+List file    = prog_j.lst 
+Number base  = decimal
+Label status = case sensitive

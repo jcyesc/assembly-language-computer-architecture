@@ -1,0 +1,144 @@
+Machine-level Assembler Version 6.1    Sat Dec 27 12:49:06 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 27-december-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Program that displays all the positive numbers d
+               ;		  are less than the input number.
+               ;
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    8020  	ldc	msg		; load the address of msg
+1  *1    FFF7  	sout			; string output
+2  *2    E01A  	call 	printLine	; call printLine to print a line feed	
+               
+3  *3    FFFC  	din			; decimal input
+4  *4    101D  	st	number		; store the number that was input in number
+5  *5    E01A  	call	printLine	; call printLine to print a line feed
+               		
+6  *6    802F  	ldc	msg_div		; load the address of msg_div
+7  *7    FFF7  	sout			; string output
+8  *8    E01A  	call	printLine	; call printLine to print a line feed
+9  *9    E00B  	call	printDivisible3	; call printDivisible3 to print the number
+               
+A  *10   FFFF  	halt			; end of the program
+               
+               ;---------------------------------------------------------------
+               ; printDivisible3 
+               ; 
+               ; Function that print all the numbers divisible by 3 that are le
+               ; than the input number.
+               ;
+               ; This function assumes that number is set.
+               ;
+               ; The number must be positive
+               ;---------------------------------------------------------------
+               
+               printDivisible3:
+B  *11   001E  	ld	acumulador	; load the value of acumulador
+C  *12   201F  	add	@3		; add 3 to acumulador
+D  *13   101E  	st	acumulador	; store acumulador
+E  *14   301D  	sub	number		; subtract number to acumulador ( acumulador - numb
+F  *15   B012  	jn	print		; if it's negative, print the acumulador, because is 
+10 *16   C012  	jz	print		; if it's zero, print acumulador because is the same 
+11 *17   F000  	ret			; return to the caller
+               
+               print:
+12 *18   001E  	ld	acumulador	; load acumulador
+13 *19   FFFD  	dout			; decimal output
+14 *20   E017  	call	printBlank	; call printBlank to print a blank space
+15 *21   900B  	ja	printDivisible3	; jump always to printDivisible3
+16 *22   F000  ret
+               
+               ;---------------------------------------------------------------
+               ; printBlank()
+               ;
+               ; Function that print a blank space
+               ;
+               ;---------------------------------------------------------------
+               
+               printBlank:
+17 *23   8020  	ldc	' '	; load the ASCII code for ' '
+18 *24   FFFB  	aout		; ASCII output
+19 *25   F000  	ret		; return to the caller
+               
+               ;---------------------------------------------------------------
+               ; printLine()
+               ;
+               ; Function that prints a line feed
+               ;  
+               ;---------------------------------------------------------------
+               
+               printLine:
+1A *26   800A  	ldc	'\n'	; load the ASCII code for '\n'
+1B *27   FFFB  	aout		; ASCII output
+1C *28   F000  	ret		; return to the caller
+               
+               ;----------------------------
+               ; VARIABLES
+               ;----------------------------
+1D *29   0000  number:	dw	0
+1E *30   0000  acumulador: dw	0
+1F *31   0003  @3:	dw	3
+               
+20 *32   0057  msg:	dw  	"Write a number"
+21 *33   0072
+22 *34   0069
+23 *35   0074
+24 *36   0065
+25 *37   0020
+26 *38   0061
+27 *39   0020
+28 *40   006E
+29 *41   0075
+2A *42   006D
+2B *43   0062
+2C *44   0065
+2D *45   0072
+2E *46   0000
+2F *47   0044  msg_div:dw	"Divisible by 3"
+30 *48   0069
+31 *49   0076
+32 *50   0069
+33 *51   0073
+34 *52   0069
+35 *53   0062
+36 *54   006C
+37 *55   0065
+38 *56   0020
+39 *57   0062
+3A *58   0079
+3B *59   0020
+3C *60   0033
+3D *61   0000
+               
+               
+3E *62   ========= end of divisible_3.mas ========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ printDivisible3           B           9   15 
+ print                     12          F   10 
+ printBlank                17          14 
+ printLine                 1A          2   5   8  
+ number                    1D          4   E  
+ acumulador                1E          B   D   12 
+ @3                        1F          C  
+ msg                       20          0  
+ msg_div                   2F          6  
+
+Input file   = divisible_3.mas
+Output file  = divisible_3.mac
+List file    = divisible_3.lst 
+Number base  = decimal
+Label status = case sensitive

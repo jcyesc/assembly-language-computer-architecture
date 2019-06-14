@@ -1,0 +1,763 @@
+                                                 mas.txt
+
+                    How to Use mas Version 6.1
+
+Quick Start 
+
+     mas (Machine-level ASsembler) translates the assembly 
+language described in 
+
+  ASSEMBLY LANGUAGE AND COMPUTER ARCHITECTURE USING C++ AND JAVA
+           by Anthony J. Dos Reis, Course Technology, 2004
+
+to machine language.  mas outputs a file with either a ".mac" or 
+a ".mob" extension.  It uses a ".mac" extension when the source 
+program contains no PUBLIC or EXTERN statements.  Otherwise, it 
+uses a ".mob" extension.  ".mob" files are object modules that 
+are combined by the linker to produce an executable module.  
+".mac" files are directly executable. 
+
+     To invoke mas, enter 
+
+     mas
+
+mas then prompts the user for the name of the input file 
+containing the program to be translated.  Enter the input file 
+name and/or other desired command line arguments (any number of 
+items per input line).  If the input file name entered has no 
+extension, ".mas" is appended to it.  As command line arguments 
+are entered, mas continues to prompt for more arguments until an 
+input file name is entered. 
+     mas outputs a file whose name is either 
+
+     <input_file_name_less_extension>.mac
+
+or 
+
+     <input_file_name_less_extension>.mob 
+
+
+     Each line of the source program should be in the following
+format (the square brackets surround optional items):
+
+[<label> :]  [<mnemonic/directive>  [<operand>]]  [/<comment>]
+
+<label> may start in any column.  <label> may be any sequence of 
+letters, digits, "@", "$", and "_" that does not start with a 
+digit from 0 to 9.  <comment> may be any sequence of characters.  
+No more than one instruction may be specified per line.  
+<mnemonic/directive> and <operand> must be separated by at least 
+one space.  Spaces are optional to the left and right of the 
+colon following <label>.  A semicolon may be used in place of "/" 
+at the start of a comment.  Completely blank lines and lines with 
+only "<label> :" are allowed. 
+
+
+Command Line Arguments
+
+     All command line arguments are optional, can be specified in 
+any order, must have no embedded spaces, and must be separated by 
+at least one space. 
+
+     All command line arguments, except <infilename>, must have a 
+leading "/" or "-". 
+
+     All command line arguments are case insensitive, except for 
+file names on systems with case-sensitive file names. 
+
+     The format of the command line is
+
+mas <infilename> /h /dec /i /l<lstfilename> /c<cfgfilename> /o<outfilename> 
+                 /? /hex /s /n
+
+If <infilename> is specified on the command line, then mas will 
+not prompt the user for additional input.  In response to a 
+prompt, the user can enter <infilename> and/or other command line 
+arguments.  Prompting ends whenever the user enters <infilename>.  
+If <infilename> has no extension, then ".mas" is appended to it. 
+If <infilename> starts with a pathname that starts with "/", then 
+substitute "//" for the leading "/" in the pathname when entering 
+<infilename>.  
+
+/h or /? displays a help screen.
+
+If /dec is specified, a number in the source program is treated as 
+decimal, unless it ends with an "h" or "H", in which case it is 
+treated as hexadecimal.  If /hex is specified, a number is treated 
+as hex, unless it ends with a "t" or "T" ("t" stands for base 
+ten), in which case it is treated as a decimal.  If neither /dec 
+nor /hex is specified, then the default setting is used (see the 
+section "Default Settings" below). 
+
+If /i is specified, labels are case insensitive.  If /s is 
+specified, labels are case sensitive.  If neither /i nor /s is 
+specified, then the default setting is used (see the section
+"Default Settings" below).
+
+If /l is specified, a list file is generated.  If /n is 
+specified, a list file is not generated.  If neither /l nor /n is 
+specified, then the default setting is used (see the section 
+"Default Settings" below).  A list file name can optionally 
+follow /l.  If a list file name is specified without an 
+extension, then ".lst" is appended to it.  If the /l argument is 
+specified without a file name, then the file name used is 
+
+     <infilename_less_extension>.lst
+
+Each line in a list file is truncated, if necessary, to avoid 
+wraparound on an 80 column display.  The list file includes a 
+listing of each line of the assembly program along with its 
+corresponding location and object code.  It also includes a 
+display of the symbol/cross-reference table.  At most 25 
+characters of each symbol are displayed in the symbol/cross-
+reference table.  If there is insufficient space for the internal 
+table used to accumulate data for the cross-reference table, a 
+cross-reference table is not written to the list file.  For the 
+cross-reference table, the references made by an END, EXTERN, 
+EQU, or PUBLIC directive are specified using the first address 
+that follows the position of the directive in the program.  For 
+example, suppose the following sequence appears in a list file: 
+
+                        public x
+7  *7    0001  y:       dw 1
+
+Then the reference to x in the PUBLIC directive is listed using 7 
+in the entry for x in the cross reference table. 
+
+The /c argument is used to specify a configuration file.  A 
+configuration file is used to reconfigure mas to a different 
+assembly language.  See sim.txt for more information on 
+configuration files.  If the both the /c argument and a !-
+directive are omitted , then mas uses its default configuration 
+(see the section "Default Settings" below).  If a configuration 
+file name is specified without an extension, ".cfg" is appended 
+to it.  If both the /c command line argument and a !-directive 
+in an assembly language program are used, mas will use the 
+command line argument and ignore the !-directive. 
+
+The /o argument is used to specify the name of the output file.  
+If <outfilename> is specified without an extension, then ".mac" 
+or ".mob" is appended to it.  If the /o argument is omitted, then 
+<outfilename> defaults to 
+
+     <infilename_less_extension>.mac 
+
+or 
+
+     <infilename_less_extension>.mob
+
+
+Addresses
+
+     Addresses can be either absolute (i.e., a number) or 
+symbolic (i.e., a label).  Labels are relocatable addresses--that 
+is, addresses corresponding to labels are adjusted according to 
+the load point in memory of the program.  Absolute addresses are 
+not relocatable.
+
+
+Types of Operands
+
+     The operand field of an assembly language instruction 
+can be of several types:
+
+Note: "*" designates the current location
+
+     Type                         Examples
+
+    Number                          ld   24   
+
+    Label                           st   sum
+
+    Label + Unsigned_Number         ld   table + 4
+
+    Label - Unsigned_Number         ld   table - 1
+
+    * + Unsigned_Number             st   * + 2
+
+    * - Unsigned_Number             st   * - 2
+
+    *                               st   *
+
+    String terminated
+    with null character             dw   "X="
+                               
+    String not terminated
+    with null character             dw   'X='
+
+Strings are mapped to storage with one ASCII character per word.
+Strings which are delimited with double quotes are terminated 
+with the null character.  For example, the string "A" specifies
+two words:
+
+     0041    (the ASCII value of 'A')
+     0000    (the null character)
+
+In contrast, the string 'A' specifies only one word:
+
+     0041    (the ASCII value of 'A')
+
+The following escape sequences can be used:
+
+     \n    newline
+     \r    carriage return
+     \a    bell
+     \b    backspace
+     \f    form feed
+     \v    vertical tab
+     \t    horizontal tab
+     \0    null character
+     \"    double quote
+     \'    single quote
+     \\    backslash
+
+For example, the string consisting of three letters followed by
+the newline character is:  
+
+     'ABD\n' 
+
+A null-terminated string of length zero or one or a non-null-
+terminated string of length 1 can be used in the operand field on 
+any instruction that takes an operand.  The ASCII value for the 
+character in the string is placed in the operand field of the 
+assembled instruction.  If a null-terminated string of length 
+zero is specified, then zero is placed in the operand field.  For 
+example, the instructions 
+
+     ldc  'A'
+     ldc  "A"
+
+are both translated to 8041 (8 is the opcode for ldc; 41 is 
+ASCII for 'A').  The instruction
+
+     ldc  ""
+
+is translated to 8000.  
+     Strings may not span lines.  Thus, if a string requiring 
+multiple lines is needed, it has to be defined with multiple 
+consecutive DW directives.  The maximum length of an input line 
+is 200 characters.  Thus, one line can define a string with a 
+length up to 195 characters (five characters are needed for the 
+DW directive, a space and two quotes). 
+
+
+Range of x, y, and z Fields
+
+     For maximum generality, mas allows both positive and 
+negative values in the x, y, and z fields of instructions.
+The allowable ranges are as follows:
+
+     x field (4-bit opcode):  -4095 to 4095
+     y field (8-bit opcode):  -255 to 255
+     z field (12-bit opcode): -15 to 15
+
+
+Directives
+
+     mas supports six directives: DW, END, EQU, EXTERN, ORG, and 
+PUBLIC, .  Each directive should be on a separate line.  
+Placement of directives is not critical, except for DW or ORG. 
+
+
+DW Directive--------------------------------------------------
+
+     DW (define word) is used to define in memory one word (for 
+numbers) or multiple words (for strings).  If a number follows 
+"DW", then only one word is defined.  The range of the numbers 
+can be from -32768 to 65535.  If a string follows "DW", then one 
+word is defined for each character in the string, plus one word 
+for the null character if double quotes are used.  For example, 
+
+     dw    9
+
+defines the word 0009.       
+
+     dw "AB"
+
+defines three words:  0041 (ASCII for 'A'),  0042  (ASCII for 
+'B'), 0000 (the null character).
+
+     dw 'AB'
+
+defines two words:
+
+     0041 (ASCII for 'A'), and 0042 (ASCII for 'B').
+
+
+The storage defined by a DW directive can be replicated using the 
+DUP modifier.  For example, 
+
+     x:    dw   3 dup 10
+
+is equivalent to
+
+     x:    dw   10
+           dw   10
+           dw   10
+
+DUP can be used with string constants as well as numeric 
+constants.  For example, 
+
+     y:    dw   2 dup "abc"
+
+is equivalent to
+
+     y:    dw   "abc"
+           dw   "abc" 
+
+The count that precedes "dup" must be unsigned and greater than 
+or equal to 1. 
+
+
+END Directive-------------------------------------------------
+
+     The END directive is used to specify the entry point for 
+the program.  The entry point can be specified as either an 
+absolute address or a label.  For example, both
+       
+              end  start
+
+and 
+
+              end  29
+
+are legal.  At most one END directive can appear in a program.  
+If an END directive does not appear in a program, then the entry 
+point defaults to the lowest location occupied by the program. 
+
+
+EQU Directive-------------------------------------------------
+
+     The EQU (equate) directive associates a numeric value with 
+a symbol.  Wherever the symbol appears as an operand, the 
+assembler substitutes its corresponding value.  For example, in 
+the following program, 
+
+          equ  x    3
+          ld   x
+          halt
+
+the assembler substitutes 3 for x in the ld instruction.  Thus, 
+the ld instruction is assembled as if it were written as 
+
+          ld   3
+
+The symbol in an equ should have the same form as a label.
+
+
+EXTERN directive----------------------------------------------
+
+     EXTERN declares a label to be external--that is, used within
+the module that contains the EXTERN but defined in a separately
+assembled module.  For example, here is a module that can call 
+the "add_one" label in the module above:
+
+              extern add_one
+              ldc    10         / load 10 into ac register
+              call   add_one    / call subroutine to add 1
+              dout              / display the result
+              halt
+
+If the EXTERN directive did not appear in this module, then the
+assembler would flag the call instruction as having an undefined 
+label.
+
+
+ORG Directive-------------------------------------------------
+
+     The ORG directive resets the current address.  For 
+example, in the program
+
+           ld   x
+           org  3
+     x:    dw   256
+     y     dw   333
+
+the address of x is 3.  The locations skipped because of an ORG 
+directive are set to 0.  Thus, the program above is equivalent to 
+
+          ld    x
+          dw    0
+          dw    0
+     x:   dw    256
+     y:   dw    333
+
+
+The ORG directive must specify an absolute address which is at 
+least as big as the current address.
+
+
+PUBLIC Directive----------------------------------------------
+
+     PUBLIC makes a label a global--that is, referencable by a 
+separately-assembled module.  For example, in the following 
+module, the label "add_one" can be called from a separately 
+assembled module: 
+
+              public add_one
+     add_one: add  @1
+              ret
+     @1:      dw   1
+
+--------------------------------------------------------------
+
+
+Specifying a Configuration File in the Input File
+
+     A configuration file can be specified by the /c command line 
+argument.  Alternatively, a configuration file can be specified 
+in the input file with a !-directive.  A !-directive consists of 
+"!" followed by the base name of the configuration file. 
+     A !-directive, if one is specified, should appear at the 
+beginning of the input file.  Only comments, completely blank 
+lines, or a &-directive may precede the line containing a !-
+directive.  A !-directive may start in any column.  However, if 
+it does not start in the first column, it must have only white 
+space to its left.  A comment may appear to the right of a !-
+directive with at least one blank separating it from the !-
+directive.
+     If a configuration file is specified neither on the command 
+line nor with a !-directive, then mas will use a default 
+configuration file.  If the current setting of the default 
+configuration file is "none", mas will use its built-in 
+configuration file (which corresponds to the standard instruction 
+set).  The default configuration file can be changed with the mod 
+program (see mod.txt). 
+
+
+Activating Memory-mapped I/O
+
+     A &-directive, if one is specified, should appear at the 
+beginning of the input file.  Only comment lines, completely 
+blank lines, or a line containing a !-directive may precede a &-
+directive.  A &-directive may start in any column.  However, if 
+it does not start in the first column, it must have only white 
+space to its left.  A comment may appear to the right of a &-
+directive with at least one blank separating it from the &-
+directive. 
+     A &-directive consists of "&" followed immediately by an 
+optional address in hex, or in decimal (if suffixed with "t").  
+If an address is specified, it should follow "&" with no 
+intervening spaces.
+     The assembler ignores &-directives.  However, when sim runs 
+a program whose assembler version contains a &-directive, it 
+activates memory-mapped I/O using the address in the &-directive, 
+if one is specified.  If an address is not specified in the &-
+directive, sim uses the default address.
+
+
+Search Path for Configuration File
+
+     If a directory is specified by the /c argument, mas searches 
+for the configuration file in that directory.  Otherwise, mas 
+searches for the configuration file in the current directory and 
+in the directory specified by the H1DIR environment variable, if 
+any, in that order. 
+
+     If a configuration file is specified by a !-directive, mas 
+searches the directory in which the ".mas" file containing the !-
+directive is located, and the directory specified by the H1DIR 
+environment variable, if any, in that order. 
+
+
+Too Few or Too Many Operands
+
+     If the configuration file contains information on the number 
+of operands, mas will check that instructions are specified with 
+the correct number of operands.  If, on the other hand, the 
+configuration file does not contain this information, mas will 
+not check if there are too few or too many operands for any 
+instruction.  In the latter case, if there are too few operands, 
+mas will assemble the corresponding field to zero.  If there are 
+too many, mas will ignore the excess.   Regardless of the 
+configuration file, mas checks directives for missing operands. 
+
+
+Multiple-word Instructions
+
+     mas will assembly a mnemonic as a two-word instruction if 
+the mnemonic and the number of operands in part 1 of the 
+configuration file is followed on the same line by 2, with at 
+least one intervening blank.  For example if the mnemonic entry 
+for mult in part 1 of the configuration file is 
+
+mult 1 2
+
+then mas assembles mult as one-operand, two-word instruction.  
+The first word of the assembled instruction will contain the 
+opcode; the second word, the operand.  
+
+     Instructions longer than two words are not directly 
+supported.  However, they can still be included in an assembly 
+language program by using dw directives to define those words in 
+the instruction beyond the second.  For example, suppose LI is 
+four-word instruction, consisting of a one-word opcode followed 
+by three words, each containing the address of an operand.  If we 
+indicate that LI is a two-word instruction in the configuration 
+file, the following assembly language statements then define a 
+single LI instruction: 
+
+     li   a    ; defines first two words
+     dw   b    ; defines third word
+     dw   c    ; defines fourth word
+
+
+
+^-Lines
+
+     A ^-line (read as "caret line") is a line whose first non-
+whitespace character is "^" (without the quotes).  mas processes 
+^-lines last.  Thus, the effect of "^" on a line is to move it to 
+the end of the program.  ^-lines allow constants to be defined in 
+line with executable code, making reading and writing programs 
+easier.  For example, consider the following code: 
+
+          ldc    prompt
+^prompt:  dw     "Enter integer"
+          sout
+          
+          ; more executable code.
+          
+
+Although the dw is physically in line with the executable code, 
+mas places it at the end of the program, out of the flow of 
+control.  mas also creates a ".car" file (if the car file option 
+is on and the program contains careted lines) that contains the 
+original source code but with the ^-lines (now no longer starting 
+with "^") at the end of the program.  For example, the code above 
+would appear in the ".car" file (and in the ".lst" file) as 
+
+
+          ldc    prompt
+          sout
+          
+          ; more executable code.
+
+; ===================== ^-lines follow ============
+prompt:   dw     "Enter integer"
+
+
+Notice that when mas moves a ^-line, it removes the "^".  If the 
+line contains a label, the label and the ":" that follows it are 
+moved to the left one position (filling in the position formerly 
+occupied by the "^").  The rest of the line, however, maintains 
+its columnar position.  If there is no label, then all the 
+characters on a line maintain their columnar positions. 
+
+
+Reverse Comments
+
+     If a C++ program is commented with one-line comments each 
+starting with "//", a C++ compiler will ignore these comments 
+(because of the leading "//" on each comment).  If mas assembles 
+the SAME code, mas will reverse the comments.  That is, mas will 
+treat the "//" comments as assembly input, and the C++ code as 
+comments to be ignored.  In addition, mas creates a "reverse 
+file" with a ".mas" extension (if the reverse file option is on) 
+and a ".lst" file (if the list file option is on) in which the 
+C++ code appears as comments.  For example, consider the 
+following C++ code: 
+
+
+#include <iostream>   //; Sample program
+using namespace std;
+int x;                //x:        dw    0
+
+int main() {          //main:
+
+   x = 5;             //          ldc   5
+                      //          st    x
+
+   cout << x << endl; //          ld    x
+                      //          dout
+                      //          ldc   '\n'
+                      //          aout
+
+   return 0;          //          ldc   0
+                      //          halt
+
+}                     //          end   main
+
+
+A C++ compiler can compile this code.  mas can also assemble this 
+code by treating the "//" comments as assembly input.  Suppose 
+the C++ code above is in a file name t.cpp.  Then to assemble the 
+assembly code it contains, simply enter 
+
+     mas t.cpp
+
+Note that you must specify a ".cpp" extension or else mas assumes 
+a ".mas" extension.  mas then creates the executable file t.mac 
+which can be run on sim.  It also creates a list file t.lst in 
+which the original C++ code now appears as comments: 
+
+
+Machine-level Assembler Version 4.3    Wed Mar 23 10:49:16 2005
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Sample program         ; #include <iostream>   
+                                        ; using namespace std;
+0  *0    0000  x:        dw    0        ; int x;                
+               
+               main:                    ; int main() {          
+               
+1  *1    8005            ldc   5        ;    x = 5;             
+2  *2    1000            st    x
+               
+3  *3    0000            ld    x        ;    cout << x << endl; 
+4  *4    FFFD            dout
+5  *5    800A            ldc   '\n'
+6  *6    FFFB            aout
+               
+7  *7    8000            ldc   0        ;    return 0;          
+8  *8    FFFF            halt
+               
+                         end   main     ; }                      
+9  *9    ========= end of t.cpp ==================================
+
+
+mas also creates a "reverse" file t.mas in which the C++ code 
+appear as comments:
+
+; Sample program         ; #include <iostream>   
+                         ; using namespace std;
+x:        dw    0        ; int x;                
+
+main:                    ; int main() {          
+
+          ldc   5        ;    x = 5;             
+          st    x
+
+          ld    x        ;    cout << x << endl; 
+          dout
+          ldc   '\n'
+          aout
+
+          ldc   0        ;    return 0;          
+          halt
+
+          end   main     ; }                      
+
+
+The SD command in sim displays the ".mas" file corresponding to 
+the ".mac" file sim is currently running.  Thus, when sim is 
+running a ".mac" file corresponding to a ".cpp" file, the SD 
+command displays the reverse file (because it has a ".mas" 
+extension). 
+
+Reverse commenting is in effect only if it is enabled and the 
+extension on the input file is ".cpp", ".c", ".java", or ".jav".  
+
+A reverse file is created only if reverse commenting is in 
+effect and the reverse file option is on.
+
+To create a reverse file, mas moves the C++/C/Java code to the 
+right so that it starts in column 25, placing the assembly code 
+to the left of column 25.  If a line of assembly code extends 
+beyond column 25 in the reverse file, mas positions the C++ code 
+on that line to the right of the assembly code. 
+
+The delimiter for reverse comments can be changed by the mod 
+program to any string starting with "//" followed by an optional 
+third character.  For example, you can change it to "//!" or 
+"//."  Thus, if the original C++/C/Java program has // comments, 
+you can add your assembler code using a different delimiter (such 
+as "//.").  Then mas will be able to distinguish between the 
+program's original comments and the comments that hold assembler 
+code. 
+
+The C++ code start column can be changed by the mod program (the 
+default value is 25). 
+
+The reverse commenting feature of mas can be enabled or disabled 
+with the mod program.  If it is enabled, it is activated when 
+the input file has the extension ".cpp", ".c", ".java", or 
+".jav".
+
+
+Problem with a Leading "/" in Command Line Arguments on Non-
+Microsoft Systems
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with EITHER "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems can cause a 
+problem.  For example, suppose you want to specify an input file 
+on the command line.  Recall that an input file argument is not 
+preceded by an argument marker.  For example in, 
+
+    sim a /ms
+
+the argument "a" (which specifies the input file a.mac) does NOT 
+have a preceding "/" or "-".  "/ms", on the other hand, has the 
+argument marker "/".  "/ms" is interpreted as the "/m" argument 
+followed by the secondary argument "s".  Now suppose the input 
+file you want to specify on the command line is 
+
+     /abc.x
+
+This denotes the abc.x file in the root directory "/".  
+Unfortunately, all the programs in the H1 Software Package will 
+interpret a leading "/" as an argument marker rather than as the 
+root directory.  Thus, 
+
+     /abc.x
+
+on the command line is incorrectly interpreted as the argument 
+
+     /a 
+
+followed by the secondary argument
+
+     bc.x
+
+This problem does not occur on Microsoft systems because they use 
+"\" rather than "/" as the filename separator, and, thus, there 
+is never any confusion with the argument marker "/". 
+
+You will probably rarely run into this problem because full 
+pathnames are rarely needed when using the programs in the H1 
+Software Package.  However, if the problem does occur, it can 
+easily be circumvented: simply use "//" to represent the root.  
+For example, if 
+
+     //abc.x
+
+appears on a command line, it is interpreted as the input file
+
+     /abc.x
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 
+
+
+Default Settings
+
+     mas is shipped with the following default settings:
+
+     number base:          decimal
+     label status:         case sensitive
+     list file status:     list on
+     message status:       messages on (i.e., non-error/non-warning 
+                           console messages are displayed)
+     sym tab display:      enabled
+     car file status:      car file on
+     reverse comments:     enabled
+     reverse delimiter:    //
+     reverse file status:  reverse file on
+     reverse start column: 25
+     configuration file:   none (i.e., mas is configured for the 
+                           standard instruction set)
+
+These settings, however, can be changed with the mod program.  
+For information on the mod program, see mod.txt. 

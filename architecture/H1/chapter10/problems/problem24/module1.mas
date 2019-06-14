@@ -1,0 +1,9 @@
+;-------------------------------------------------------------------------
+; 10.24 Suppose the following two modules are assembled and linked
+; in the order given. Show the contents of the ".mac" file that is
+; produced. Use the same format that pic uses.
+;-------------------------------------------------------------------------
+
+	extern	a
+	public	b
+b:	dw	a

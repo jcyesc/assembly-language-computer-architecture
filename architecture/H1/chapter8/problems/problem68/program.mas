@@ -1,0 +1,57 @@
+;----------------------------------------------------------------------------
+; Translate the program 8.68 to assembly language.
+;----------------------------------------------------------------------------
+
+;------------------------
+; void f(int x)
+;------------------------
+
+@f$i:	ldr	1	; if(x == 0)
+	jnz	next
+	
+	ldc	hello	; cout << "hello\n";
+	sout
+	ret		; return to the caller	
+
+next:	ldc	good	; cout << "good\n";
+	sout
+
+	ldr	1	; f(x - 1);
+	sub	@1
+	push
+	call	@f$i
+	dloc	1
+
+	ldc	bad	; cout << "bad\n";
+	sout
+	
+	ldr	1	; f(x -1);
+	sub	@1
+	push
+	call	@f$i
+	dloc	1
+
+	ldc	so	; cout << "so so\n";
+	sout
+
+	ret		; return to the caller
+
+;-------------------------
+; int main()
+;-------------------------
+
+main:	ldc	3	; f(3);
+	push
+	call	@f$i
+	dloc	1
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+hello:	dw	"hello\n"
+good:	dw	"good\n"
+bad:	dw	"bad\n"
+so:	dw	"so so\n"
+@1:	dw	1

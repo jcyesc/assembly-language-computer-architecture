@@ -1,0 +1,19 @@
+; #6175
+;Your display should look exactly like this (data from the test 
+;cases replacing the strings):
+;Enter string
+;hello
+;Length = 5
+n
+o
+ln
+g
+hello
+o
+g
+12ABC
+o
+g
+?
+SD
+q

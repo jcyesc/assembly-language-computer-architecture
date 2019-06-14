@@ -1,0 +1,6 @@
+b:	call	c
+	ret
+
+	public	b	; b is a public symbol.
+	extern	c	; c is external.
+	

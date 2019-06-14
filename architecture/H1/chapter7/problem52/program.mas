@@ -1,0 +1,46 @@
+;--------------------------------------------------------------
+; Translate the program 7.52 to assembly language
+;--------------------------------------------------------------
+
+;-----------------------
+; void f(int x)
+;-----------------------
+
+f:	ldc	msg_x	; cout << "x = " << x << endl;
+	sout
+	ldr	1
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	msg_a	; cout << "a = " << x << endl;
+	sout
+	ld	a
+	dout
+	ldc	'\n'
+	aout
+	
+	ret		; return to the calling function
+
+
+;-----------------------
+; main()
+;-----------------------
+
+main:	ld	a	; f(a++); a is incremented before f is executed
+	push
+	add	@1
+	st	a
+	call	f
+	dloc	1	
+
+	halt		; end of the program		
+
+	end main
+
+; GLOBAL VARIABLES
+
+a:	dw	5
+msg_x:	dw	"x = "
+msg_a:	dw	"a = "
+@1:	dw	1

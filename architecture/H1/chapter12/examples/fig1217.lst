@@ -1,0 +1,212 @@
+Machine-level Assembler Version 6.1    Tue Mar  9 16:24:39 2010
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               	!o
+               	; void traverse(NODE *p)
+               @traverse$p4NODE:
+0  *0    FA00  	esba
+               
+1  *1    4002  @L0:	ldr	2	; while(p) {
+2  *2    C00D  	jz	@L1
+               
+3  *3    4002  	ldr	2	; cout << p->data << endl;
+4  *4    F100  	ldi
+5  *5    FFFD  	dout
+6  *6    800A  	ldc	'\n'
+7  *7    FFFB  	aout
+               
+8  *8    4002  	ldr	2	; p = p->link;
+9  *9    F801  	addc	1
+A  *10   F100  	ldi
+B  *11   5002  	str	2
+               
+C  *12   9001  	ja	@L0
+               	
+D  *13   FB00  @L1:	reba
+E  *14   F000  	ret
+               
+               ;===============================================================
+               @get_data$ri:
+F  *15   FA00  	esba
+               
+10 *16   8041  	ldc	@m0	; cout << "Enter positive int ....\n";
+11 *17   FFF7  	sout
+               
+12 *18   FFFC  	din		; cin >> x;
+13 *19   F300  	push
+14 *20   4002  	ldr	2
+15 *21   F200  	sti
+               
+16 *22   FB00  	reba
+17 *23   F000  	ret
+               
+               ;===============================================================
+               main:	
+18 *24   F501  	aloc	1	; NODE *head;
+               	
+19 *25   F501  	aloc	1	; NODE *p;
+               
+1A *26   F501  	aloc	1	; int x;
+               
+1B *27   8000  	ldc	0	; head = NULL;
+1C *28   5FFF  	str	-1
+               
+1D *29   8FFD  	ldc	-3	; get_data(x);
+1E *30   FC00  	cora
+1F *31   F300  	push
+20 *32   E00F  	call	@get_data$ri
+21 *33   F601  	dloc	1
+               
+22 *34   4FFD  @L2:	ldr	-3	; while(x >= 0) {
+23 *35   B039  	jn	@L3
+               
+24 *36   007E  	ld	@avail_ptr	; p = new NODE;
+25 *37   5FFE  	str	-2
+26 *38   F802  	addc	2
+27 *39   107E  	st	@avail_ptr
+               
+28 *40   4FFD  	ldr	-3	; p -> data = x;
+29 *41   F300  	push
+2A *42   4FFE  	ldr	-2
+2B *43   F200  	sti
+               
+2C *44   4FFF  	ldr	-1	; p -> link = head;
+2D *45   F300  	push
+2E *46   4FFE  	ldr	-2
+2F *47   F801  	addc	1
+30 *48   F200  	sti
+               
+31 *49   4FFE  	ldr	-2	; head = p;
+32 *50   5FFF  	str	-1
+               
+33 *51   8FFD  	ldc	-3	; get_data(x);
+34 *52   FC00  	cora
+35 *53   F300  	push
+36 *54   E00F  	call	@get_data$ri
+37 *55   F601  	dloc	1
+               
+38 *56   9022  	ja	@L2
+               
+39 *57   806D  @L3:	ldc	@m1	; cout << "Traversing list\n";
+3A *58   FFF7  	sout
+               
+3B *59   4FFF  	ldr	-1	; traverse(head);
+3C *60   F300  	push
+3D *61   E000  	call	@traverse$p4NODE
+3E *62   F601  	dloc	1
+               
+3F *63   8000  	ldc	0	; return 0;
+40 *64   FFFF  	halt
+               
+               
+               end	main
+               ;=========================================================
+41 *65   0065  @m0:	dw	"enter positive int (or negative in to end)\n";
+42 *66   006E
+43 *67   0074
+44 *68   0065
+45 *69   0072
+46 *70   0020
+47 *71   0070
+48 *72   006F
+49 *73   0073
+4A *74   0069
+4B *75   0074
+4C *76   0069
+4D *77   0076
+4E *78   0065
+4F *79   0020
+50 *80   0069
+51 *81   006E
+52 *82   0074
+53 *83   0020
+54 *84   0028
+55 *85   006F
+56 *86   0072
+57 *87   0020
+58 *88   006E
+59 *89   0065
+5A *90   0067
+5B *91   0061
+5C *92   0074
+5D *93   0069
+5E *94   0076
+5F *95   0065
+60 *96   0020
+61 *97   0069
+62 *98   006E
+63 *99   0020
+64 *100  0074
+65 *101  006F
+66 *102  0020
+67 *103  0065
+68 *104  006E
+69 *105  0064
+6A *106  0029
+6B *107  000A
+6C *108  0000
+6D *109  0054  @m1:	dw	"Traversing list\n";
+6E *110  0072
+6F *111  0061
+70 *112  0076
+71 *113  0065
+72 *114  0072
+73 *115  0073
+74 *116  0069
+75 *117  006E
+76 *118  0067
+77 *119  0020
+78 *120  006C
+79 *121  0069
+7A *122  0073
+7B *123  0074
+7C *124  000A
+7D *125  0000
+7E *126  007F  @avail_ptr: dw   * + 1
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+7F *127  ========= end of fig1217.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @traverse$p4NODE          0           3D 
+ @L0                       1           C  
+ @L1                       D           2  
+ @get_data$ri              F           20  36 
+ main                      18          41 
+ @L2                       22          38 
+ @L3                       39          23 
+ @m0                       41          10 
+ @m1                       6D          39 
+ @avail_ptr                7E          24  27 
+
+Input file   = fig1217.mas
+Output file  = fig1217.mac
+List file    = fig1217.lst 
+Config file  = o.cfg 
+Number base  = decimal
+Label status = case sensitive

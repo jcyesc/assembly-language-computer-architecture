@@ -1,0 +1,30 @@
+;---------------------------------------------------
+;main module -- illustrates call instruction
+;---------------------------------------------------
+	call   f1
+ret1:	ldc    msgmain
+	sout
+	call   f2
+ret2:	halt
+msgmain:dw     "middle"
+
+
+;------------------------------
+; f1 function
+;
+; outputs string "left"
+;------------------------------
+ f1: 	ldc   msgf1
+	sout
+	ret
+msgf1:	dw   "left"
+
+;-----------------------------
+; f2 function
+; 
+; outputs string "right\n"
+;-----------------------------
+f2:    	ldc   msgf2
+	sout
+	ret
+msgf2:  dw    "right\n"

@@ -1,0 +1,239 @@
+Machine-level Assembler Version 6.1    Fri Jun 15 14:09:45 2007
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+                          !k                                    ksup.mas
+                          ; stack start-up code
+               ;===========================================================
+0  *0    004B  loc0:      dw   'K'        ; to test for null pointer assignment
+               
+               ;          initialize sp register
+1  *1    FB00  start_up:  zesp
+               
+               ;          test if clptr has reached the end of the command line
+2  *2    0048  getarg:    p    clptr      ; test for null char
+3  *3    F500             load
+4  *4    A035             jz   alldone    ; jump if null char
+               
+               ;          check if too many args--max = 20
+5  *5    004A             p    argc       ; get current count
+6  *6    1014             pc   20
+7  *7    F200             sub
+8  *8    B00C             jnz  * + 4
+9  *9    1060             pc   errmsg1    ; display error message
+A  *10   FFF7             sout
+B  *11   6046             ja   done
+               
+               ;          move contents of clptr into next avail slot in vector
+C  *12   0049             p    vectorptr  ; make entry into vector
+D  *13   0048             p    clptr
+E  *14   F300             stav
+               
+               ;          move clptr to end of current argument
+F  *15   0048  getchar:   p    clptr      ; get next char in command line
+10 *16   F500             load
+11 *17   A01D             jz   endarg     ; jump if null char
+12 *18   0048             p    clptr
+13 *19   F500             load
+14 *20   1020             pc   ' '
+15 *21   F200             sub  
+16 *22   A01D             jz   endarg     ; jump if space
+17 *23   1048             pc   clptr      ; move command line ptr to next char
+18 *24   0048             p    clptr     
+19 *25   1001             pc   1
+1A *26   F100             add
+1B *27   F300             stav
+1C *28   600F             ja   getchar
+               
+               ;          terminate argument with null character
+1D *29   0048  endarg:    p    clptr      ; terminate arg with null char
+1E *30   1000             pc   0         
+1F *31   F300             stav
+               
+               ;          increment count in argc
+20 *32   104A             pc   argc
+21 *33   004A             p    argc
+22 *34   1001             pc   1
+23 *35   F100             add
+24 *36   F300             stav
+               
+               ;          prepare for the next argument
+               
+               ;          move vectorptr to next slot in vector
+25 *37   1049             pc   vectorptr  ; move vectorptr
+26 *38   0049             p    vectorptr  
+27 *39   1001             pc   1
+28 *40   F100             add
+29 *41   F300             stav
+               
+               ;          move clptr to beginning of next arg
+2A *42   1048  nextarg:   pc   clptr
+2B *43   0048             p    clptr      ; find start of next arg
+2C *44   1001             pc   1
+2D *45   F100             add
+2E *46   F300             stav
+2F *47   0048             p    clptr                                           
+30 *48   F500             load
+31 *49   1020             pc   ' '
+32 *50   F200             sub
+33 *51   A02A             jz   nextarg
+34 *52   6002             ja   getarg     ; now process next arg
+               
+               ;===========================================================
+35 *53   4FFF  alldone:   aspc -1         ; allocate return area
+               ;          pass argv (the address of vector) and argc args to ma
+36 *54   104B             pc   vector     ; push address of vector
+37 *55   004A             p    argc       ; push value of argc
+38 *56   5000             call main
+39 *57   4002             aspc 2          ; remove parameters
+3A *58   105F             pc   retcode    ; push address of retcode
+3B *59   F400             stva            ; store return value in retcode
+               ;===========================================================
+               ;          final housekeeping code
+               
+               ;          check if word at loc0 still has 'K'
+3C *60   0000  testloc0:  p     loc0   
+3D *61   104B             pc    'K'
+3E *62   F200             sub
+3F *63   A046             jz    done      ; if still there, jump to done
+40 *64   003C             p    testloc0   ; start-up code at loc 0?
+41 *65   A044             jz   atloc0     ; if yes, display null ptr message
+42 *66   1082             pc   errmsg2    ; if not, display other message
+43 *67   6045             ja   outmsg
+44 *68   109C  atloc0:    pc   errmsg3
+45 *69   FFF7  outmsg:    sout
+               
+46 *70   005F  done:      p    retcode    ; ret code at top of main memory
+47 *71   FFFF             halt
+               ;===========================================================
+               ;          constants and variables
+48 *72   0F3C  clptr:     dw   3900       ; address of command line
+49 *73   004B  vectorptr: dw   vector     ; address of vector
+4A *74   0000  argc:      dw   0          ; count of the number of arguments
+4B *75   0000  vector:    dw   20 dup 0   ; array of char ptrs to arguments
+5F *95   0000  retcode:   dw   0
+60 *96   000A  errmsg1:   dw   "\nToo many command line arguments\n"
+61 *97   0054
+62 *98   006F
+63 *99   006F
+64 *100  0020
+65 *101  006D
+66 *102  0061
+67 *103  006E
+68 *104  0079
+69 *105  0020
+6A *106  0063
+6B *107  006F
+6C *108  006D
+6D *109  006D
+6E *110  0061
+6F *111  006E
+70 *112  0064
+71 *113  0020
+72 *114  006C
+73 *115  0069
+74 *116  006E
+75 *117  0065
+76 *118  0020
+77 *119  0061
+78 *120  0072
+79 *121  0067
+7A *122  0075
+7B *123  006D
+7C *124  0065
+7D *125  006E
+7E *126  0074
+7F *127  0073
+80 *128  000A
+81 *129  0000
+82 *130  000A  errmsg2:   dw   "\nStart-up code corrupted\n"
+83 *131  0053
+84 *132  0074
+85 *133  0061
+86 *134  0072
+87 *135  0074
+88 *136  002D
+89 *137  0075
+8A *138  0070
+8B *139  0020
+8C *140  0063
+8D *141  006F
+8E *142  0064
+8F *143  0065
+90 *144  0020
+91 *145  0063
+92 *146  006F
+93 *147  0072
+94 *148  0072
+95 *149  0075
+96 *150  0070
+97 *151  0074
+98 *152  0065
+99 *153  0064
+9A *154  000A
+9B *155  0000
+9C *156  000A  errmsg3:   dw   "\nNull pointer assignment\n"
+9D *157  004E
+9E *158  0075
+9F *159  006C
+A0 *160  006C
+A1 *161  0020
+A2 *162  0070
+A3 *163  006F
+A4 *164  0069
+A5 *165  006E
+A6 *166  0074
+A7 *167  0065
+A8 *168  0072
+A9 *169  0020
+AA *170  0061
+AB *171  0073
+AC *172  0073
+AD *173  0069
+AE *174  0067
+AF *175  006E
+B0 *176  006D
+B1 *177  0065
+B2 *178  006E
+B3 *179  0074
+B4 *180  000A
+B5 *181  0000
+                          extern main
+                          end start_up     
+B6 *182  ========= end of ksup.mas ===============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ loc0                      0           3C 
+ start_up                  1           B6 
+ getarg                    2           34 
+ getchar                   F           1C 
+ endarg                    1D          11  16 
+ nextarg                   2A          33 
+ alldone                   35          4  
+ testloc0                  3C          40 
+ atloc0                    44          41 
+ outmsg                    45          43 
+ done                      46          B   3F 
+ clptr                     48          2   D   F   12  17 
+                                       18  1D  2A  2B  2F 
+ vectorptr                 49          C   25  26 
+ argc                      4A          5   20  21  37 
+ vector                    4B          36  49 
+ retcode                   5F          3A  46 
+ errmsg1                   60          9  
+ errmsg2                   82          42 
+ errmsg3                   9C          44 
+ main                      ext         B6  38 
+
+Input file   = ksup.mas
+Output file  = dist/ksup.mob
+List file    = dist/ksup.lst 
+Config file  = k.cfg 
+Number base  = decimal
+Label status = case sensitive

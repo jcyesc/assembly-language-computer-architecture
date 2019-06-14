@@ -1,0 +1,7 @@
+; 4.29 What happens when the following program is executed:
+
+	ldc	y
+	swap
+	call	x
+x:	halt
+y:	dw	-1

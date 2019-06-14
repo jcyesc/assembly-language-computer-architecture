@@ -1,0 +1,122 @@
+Machine-level Assembler Version 6.1    Tue Mar 31 22:12:58 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;--------------------------------------------------------------
+               ; Translate the program 8.61 to assembly language
+               ;--------------------------------------------------------------
+               
+               ;---------------------
+               ; main()
+               ;---------------------
+               
+0  *0    8018  main:	ldc	enter	; cout << "enter\n";
+1  *1    FFF7  	sout
+               
+2  *2    FFFC  	din		; cin >> x;
+3  *3    1017  	st	x
+               
+4  *4    0017  	ld	x	; if(x >= 5)
+5  *5    303E  	sub	@5
+6  *6    B009  	jn	next
+               	
+7  *7    801F  	ldc	hello	; cout << "hello\n";
+8  *8    FFF7  	sout
+               
+               next:
+9  *9    003F  	ld	@_6	; if(x <= -6)
+A  *10   3017  	sub	x
+B  *11   B00F  	jn	else_if
+               	
+C  *12   8026  	ldc	small	; cout << "small\n";
+D  *13   FFF7  	sout
+               
+E  *14   9016  	ja	end_p
+               else_if:
+F  *15   802D  	ldc	big	; cout << "big\n";
+10 *16   FFF7  	sout
+               
+11 *17   801E  	ldc	30	; if(x > 30)
+12 *18   3017  	sub	x
+13 *19   A016  	jzop	end_p
+               
+14 *20   8032  	ldc	re_big	; cout << "really big\n";
+15 *21   FFF7  	sout
+               
+               end_p:
+16 *22   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+17 *23   0000  x:	dw	0	; int x;
+18 *24   0065  enter:	dw	"enter\n"
+19 *25   006E
+1A *26   0074
+1B *27   0065
+1C *28   0072
+1D *29   000A
+1E *30   0000
+1F *31   0068  hello:	dw	"hello\n"
+20 *32   0065
+21 *33   006C
+22 *34   006C
+23 *35   006F
+24 *36   000A
+25 *37   0000
+26 *38   0073  small:	dw	"small\n"
+27 *39   006D
+28 *40   0061
+29 *41   006C
+2A *42   006C
+2B *43   000A
+2C *44   0000
+2D *45   0062  big:	dw	"big\n"
+2E *46   0069
+2F *47   0067
+30 *48   000A
+31 *49   0000
+32 *50   0072  re_big:	dw	"really big\n"
+33 *51   0065
+34 *52   0061
+35 *53   006C
+36 *54   006C
+37 *55   0079
+38 *56   0020
+39 *57   0062
+3A *58   0069
+3B *59   0067
+3C *60   000A
+3D *61   0000
+               
+3E *62   0005  @5:	dw	5
+3F *63   FFFA  @_6:	dw	-6	; It's necessary to define it here because with ldc o
+               			; is loaded in the first 12 right bits.
+               
+40 *64   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           17 
+ next                      9           6  
+ else_if                   F           B  
+ end_p                     16          E   13 
+ x                         17          3   4   A   12 
+ enter                     18          0  
+ hello                     1F          7  
+ small                     26          C  
+ big                       2D          F  
+ re_big                    32          14 
+ @5                        3E          5  
+ @_6                       3F          9  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

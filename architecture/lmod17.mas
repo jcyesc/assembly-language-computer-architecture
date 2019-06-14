@@ -1,0 +1,12 @@
+         ;                                       lmod17.mas
+         ; Test module for linv1
+         ; Link by itself
+         ; Generates error message
+         extern x
+         ld     x
+         ld     x
+         ld     x
+         ld     x
+         ld     x
+         ld     x
+         halt

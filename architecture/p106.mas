@@ -1,0 +1,8 @@
+                  public x
+                  extern y
+            s:    call   y
+                  add    x
+                  add    y
+                  halt
+            x:    dw     -5
+                  end    s

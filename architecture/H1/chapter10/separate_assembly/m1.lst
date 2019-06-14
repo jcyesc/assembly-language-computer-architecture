@@ -1,0 +1,33 @@
+Machine-level Assembler Version 6.1    Sat Apr 11 11:57:56 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    E000  main:	call	sub
+1  *1    1000  	st	total
+2  *2    FFFF  done:	halt
+3  *3    0011  x:	dw	17
+               	
+               	public	x
+               	extern	sub
+               	extern	total
+               	end	main
+4  *4    ========= end of m1.mas =================================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           4  
+ done                      2          
+ x                         3           4  
+ sub                       ext         4   0  
+ total                     ext         4   1  
+
+Input file   = m1.mas
+Output file  = m1.mob
+List file    = m1.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,3 @@
+            ldr  x
+            halt
+        x:  dw   2

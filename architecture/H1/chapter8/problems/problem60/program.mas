@@ -1,0 +1,55 @@
+;---------------------------------------------------------------
+; Translate the program 8.60 to assembly language
+;---------------------------------------------------------------
+
+;---------------------
+; main()
+;---------------------
+
+main:	ldc	enter	; cout << "enter\n";
+	sout
+
+	din		; cin >> x;
+	st	x
+
+	ldc	5	; if(x + 5)
+	add	x
+	jz	end_if
+	ldc	hello	; cout << "hello\n";	
+	sout
+
+end_if:
+	ldc	44	; if(x > 44)
+	sub	x
+	jzop	else_2_if
+	
+	ldc	big	; cout << "big\n";
+	sout
+
+	ja	end_p
+
+else_2_if:
+	ldc	small	; cout << "small\n";
+	sout
+	
+	ldc	30	; if( x < 30)
+	sub	x
+	jn	end_p
+	jz	end_p
+	
+	ldc	re_small	; cout << "really small\n";
+	sout
+
+end_p:
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	0	; int x = 0;
+enter:	dw	"enter\n"
+hello:	dw	"hello\n"
+big:	dw	"big\n"
+small:	dw	"small\n"
+re_small:	dw	"really small\n"
+

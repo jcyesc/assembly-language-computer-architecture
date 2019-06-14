@@ -1,0 +1,10 @@
+Module Examiner Version 6.1             Sun May  3 11:54:40 2009
+
+Header:
+       0:  0052 0000 0052 0004 0052 0005 0052 0006   R.R.R.R.
+       8:  0054                                      T       
+Text:
+       0:  9004 0001 0008 0000 0001 2002 1003 FFFF   ........
+
+Input file = program.mac
+List file  = program.mex

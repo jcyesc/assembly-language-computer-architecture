@@ -1,0 +1,74 @@
+;-----------------------------------------------------------------------
+; Translate the program 9.20 to assembly language.
+;-----------------------------------------------------------------------
+
+;-------------------------------------------------------
+; int f(int x, int $y, int &z)  $y means value-result
+;-------------------------------------------------------
+
+@f$ipiri:	ldc	1	; x++;
+		addr	1
+		str	1
+
+		ldc	1	; y++; Take in count that y is value-result
+		addr	2
+		str	2
+
+		ldr	3	; z++
+		ldi
+		add	@1
+		push
+		ldr	4
+		sti
+
+		ldr	3	; x + y + z;
+		ldi
+		addr	1
+		addr	2
+
+		ret
+
+main:	ldc	c
+	push
+	ld	b
+	push
+	ld	a
+	push
+	call	@f$ipiri
+	st	s	
+
+	ldr	1	; value-result
+	st	b
+
+	dloc	3
+
+	ld	s	; cout << s << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ld	a	; cout << a << endl;	
+	dout
+	ldc	'\n'
+	aout
+
+	ld	b	; cout << b << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ld	c	; cout << c << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt
+	end main
+		
+; Global variables
+
+s:	dw	0
+a:	dw	1
+b:	dw	2
+c:	dw	3
+@1:	dw	1

@@ -1,0 +1,87 @@
+;--------------------------------------------------------------------------------------
+; Version	: 1.0
+; Created	: 27-december-2008
+; Author	: Juan Carlos Yescas
+; Description	: Program that displays all the positive numbers divisible by 3 that
+;		  are less than the input number.
+;
+;---------------------------------------------------------------------------------------
+
+main:
+	ldc	msg		; load the address of msg
+	sout			; string output
+	call 	printLine	; call printLine to print a line feed	
+
+	din			; decimal input
+	st	number		; store the number that was input in number
+	call	printLine	; call printLine to print a line feed
+		
+	ldc	msg_div		; load the address of msg_div
+	sout			; string output
+	call	printLine	; call printLine to print a line feed
+	call	printDivisible3	; call printDivisible3 to print the numbers divisible by 3
+
+	halt			; end of the program
+
+;-----------------------------------------------------------------
+; printDivisible3 
+; 
+; Function that print all the numbers divisible by 3 that are less
+; than the input number.
+;
+; This function assumes that number is set.
+;
+; The number must be positive
+;-----------------------------------------------------------------
+
+printDivisible3:
+	ld	acumulador	; load the value of acumulador
+	add	@3		; add 3 to acumulador
+	st	acumulador	; store acumulador
+	sub	number		; subtract number to acumulador ( acumulador - number)
+	jn	print		; if it's negative, print the acumulador, because is less than number
+	jz	print		; if it's zero, print acumulador because is the same than number
+	ret			; return to the caller
+
+print:
+	ld	acumulador	; load acumulador
+	dout			; decimal output
+	call	printBlank	; call printBlank to print a blank space
+	ja	printDivisible3	; jump always to printDivisible3
+ret
+
+;-----------------------------------------------------------------
+; printBlank()
+;
+; Function that print a blank space
+;
+;-----------------------------------------------------------------
+
+printBlank:
+	ldc	' '	; load the ASCII code for ' '
+	aout		; ASCII output
+	ret		; return to the caller
+
+;-----------------------------------------------------------------
+; printLine()
+;
+; Function that prints a line feed
+;  
+;-----------------------------------------------------------------
+
+printLine:
+	ldc	'\n'	; load the ASCII code for '\n'
+	aout		; ASCII output
+	ret		; return to the caller
+
+;----------------------------
+; VARIABLES
+;----------------------------
+number:	dw	0
+acumulador: dw	0
+@3:	dw	3
+
+msg:	dw  	"Write a number"
+msg_div:dw	"Divisible by 3"
+
+

@@ -1,0 +1,205 @@
+                                                 jvm.txt
+
+Java Virtual Machine Bytecode Summary
+
+Mnemonic Conventions
+
+         Meaning                   Example
+
+ 2     double word             dup2      (dup doubleword on top of stack)
+ 2     "to"                    i2f       (int to float)
+ a     reference               aload     (load reference from loc var)
+ a     array                   aaload    (load reference from array)
+ b     byte                    i2b       (int to byte)
+ b     boolean                 bastore   (byte or boolean array store)
+ c     char                    caload    (char array load)
+ const push constant           iconst_0  (push int const 0)
+ d     double                  dadd      (double add)
+ f     float                   fadd      (float add)
+ i     int                     iadd      (int add)
+ l     long                    ladd      (long add)
+ load  push                    iload     (int load)
+ _m1   minus 1                 iconst_m1 (push int const -1)
+ _w    wide index (2 bytes)    ldc_w     (load constant wide)
+ _w    wide address (4 bytes)  goto_w    (goto wide)
+
+ _<n>   0, 1, 2, 3             iload_3
+ _<d>   0, 1                   dconst_1
+ _<f>   0, 1, 2                fconst_2
+ _<i>   0, 1, 2, 3, 4, 5       iconst_5
+
+------------------------------------------------
+Opcode  Mnemonic            Instruction Operands
+ (hex)
+
+  32    aaload       
+  53    aastore        
+  01    aconst_null 
+  19    aload           local variable index (1 byte)
+2A-2D   aload_<n>
+  BD    anewarray       constant pool index (2 bytes)
+  B0    areturn 
+  BE    arraylength 
+  3A    astore          local variable index (1 byte)
+4B-4E   astore_<n>
+  BF    athrow 
+  33    baload 
+  54    bastore         
+  10    bipush          constant (1 byte)
+  34    caload 
+  55    castore 
+  C0    checkcast       constant pool index (2 bytes)
+  90    d2f 
+  83    d2i 
+  8F    d2l 
+  63    dadd 
+  31    daload 
+  52    dastore 
+  98    dcmpg 
+  97    dcmpl 
+0E-0F   dconst_<d>
+  6F    ddiv 
+  18    dload           local variable index (1 byte)
+26-29   dload_<n> 
+  6B    dmul 
+  77    dneg 
+  73    drem 
+  AF    dreturn 
+  39    dstore          local variable index (1 byte)
+47-4A   dstore_<n> 
+  67    dsub 
+  59    dup 
+  5A    dup_x1 
+  5B    dup_x2 
+  5C    dup2 
+  5D    dup2_x1 
+  5E    dup2_x2 
+  8D    f2d 
+  8B    f2i 
+  8C    f2l 
+  62    fadd 
+  30    faload 
+  51    fastore 
+  96    fcmpg 
+  95    fcmpl 
+0B-0D   fconst_<f> 
+  6E    fdiv 
+  17    fload           local variable index (1 byte)
+22-25   fload_<n> 
+  6A    fmul 
+  76    fneg 
+  72    frem 
+  AE    freturn 
+  38    fstore          local variable index (1 byte)
+43-46   fstore_<n> 
+  66    fsub 
+  B4    getfield        constant pool index (2 bytes)
+  B2    getstatic       constant pool index (2 bytes)
+  A7    goto            pc-relative address (2 bytes)
+  C8    goto_w          pc-relative address (4 bytes)
+  91    i2b 
+  92    i2c 
+  87    i2d 
+  86    i2f 
+  85    i2l 
+  93    i2s 
+  60    iadd 
+  2E    iaload 
+  7E    iand 
+  4F    iastore 
+03-08   iconst_<i> 
+  02    iconst_m1 
+  6C    idiv 
+  A5    if_acmpeq       pc-relative address (2 bytes)
+  A6    if_acmpne       pc-relative address (2 bytes)
+  9F    if_icmpeq       pc-relative address (2 bytes)
+  A2    if_icmpge       pc-relative address (2 bytes)
+  A3    if_icmpgt       pc-relative address (2 bytes)
+  A4    if_icmple       pc-relative address (2 bytes)
+  A1    if_icmplt       pc-relative address (2 bytes)
+  A0    if_icmpne       pc-relative address (2 bytes)
+  99    ifeq            pc-relative address (2 bytes)
+  9C    ifge            pc-relative address (2 bytes)
+  9D    ifgt            pc-relative address (2 bytes)
+  9E    ifle            pc-relative address (2 bytes)
+  9B    iflt            pc-relative address (2 bytes)
+  9A    ifne            pc-relative address (2 bytes)
+  C7    ifnonnull       pc-relative address (2 bytes)
+  C6    ifnull          pc-relative address (2 bytes)
+  84    iinc            local variable index (1 byte), increment (1 byte)
+  15    iload           local variable index (1 byte)
+1A-1D   iload_<n> 
+  68    imul 
+  74    ineg 
+  C1    instanceof      constant pool index (2 bytes)
+  B9    invokeinterface constant pool index (2 bytes), number of 
+                        args (1 byte) , 0 (1 byte)
+  B7    invokespecial   constant pool index (2 bytes)
+  B8    invokestatic    constant pool index (2 bytes)
+  B6    invokevirtual   constant pool index (2 bytes)
+  80    ior 
+  70    irem 
+  AC    ireturn 
+  78    ishl 
+  7A    ishr 
+  36    istore          local variable index (1 byte)
+3B-3E   istore_<n> 
+  64    isub 
+  7C    iushr 
+  82    ixor 
+  A8    jsr             pc-relative address (2 bytes)
+  C9    jsr_w           pc-relative address (4 bytes)
+  8A    l2d 
+  89    l2f 
+  88    l2i 
+  61    ladd 
+  2F    laload 
+  7F    land 
+  50    lastore 
+  94    lcmp 
+09-0A   lconst_<l> 
+  12    ldc             constant pool index (1 byte)
+  13    ldc_w           constant pool index (2 bytes)
+  14    ldc2_w          constant pool index (2 bytes)
+  6D    ldiv 
+  16    lload           local variable index (1 byte)
+1E-21   lload_<n> 
+  69    lmul 
+  75    lneg 
+  AB    lookupswitch    pad (0-3 bytes), default (4 bytes), 
+                        number of pairs (4 bytes), pairs (8 bytes 
+                        each pair) 
+  81    lor 
+  71    lrem 
+  AD    lreturn 
+  79    lshl 
+  7B    lshr 
+  37    lstore          local variable index (1 byte)
+3F-42   lstore_<n> 
+  65    lsub 
+  7D    lushr 
+  83    lxor 
+  C2    monitorenter 
+  C3    monitorexit 
+  C5    multianewarray  constant pool index (2 bytes), dimensions 
+        (1 byte)
+  BB    new             constant pool index (2 bytes)
+  BC    newarray        type code (1 byte)
+  00    nop 
+  57    pop 
+  58    pop2 
+  B5    putfield        constant pool index (2 bytes)
+  B3    putstatic       constant pool index (2 bytes)
+  A9    ret             local variable index (1 byte)
+  B1    return 
+  35    saload 
+  56    sastore 
+  11    sipush          constant (2 bytes)
+  5F    swap 
+  AA    tableswitch     pad (0-3 bytes), default (4 bytes), low (4 
+                        bytes), high (4 bytes), 
+                        jump table offsets (4 bytes each)
+  C4    wide            opcode (1 byte), local variable index (2 bytes)
+                              or
+                        iinc opcode (1 byte), local variable index 
+                        (2 bytes), increment (2 bytes)

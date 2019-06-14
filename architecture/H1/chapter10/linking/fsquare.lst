@@ -1,0 +1,54 @@
+Machine-level Assembler Version 6.1    Sun May  3 20:53:33 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; fsquare.mas
+               ;
+               ; The subroutine squares the number that is passed. It uses the
+               ; equation nxn = the sum of the first n odd integers.
+               ;---------------------------------------------------------------
+               
+0  *0    F502  square:	aloc	2	; create local variables sum, odd
+1  *1    8000  	ldc	0
+2  *2    5001  	str	1	; initialize sum to 0
+3  *3    8001  	ldc	1	; initialize odd to 1
+4  *4    5000  	str	0
+5  *5    4003  loop:	ldr	3	; get parameter (count)
+6  *6    C010  	jz	done	; all done if count = 0
+7  *7    3013  	sub	@1	; subtract 1 from count
+8  *8    5003  	str	3	; save count
+9  *9    4001  	ldr	1	; get sum
+A  *10   6000  	addr	0	; add odd to sum
+B  *11   5001  	str	1	; save sum
+C  *12   4000  	ldr	0	; get odd
+D  *13   2014  	add	@2	; add 2 to odd
+E  *14   5000  	str	0	; save odd
+F  *15   9005  	ja	loop
+10 *16   4001  done:	ldr	1	; get sum
+11 *17   F602  	dloc	2	; deallocate local variables
+12 *18   F000  	ret		; square returned in ac reg
+13 *19   0001  @1:	dw	1
+14 *20   0002  @2:	dw	2
+               
+               	public square
+15 *21   ========= end of fsquare.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ square                    0           15 
+ loop                      5           F  
+ done                      10          6  
+ @1                        13          7  
+ @2                        14          D  
+
+Input file   = fsquare.mas
+Output file  = fsquare.mob
+List file    = fsquare.lst 
+Number base  = decimal
+Label status = case sensitive

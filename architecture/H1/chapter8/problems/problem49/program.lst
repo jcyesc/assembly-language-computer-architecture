@@ -1,0 +1,119 @@
+Machine-level Assembler Version 6.1    Sat Mar 28 00:20:59 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;--------------------------------------------------------
+               ; Translate the program 8.49 to assembly language.
+               ;--------------------------------------------------------
+               
+               ;--------------------------
+               ; void f()
+               ;--------------------------
+               
+0  *0    F50A  @f$v:	aloc	10	; int c[10];
+               
+1  *1    8001  	ldc	1	; a[x] = 1;
+2  *2    F300  	push
+3  *3    803C  	ldc	a
+4  *4    203B  	add	x
+5  *5    F200  	sti
+               	
+6  *6    8002  	ldc	2	; b[x + 1] = 2;
+7  *7    F300  	push
+8  *8    8046  	ldc	b
+9  *9    203B  	add	x
+A  *10   2052  	add	@1
+B  *11   F200  	sti
+               
+C  *12   F700  	swap		; c[x + 2] = 3;
+D  *13   1054  	st	@spsave
+E  *14   F700  	swap
+F  *15   8003  	ldc	3
+10 *16   F300  	push
+11 *17   0054  	ld	@spsave
+12 *18   203B  	add	x
+13 *19   2053  	add	@2
+14 *20   F200  	sti
+               
+15 *21   0054  	ld	@spsave	; cout << c[2] << endl;
+16 *22   2053  	add	@2
+17 *23   F100  	ldi
+18 *24   FFFD  	dout
+19 *25   800A  	ldc	'\n'
+1A *26   FFFB  	aout
+               
+1B *27   F60A  	dloc	10
+               	
+1C *28   F000  	ret		; return to the calling function
+               
+1D *29   8004  main:	ldc	4	; b[10] = { 2, 3, 4};
+1E *30   F300  	push
+1F *31   8003  	ldc	3
+20 *32   F300  	push
+21 *33   8002  	ldc	2
+22 *34   F300  	push
+23 *35   8046  	ldc	b
+24 *36   F200  	sti
+25 *37   2052  	add	@1
+26 *38   F200  	sti
+27 *39   2052  	add	@1
+28 *40   F200  	sti	
+               	
+29 *41   E000  	call	@f$v	; f();
+               
+2A *42   003C  	ld	a	; cout << a[0] << " " << b[1] << " " << b[2] << endl;
+2B *43   FFFD  	dout
+2C *44   8050  	ldc	msg
+2D *45   FFF7  	sout
+2E *46   8046  	ldc	b
+2F *47   2052  	add	@1
+30 *48   F100  	ldi
+31 *49   FFFD  	dout
+32 *50   8050  	ldc	msg
+33 *51   FFF7  	sout
+34 *52   8046  	ldc	b
+35 *53   2053  	add	@2
+36 *54   F100  	ldi
+37 *55   FFFD  	dout
+38 *56   800A  	ldc	'\n'
+39 *57   FFFB  	aout	
+               
+3A *58   FFFF  	halt		; end of the program
+               	end main
+               
+               
+               
+               ; GLOBAL VARIABLES
+               
+3B *59   0000  x:	dw	0
+3C *60   0000  a:	dw	10 dup 0
+46 *70   0000  b:	dw	10 dup 0
+50 *80   0020  msg:	dw	" "
+51 *81   0000
+52 *82   0001  @1:	dw	1
+53 *83   0002  @2:	dw	2
+54 *84   0000  @spsave:dw	0
+55 *85   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$v                      0           29 
+ main                      1D          3B 
+ x                         3B          4   9   12 
+ a                         3C          3   2A 
+ b                         46          8   23  2E  34 
+ msg                       50          2C  32 
+ @1                        52          A   25  27  2F 
+ @2                        53          13  16  35 
+ @spsave                   54          D   11  15 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

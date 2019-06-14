@@ -1,0 +1,83 @@
+;----------------------------------------------------------------------------------------
+; 10.43 Write  and run on sim an assembly language program that concatenates all the
+; strings pointed to by the argv array with no intervening spaces, and displays the 
+; resulting string.
+;----------------------------------------------------------------------------------------
+
+;---------------------------------------------------------
+;int main(int argc, char *argv) {
+;	char *string = new char[100];
+;		int index = 0;
+;		while(argc != 0) {
+;			char *s = *argv;
+;			while(*s != 0) {
+;				string[index] = s[0];
+;				s++;
+;				index++;
+;			}
+;			argv++;
+;			argc--;
+;		}
+;		cout << concat << endl;
+;		return 0;
+; }
+;----------------------------------------------------------
+
+main:
+
+_while:	ldr		1	; while(argc != 0)
+		jz		_end_main
+		
+		ldr		2	; char *s = *argv;
+		ldi
+		st		@s
+		
+_while2:
+		ld		@s	; while(*s != 0)	
+		ldi
+		jz		_next
+		
+		push			; string[index] = s[0];			
+		ldc		@string
+		add		@index
+		sti	
+		
+		ld		@s		; s++;
+		add		@1
+		st		@s
+		
+		ld		@index	; index++
+		add		@1
+		st		@index
+		
+		ja		_while2
+		
+_next:
+		ldr		2		; argv++
+		add		@1
+		str		2
+		
+		ldr		1		; argc--
+		sub		@1		
+		str		1
+		
+		ja		_while
+
+_end_main:
+		ldc		@string		; cout << string << endl;
+		sout
+		ldc		'\n'
+		aout
+		
+		ldc		0
+		ret
+		
+; Global variables
+
+@1:			dw		1
+@string:	dw  100 dup 0	; This string stores the value of the concat strings.
+@index:		dw	0
+@s:			dw	0		; char *s;
+
+public	main
+

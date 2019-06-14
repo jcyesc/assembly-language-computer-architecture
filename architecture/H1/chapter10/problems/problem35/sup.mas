@@ -1,0 +1,106 @@
+; standard start-up code                         sup.mas
+;===========================================================
+loc0:      dw   'Z'       ; to test for null pointer assignment
+
+;          initialize sp register
+start_up:  ldc  0  
+           swap
+
+;          test if clptr has reached the end of the command line
+getarg:    ld   clptr     ; get next char in command line
+           ldi 
+           jz   alldone   ; if null char, all done
+
+;          check if too many args--max = 20
+           ld   argc      ; get current count
+           sub  @20
+           jnz  * + 4    
+           ldc  errmsg1   ; display error message
+           sout
+           ja   done      ; terminate execution if count at 20 
+
+;          move contents of clptr into next avail slot in vector
+           ld   clptr     ; get address of next arg
+           push           
+           ld   vectorptr
+           sti            ; put address into vector
+
+;          move clptr to end of current argument
+           ld   clptr
+getchar:   ldi            ; get next char in command line
+           jz   endarg    ; ja   if null char
+           sub  blank  
+           jz   endarg    ; ja   if space
+           ld   clptr     ; move command line ptr to next char
+           add  @1
+           st   clptr
+           ja   getchar
+
+;          terminate argument with null character
+endarg:    ldc  0        
+           push
+           ld   clptr     ; clptr points to where null char goes
+           sti 
+
+;          increment count in argc
+           ld   argc  
+           add  @1
+           st   argc
+
+;          prepare for next argument
+
+;          move vectorptr to next slot in vector
+           ld   vectorptr
+           add  @1  
+           st   vectorptr
+
+;          move clptr to beginning of next arg
+nextarg:   ld   clptr 
+           add  @1
+           st   clptr
+           ldi 
+           sub  blank
+           jz   nextarg   ; move over blanks
+           ja   getarg    ; now process next arg
+
+;===========================================================
+;          pass argv (the address of vector) and argc args to main
+alldone:   ldc  vector    ; push address of vector
+           push
+           ld   argc      ; push number of args
+           push
+           call main
+           dloc 2         ; deallocate parameters
+           st   retcode   ; save return code from main
+;===========================================================
+;          final housekeeping code
+
+;          check if word at loc0 still has 'Z'
+testloc0:  ld    loc0    
+           sub   z
+           jz    done     ; if still there, ja   to done
+           ld   testloc0  ; start-up code at loc 0?
+           jz   atloc0    ; if yes, display null ptr message
+           ldc  errmsg2   ; if not, display other message
+           ja   outmsg
+atloc0:    ldc  errmsg3
+outmsg:    sout
+
+done:      ld   retcode   ; restore ret code from main
+           halt           ; return to op sys (sim)
+;===========================================================
+;          constants and variables
+@1:        dw   1
+@20:       dw   20
+clptr:     dw   3900      ; address of command line
+vectorptr: dw   vector    ; array of char ptrs to the arguments
+blank:     dw   ' '
+argc:      dw   0         ; count of the number of arguments
+vector:    dw   20 dup 0  ; space for 20 arg pointers
+z:         dw   'Z'
+retcode:   dw   0
+errmsg1:   dw   "\nToo many command line arguments\n"
+errmsg2:   dw   "\nStart-up code corrupted\n"
+errmsg3:   dw   "\nNull pointer assignment\n"
+           extern main
+           end start_up

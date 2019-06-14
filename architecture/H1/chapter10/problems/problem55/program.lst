@@ -1,0 +1,132 @@
+Machine-level Assembler Version 6.1    Tue May 12 21:10:58 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;------------------------------------------------------------
+               ; 10.55 Translate the next C program to assembly language
+               ;
+               ;	#include <iostream>
+               ;	using namespace std;
+               ;
+               ;	int main()
+               ;	{
+               ;		int a, b[5];
+               ;		cout << "enter number\n";
+               ;		cin >> a;
+               ;		b[a] = 5;
+               ;		cout << " a = " << a << endl;
+               ;		for(a = 0; a < 5; a++)
+               ;		cout << b[a] << endl;
+               ;
+               ;		return 0;
+               ;	}
+               ;------------------------------------------------------------
+               
+               main:
+0  *0    F505  	aloc	5		; int a, b[5];
+1  *1    F501  	aloc	1	
+               
+2  *2    802B  	ldc		@msg1	; cout << "enter number\n";
+3  *3    FFF7  	sout
+               	
+4  *4    FFFC  	din				; cin >> a
+5  *5    5000  	str		0
+               	
+6  *6    8005  	ldc		5		; b[a] = 5;
+7  *7    F300  	push
+8  *8    F700  	swap
+9  *9    103F  	st		@tmp
+A  *10   F700  	swap
+B  *11   003F  	ld		@tmp	; get the address of b
+C  *12   2041  	add		@2
+D  *13   6001  	addr	1
+E  *14   F200  	sti
+               	
+F  *15   8039  	ldc		@msg2	; cout << " a = " << a << endl;
+10 *16   FFF7  	sout
+11 *17   4000  	ldr		0
+12 *18   FFFD  	dout
+13 *19   800A  	ldc		'\n'
+14 *20   FFFB  	aout
+               	
+               	; for(a = 0; a < 5; a++)
+15 *21   8000  	ldc		0
+16 *22   5000  	str		0
+               	
+               _for:	
+17 *23   8005  	ldc		5
+18 *24   7000  	subr	0
+19 *25   C028  	jz		_end
+               	
+1A *26   F700  	swap			; cout << b[a] << endl;
+1B *27   103F  	st		@tmp
+1C *28   F700  	swap
+1D *29   003F  	ld		@tmp
+1E *30   2040  	add		@1
+1F *31   6000  	addr	0
+20 *32   F100  	ldi
+21 *33   FFFD  	dout
+22 *34   800A  	ldc		'\n'
+23 *35   FFFB  	aout
+               	
+24 *36   4000  	ldr		0		; a++
+25 *37   2040  	add		@1
+26 *38   5000  	str		0
+               	
+27 *39   9017  	ja		_for
+               	
+               _end:	
+28 *40   F606  	dloc	6
+29 *41   8000  	ldc		0
+               	
+2A *42   F000  	ret
+               	
+               ; Global variables
+2B *43   0065  @msg1:	dw		"enter number\n"
+2C *44   006E
+2D *45   0074
+2E *46   0065
+2F *47   0072
+30 *48   0020
+31 *49   006E
+32 *50   0075
+33 *51   006D
+34 *52   0062
+35 *53   0065
+36 *54   0072
+37 *55   000A
+38 *56   0000
+39 *57   0020  @msg2:	dw		" a = "
+3A *58   0061
+3B *59   0020
+3C *60   003D
+3D *61   0020
+3E *62   0000
+3F *63   0000  @tmp:	dw		0
+40 *64   0001  @1:		dw		1
+41 *65   0002  @2:		dw		2
+               
+               public main
+42 *66   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           42 
+ _for                      17          27 
+ _end                      28          19 
+ @msg1                     2B          2  
+ @msg2                     39          F  
+ @tmp                      3F          9   B   1B  1D 
+ @1                        40          1E  25 
+ @2                        41          C  
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

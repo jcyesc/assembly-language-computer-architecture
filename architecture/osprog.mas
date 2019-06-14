@@ -1,0 +1,787 @@
+         !os                                     osprog.mas
+         ;
+         ; Tests student-written microcode for the
+         ; optimal instruction set in os.hor
+         ;
+         ; Will output:
+         ;
+         ;    "ERROR detected in optimal instruction set at loc XXX hex"
+         ;                  or
+         ;    "No errors detected in optimal instruction set"
+         ;
+test:    ldc  0
+         swap
+
+         esba
+         ldc  3
+         push
+         ldc  2
+         push
+         ldc  1
+         push
+         ldr  -1
+         addr -2
+         addr -3
+         sub  @6
+         jz   * + 2
+         call error
+
+         ldc  6
+         subr -3
+         subr -2
+         subr -1
+         jz   * + 2
+         call error
+
+         ld  @1
+         add  @2
+         add  @2
+         sub  @3
+         sub  @2
+         st   t
+         ld  t
+         jz   * + 2
+         call error
+
+         ld  @2
+         add  @_2
+         jz   * + 2
+         call error
+
+         ldc  3
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  0
+         swap
+         push
+         ldc  2
+         push
+         ldc  0
+         ld  ffeh
+         sub  @2
+         jz   * + 2
+         call error
+
+         swap
+         add  @2
+         jz   * + 2
+         call error
+
+         ldc  3
+         str  0
+         ldc  1
+         ldr  0
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  0
+         jzop * + 2
+         call error
+         ldc  5
+         jzop * + 2
+         call error
+         ld  @_3
+         jzop * + 2
+         ja   * + 2
+         call error
+
+         ldc  0
+         jn   * + 2
+         ja   * + 2
+         call error
+         ldc  5
+         jn   * + 2
+         ja   * + 2
+         call error
+         ld  @_3
+         jn   * + 2
+         call error
+
+         ldc  0
+         jz   * + 2
+         call error
+         ldc  5
+         jz   * + 2
+         ja   * + 2
+         call error
+         ld  @_3
+         jz   * + 2
+         ja   * + 2
+         call error
+
+         ldc  0
+         jnz  * + 2
+         ja   * + 2
+         call error
+         ldc  5
+         jnz  * + 2
+         call error
+         ld  @_3
+         jnz  * + 2
+         call error
+
+         ldc  0
+         call sub
+         sub  @3
+         jz   * + 2
+         call error
+         ja   * + 3
+sub:     ld  @3
+         ret
+
+         ldc  3
+         st   t
+         ldc  t
+         ldi
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ldc  t
+         sti
+         ld  t
+         sub  @2
+         jz   * + 2
+         call error
+
+         ldc  4
+         swap
+         push
+         swap
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  1
+         swap
+         dloc 33
+         aloc 32
+         swap  
+         sub  @2
+         jz   * + 2
+         call error
+
+         ldc  3
+         shll 0
+         sub  @3
+         jz   * + 2
+         call error
+
+         ldc  1
+         shll 1
+         sub  @2
+         jz   * + 2
+         call error
+
+         ldc  1
+         shll 5
+         shrl 3
+         sub  @4
+         jz   * + 2
+         call error
+
+         ld  @_1
+         shrl 15
+         sub  @1
+         jz   * + 2
+         call error
+
+         ldc  255
+         shll 15
+         shrl 15
+         sub  @1
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ldc  3
+         mult  
+         sub  @6
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ld  @_3
+         mult
+         sub  @_6
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ld  @_3
+         mult
+         sub  @_6
+         jz   * + 2
+         call error
+
+         ld  @_2
+         push
+         ld  @_3
+         mult
+         sub  @6
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ldc  3
+         m  
+         sub  @6
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ld  @_3
+         m
+         sub  @_6
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ld  @_3
+         m
+         sub  @_6
+         jz   * + 2
+         call error
+
+         ld  @_2
+         push
+         ld  @_3
+         m
+         sub  @6
+         jz   * + 2
+         call error
+
+         ldc  6
+         push
+         ldc  4
+         rem
+         sub  @2
+         jz   * + 2
+         call error
+
+         ldc  6
+         push
+         ld  @_4
+         rem
+         sub  @2
+         jz   * + 2
+         call error
+
+         ld  @_6
+         push
+         ldc  4
+         rem
+         sub  @_2
+         jz   * + 2
+         call error
+
+         ld  @_6
+         push
+         ld  @_4
+         rem
+         sub  @_2
+         jz   * + 2
+         call error
+
+
+
+         ldc  6
+         push
+         ldc  2
+         div  
+         sub  @3
+         jz   * + 2
+         call error
+
+         ld  @_6
+         push
+         ld  @_2
+         div
+         sub  @3
+         jz   * + 2
+         call error
+
+         ld  @_6
+         push
+         ldc  2
+         div
+         sub  @_3
+         jz   * + 2
+         call error
+
+         ldc  6
+         push
+         ld  @_2
+         div
+         sub  @_3
+         jz   * + 2
+         call error
+
+         ldc  10
+         sect  
+loop:    sub  @1
+         dect  
+         ja   loop
+         jz   * + 2
+         call error
+
+         ldc  0
+         sodd  
+         ja   * + 2
+         call error
+
+         ldc  2
+         sodd  
+         ja   * + 2
+         call error
+
+         ld  @_2
+         sodd  
+         ja   * + 2
+         call error
+         
+         ldc  1
+         sodd
+         call error
+
+         ld  @_1
+         sodd
+         call error
+
+         ld  @_1
+         add  @1        ; set cy to 1
+         ldc  0
+         push
+         addy
+         sub  @1
+         jz   * + 2
+         call error
+
+         ldc  1
+         add  @1        ; set cy to 0
+         ldc  0
+         push
+         addy
+         jz   * + 2
+         call error
+
+         ldc  1
+         str  0
+         ld  @_1
+         addr 0         ; set cy to 1
+         ldc  0
+         push
+         addy
+         sub  @1
+         jz   * + 2
+         call error
+
+         ldc  1
+         str  0
+         ldc  1
+         addr 0         ; set cy to 0
+         ldc  0
+         push
+         addy
+         jz   * + 2
+         call error
+
+         ld  @10
+         push
+         ld  @12
+         or
+         sub  @14
+         jz   * + 2
+         call error
+
+         ld  @10
+         push
+         ld  @12
+         xor
+         sub  @6
+         jz   * + 2
+         call error
+
+         ld  @10
+         push
+         ld  @12
+         and
+         sub  @8
+         jz   * + 2
+         call error
+
+         ld  @6
+         flip
+         add  @1
+         add  @6
+         jz   * + 2
+         call error
+
+         ldc  0
+         addc 6
+         sub  @6
+         jz   * + 2
+         call error
+
+         ld   @_1
+         addc 1
+         ldc  0
+         push
+         addy
+         sub @1
+         jz  * + 2
+         call error
+
+         ld   @_1
+         addc 1
+         ldc  0
+         addc 1
+         ldc  0
+         push
+         addy
+         jz   * + 2
+         call error
+
+         ldc  0
+         subc 6
+         add  @6
+         jz   * + 2
+         call error
+
+         ld  @_4
+         shra 1
+         sub  @_2
+         jz   * + 2
+         call error
+
+         ld  @4
+         shra 1
+         sub  @2
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ldc  5
+         scmp
+         addc 1
+         jz   * + 2
+         call error
+
+         ldc  5
+         push
+         ldc  2
+         scmp
+         subc 1
+         jz   * + 2
+         call error
+
+         ldc  5
+         push
+         ldc  5
+         scmp
+         jz   * + 2
+         call error
+
+         ld  @_2
+         push
+         ld  @_3
+         scmp
+         subc 1
+         jz   * + 2
+         call error
+
+         ld  @_3
+         push
+         ld  @_2
+         scmp
+         addc  1
+         jz   * + 2
+         call error
+
+         ld  @_3
+         push
+         ld  @_3
+         scmp
+         jz   * + 2
+         call error
+
+         ldc  0
+         push
+         ldc  3
+         scmp
+         addc 1
+         jz   * + 2
+         call error
+
+         ldc  3
+         push
+         ldc  0
+         scmp
+         subc 1
+         jz   * + 2
+         call error
+
+         ldc  3
+         push
+         ld  @_2
+         scmp
+         subc 1
+         jz   * + 2
+         call error
+
+         ld  @_2
+         push
+         ldc  3
+         scmp
+         addc 1
+         jz   * + 2
+         call error
+
+         ldc  2
+         push
+         ldc  5
+         ucmp
+         addc 1
+         jz   * + 2
+         call error
+
+         ldc  5
+         push
+         ldc  2
+         ucmp
+         subc 1
+         jz   * + 2
+         call error
+
+         ldc  5
+         push
+         ldc  5
+         ucmp
+         jz   * + 2
+         call error
+
+         ld  @_2
+         push
+         ld  @_3
+         ucmp
+         subc 1
+         jz   * + 2
+         call error
+
+         ld  @_3
+         push
+         ld  @_2
+         ucmp
+         addc 1
+         jz   * + 2
+         call error
+
+         ld  @_3
+         push
+         ld  @_3
+         ucmp
+         jz  * + 2
+         call error
+
+         ldc  0
+         push
+         ldc  3
+         ucmp
+         addc 1
+         jz   * + 2
+         call error
+
+         ldc  3
+         push
+         ldc  0
+         ucmp
+         subc 1
+         jz   * + 2
+         call error
+
+         ldc  3
+         push
+         ld  @_2
+         ucmp
+         addc 1
+         jz   * + 2
+         call error
+
+         ld  @_2
+         push
+         ldc  3
+         ucmp
+         subc 1
+         jz   * + 2
+         call error
+
+         ldc  target
+         cali  
+rp:      call error
+         call error
+target:  ld  jok
+         st   rp
+         ret
+
+ok:      ldc  0
+         cora
+         sub  @fff
+         jz   * + 2
+         call error
+
+         ldc  0
+         swap
+         esba
+         esba
+         ldc  1
+         cora  
+         sub  @fff
+         jz   * + 2
+         call error
+         ldc  -1
+         cora
+         sub  @ffd
+         jz   * + 2
+         call error
+
+         ldc  0
+         swap
+         esba
+         esba
+         bpbp
+         pop
+         sub  @fff
+         jz   * + 2
+         call error
+         pop
+
+         esba
+         pbp
+         pop
+         sub  @fff
+         jz   * + 2
+         call error
+         pop
+
+         esba
+         esba
+         pobp
+         esba
+         pop
+         sub  @fff
+         jz   * + 2
+         call error
+         pop
+
+         ldc  fffh
+         push
+         ldc  2
+         push
+         esba
+         aloc 10
+         ldc  2
+         cora
+         subr 2
+         jz   * + 2
+         call error
+
+         ldr  1
+         sub  ffeh
+         jz   * + 2
+         call error
+         ldc  0
+         str  1
+         ld  ffeh
+         jz   * + 2
+         call error
+
+         dloc 10
+         esba
+         reba
+         ldr  1
+         sub  ffeh
+         jz   * + 2
+         call error
+
+         ldc  3
+         sect
+         ldc  s
+         push
+         ldc  d
+         bcpy
+         ld  d + 2
+         sub s + 2
+         jz  * + 2
+         call error
+         ld  d + 3
+         sub s + 3
+         jnz * + 2
+         call error
+
+         ldc  0
+         swap
+
+         push
+         ldc  0
+         div
+         sub  @_1
+         jz   * + 2
+         call error
+
+         ldc 4
+         sect
+         ldc 0
+         rem
+         sub @4
+         jz  * + 2
+         call error
+
+noerror: ldc  okmsg
+         sout
+         halt
+
+error:   ldc  badmsg1
+         sout
+         pop
+         sub  @1
+         hout
+         ldc  badmsg2
+         sout
+         halt
+
+okmsg:   dw   "No errors detected in optimal instruction set\n"
+badmsg1: dw   "ERROR detected in optimal instruction set at loc "
+badmsg2: dw   " hex\n"
+@0:      dw   0
+@1:      dw   1
+@2:      dw   2
+@3:      dw   3
+@4:      dw   4
+@6:      dw   6
+@8:      dw   8
+@10:     dw   10
+@12:     dw   12
+@14:     dw   14
+@fff:    dw   fffh
+@ffd:    dw   ffdh
+@_1:     dw   -1
+@_2:     dw   -2
+@_3:     dw   -3
+@_4:     dw   -4
+@_6:     dw   -6
+t:       dw   5
+jok:     ja   ok
+d:       dw   'DDDD'
+s:       dw   'SSSS'

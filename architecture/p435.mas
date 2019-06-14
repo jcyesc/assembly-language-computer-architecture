@@ -1,0 +1,3 @@
+            ldc  A
+            halt
+        A:  ldc  'A'

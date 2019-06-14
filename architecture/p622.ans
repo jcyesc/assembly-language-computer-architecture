@@ -1,0 +1,14 @@
+; #3df4
+;Use p622.has for your microcode
+;Create config file p622.cfg
+;Insert !p622 at beginning of assembly language program
+;Display should look exactly like this:
+;143
+n
+o
+ln
+g
+SD
+enable
+sd
+q

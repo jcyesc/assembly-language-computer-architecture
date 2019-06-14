@@ -1,0 +1,62 @@
+Machine-level Assembler Version 6.1    Sun Jan  4 11:49:39 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1
+               ; Created	: 4-december-2009
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Write and run an assembly language program
+               ;		  that reads in a string and echos it to the monitor 
+               ;		  using memory-mapped I/O.
+               ;---------------------------------------------------------------
+               
+               	&	; USE MEMORY-MAPPEND I/O configure H1 for memory-mapped I/O
+0  *0    0BB8  echo:	ld	3000	; get keyboard status
+1  *1    C000  	jz	* - 1 	; if 0 (not ready), try again
+2  *2    0BB9  	ld	3001	; get character from keyboard
+               	
+3  *3    100D  	st	char	; store the value in char
+               	
+4  *4    300C  	sub	flag_exit	; subtract the flag to the character to verify
+               				; if it's going to continue the loop.
+5  *5    C00B  	jz	end	; if it's ZERO, the loop end.
+               
+6  *6    0BBA  	ld	3002	; get status word from display monitor
+7  *7    C006  	jz	* - 1	; if 0 ( not ready), try again
+8  *8    000D  	ld	char
+9  *9    1BBB  	st	3003	; store in data word for display monitor
+               
+A  *10   9000  	ja	echo
+               
+B  *11   FFFF  end:	halt
+               
+               
+               ;---------------
+               ; VARIABLES
+               ;---------------
+C  *12   0040  flag_exit:	dw	'@'	; Flag that means that the string has finish
+D  *13   0000  char:		dw	0
+               
+               
+               
+               
+E  *14   ========= end of echo.mas ===============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ echo                      0           A  
+ end                       B           5  
+ flag_exit                 C           4  
+ char                      D           3   8  
+
+Input file   = echo.mas
+Output file  = echo.mac
+List file    = echo.lst 
+Number base  = decimal
+Label status = case sensitive

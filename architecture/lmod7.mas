@@ -1,0 +1,7 @@
+         ;                                       lmod7.mas
+         ; Test module for linv1
+         ; Link with lmod8.mas, lmod9.mas
+         ; Generates link error
+         ld     x
+         halt
+         extern x

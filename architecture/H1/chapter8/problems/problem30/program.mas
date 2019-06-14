@@ -1,0 +1,19 @@
+;------------------------------------------------------------------------------
+;    Problem 8.30
+;
+; Using instructions from the standard instruction set, write the sequence 
+; of instructions needed to bitwise complement the number in the ac register.
+;------------------------------------------------------------------------------
+
+main:	ldc	0
+	sub	x
+
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+	end main
+
+
+x:	dw	3

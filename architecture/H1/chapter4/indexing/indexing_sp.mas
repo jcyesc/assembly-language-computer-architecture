@@ -1,0 +1,31 @@
+	ldc    table
+	swap		; init sp with address of tables
+loop:	ld     sum
+	addr   0	; add number pointed to by sp
+	st     sum
+	dloc   1	; move sp to next number in table
+	ld     count
+	sub    @1	; decrement counter
+	st     count
+	jnz    loop	; jump if counter not zero
+	ldc    message	; display sum
+	sout
+	ld     sum
+	dout
+	ldc    '\n'
+	aout
+	halt
+message:dw     "sum = "
+@1:	dw     1
+count:	dw     10
+sum:    dw     0
+table:  dw     56
+	dw     -8
+	dw     444
+	dw     23
+	dw     -233
+	dw     16
+	dw     45
+	dw     -11
+	dw     5
+	dw     7	

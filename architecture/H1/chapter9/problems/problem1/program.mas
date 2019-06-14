@@ -1,0 +1,110 @@
+;-------------------------------------------------------------------------------------
+; Problem 9.1
+;
+; In call by value-result, the called function behaves exactly as it would in  call
+; by value. Another implementation of call by value-result is to have the calling 
+; sequence behave exactly as if would in call by reference. Translate the program in
+; Figure 9.12 using this alternative approach to call by value-result.
+;
+;-------------------------------------------------------------------------------------
+
+;--------------------------------------------------------------------------------
+; void ref(int &x)	// & signals the reference mechanism
+;--------------------------------------------------------------------------------
+
+@ref$ri:	ldr	1	; x = x + 5;
+		ldi
+		add	@5
+		push
+		ldr	2
+		sti
+		
+		ret
+
+;-------------------------------------------------------------------------------
+; void vr(int $x)	// $ signals the value-result mechanism
+; 
+;	This value-result mechanism use a temporal variable to store the
+; 	value of x, at the end the value of the temporal variable is assigned
+; 	to x, that produces the side effect.
+;-------------------------------------------------------------------------------
+
+@vr$mi:		aloc	1	; x = x + 5;
+		ldr	2
+		ldi
+		str	0
+		add	@5
+		str	0
+		ldr	2
+		sti
+		
+		ret
+
+;--------------------------------------------------------------------------------
+; void v(int x)		// just x signals the value mechanism
+;--------------------------------------------------------------------------------
+
+@v$i:		ldr	1	;x = x + 5;
+		add	@5
+		str	1
+
+		ret
+
+;-------------------------------------------------
+; void cout() // print the value of y
+;-------------------------------------------------
+
+cout:	ldc	msg_y
+	sout
+	ld	y
+	dout
+	ldc	'\n'
+	aout
+
+	ret
+
+;--------------------------------------------------
+; int main()
+;--------------------------------------------------
+
+main:	ldc	1	; y = 1;
+	st	y
+
+	ldc	y	; ref(y);
+	push
+	call	@ref$ri
+	dloc	1
+
+	call	cout
+
+	ldc	1	; y = 1;
+	st	y
+
+	ldc	y	; vr(y);
+	push
+	call	@vr$mi
+	dloc	1
+
+	call	cout
+
+	ldc	1	; y = 1;
+	st	y
+
+	ld	y	; v(y);
+	push
+	call	@v$i
+	dloc	1
+
+	call	cout
+
+	halt
+	end main
+
+
+; GLOBAL VARIABLES
+
+@5:	dw	5
+y:	dw	0
+msg_y:	dw	"y = "
+
+

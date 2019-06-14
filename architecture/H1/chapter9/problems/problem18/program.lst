@@ -1,0 +1,63 @@
+Machine-level Assembler Version 6.1    Fri May  1 18:42:55 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 9.18 to assembly language
+               ;---------------------------------------------------------------
+               
+               ;---------------------------------------------------------------
+               ; void f(int *x) 
+               ; 	Function using value-result implemented as call by reference.
+               ;---------------------------------------------------------------
+               
+0  *0    F501  @f$pi:	aloc	1	; int tmp = *x;
+1  *1    4002  	ldr	2
+2  *2    F100  	ldi	
+3  *3    5000  	str	0
+               
+4  *4    4000  	ldr	0	; tmp--;
+5  *5    3014  	sub	@1
+6  *6    5000  	str	0
+               
+7  *7    4002  	ldr	2	; *x = tmp; // tmp is already in the stack
+8  *8    F200  	sti
+               
+9  *9    F000  	ret
+               
+A  *10   8013  main:	ldc	y	; f(&y);
+B  *11   F300  	push
+C  *12   E000  	call	@f$pi
+D  *13   F601  	dloc	1
+               	
+E  *14   0013  	ld	y	; cout << y << endl;
+F  *15   FFFD  	dout
+10 *16   800A  	ldc	'\n'
+11 *17   FFFB  	aout
+               
+12 *18   FFFF  	halt
+               	end main
+               
+               ; Global variables
+               
+13 *19   0002  y:	dw	2
+14 *20   0001  @1:	dw	1
+15 *21   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$pi                     0           C  
+ main                      A           13 
+ y                         13          A   E  
+ @1                        14          5  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

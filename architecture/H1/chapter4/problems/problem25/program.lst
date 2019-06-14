@@ -1,0 +1,34 @@
+Machine-level Assembler Version 6.1    Wed Dec 31 22:16:27 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; What happens when the following program is run:
+               
+0  *0    0000  	ld	0
+1  *1    0001  z:	ld	1
+2  *2    0001  	ld	z
+3  *3    1004  s:	st	x
+4  *4    FFFF  x:	halt
+5  *5    3001  	sub	z
+6  *6    9003  	ja	s
+               
+               ;  After two jumps the program finishes because we override the
+               ;  address 004 two times.
+7  *7    ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ z                         1           2   5  
+ s                         3           6  
+ x                         4           3  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

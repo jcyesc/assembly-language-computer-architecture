@@ -1,0 +1,25 @@
+;-----------------------------------------------------------------------
+; For the following problems, translate the given program to assembly
+; language, assemble, and run on sim.
+;-----------------------------------------------------------------------
+
+; Program 7.33
+
+f:	aloc	1	; allocate sp = sp -1
+	ldc	1	; load constant 1
+	str	0	; store relative mem{sp + 0]= ac
+	dout		; decimal output
+	dloc	1	; deallocate  sp = sp + 1
+	ret		; return to the calling function
+
+
+g:	call f		; call f
+	ret		; return to the calling function
+
+main:
+	call f		; call f
+	call g		; call f
+
+	halt		; end of the program
+	end main
+

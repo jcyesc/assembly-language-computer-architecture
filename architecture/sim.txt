@@ -1,0 +1,2926 @@
+                                                 sim.txt
+
+                  How to Use sim Version 6.1
+
+
+Introduction 
+
+     sim is a program that simulates the H1 (horizontally 
+microprogrammed) and V1 (vertically microprogrammed) computers 
+described in the textbook 
+
+       ASSEMBLY LANGUAGE AND COMPUTER ARCHITECTURE 
+                  USING C++ AND JAVA
+       by Anthony J. Dos Reis, Course Technology, 2004
+
+The above textbook (along with whatsnew.txt) provides complete 
+tutorial coverage of sim that should satisfy most (if not all) of 
+your needs.  If, however, you need complete documentation on sim, 
+then consult this file. 
+
+     sim includes an integrated machine-level/microlevel debugger 
+that is powerful and easy to use.  The debugger supports source-
+level debugging, program verification, instruction profiling, 
+breakpoints, watchpoints, tracing, memory display, editing, 
+assembly, and unassembly.  A log facility can record all 
+debugging activity to a log file.  The log file can be examined 
+by the user during a run, providing the user with access to the 
+complete run history.  
+
+     sim automatically checks the correctness of the programs for 
+which verification data is provided.  Verification data for most 
+of the end-of-chapter problems from the textbook starting with 
+Chapter 4 is included in the H1 Software Package. 
+
+     sim can be reconfigured for different instruction set 
+architectures.  For example, if sim uses new microcode that 
+creates a new instruction set, sim can be reconfigured to 
+properly trace the new instruction set.  The mas, has, and vas 
+assemblers can be similarly reconfigured to process new 
+instruction sets.  Reconfiguration of all these programs is by 
+means of a common configuration file. 
+
+     sim can run enabled (i.e., with the microlevel visible to 
+the user) or disabled (i.e., with the microlevel hidden from the 
+user).  Running sim disabled makes sense if you are working at 
+the machine level--then there is no chance that you will 
+accidentally invoke a microlevel function and, thereby, causing 
+an unwanted action. 
+
+     sim is shipped with the microlevel disabled.  The microlevel 
+can be enabled with a command line argument (/e), with a debugger 
+command (enable), or with the mod program (for information on the 
+mod program, see the file mod.txt). 
+
+
+Quick Start
+
+     If the name of the input file (i.e., a machine code file 
+with a ".mac" extension) is NOT entered on the command line that 
+invokes sim, sim will prompt for it.  You may then enter an input 
+file name and/or any other desired command line arguments (any 
+number of items per input line).  Prompting ends once an input 
+file name is entered. 
+
+     All numbers displayed by sim are hexadecimal unless labeled 
+otherwise.  The only exception is the profile counts--which are 
+decimal numbers--displayed by the u command (the omission of 
+"decimal" on these counts allows for the display of larger 
+counts).  
+
+     Any number read by sim from the keyboard is treated as a 
+hexadecimal number unless it ends with "t" or "T", in which case 
+it is treated as a decimal number ("t" stands for base ten).  For 
+example, to specify to sim the hexadecimal number 123, enter 
+
+     123
+
+To specify the decimal number 123, enter
+
+     123t
+
+Hex numbers with fewer than four digits are zero-extended on the 
+left to four digits. For example, the number FA is interpreted as 
+00FA.  Hex digits A to F can be entered in upper or lowercase.
+
+     Unlike sim, programs that run on sim do not necessarily 
+interpret numbers input from the keyboard as hex numbers.  For 
+example, the din instruction (decimal input) inputs a decimal 
+number.  When the din instruction is executed, the number entered 
+from the keyboard is always treated as a decimal number. 
+
+     To invoke sim, enter
+
+     sim
+
+sim then prompts for a machine code file name and, if enabled, a 
+microcode file name.  The machine code file should be previously 
+created by the machine-level assembler, mas; the microcode file--
+if one is used--should be previously created by the microcode 
+assembler--either has (the horizontal microcode assembler) or vas 
+(the  vertical microcode assembler).  If "none" (without the 
+quotes) is specified for the machine code file, a machine code 
+file is not loaded, in which case main memory is initialized to 
+zero.  If "none" (without the quotes) is specified for the 
+microcode file, a microcode file is not loaded, in which case 
+microstore retains its current contents (initially the microcode 
+for the standard instruction set).  
+     
+     Whenever sim prompts the user for an input, it usually shows 
+the default input in the prompt itself inside square brackets.  
+The default input is taken whenever you hit the ENTER key without 
+first entering an alternative.  For example, suppose sim 
+generates the following prompt message: 
+
+     Enter microcode file name.  [s.hor]
+
+If the ENTER key is hit without first entering a file name,  
+then sim takes "s.hor" as the input.
+
+     Whenever the integrated debugger needs an input, and sim is 
+in machine-level display mode, it generates a prompt message 
+consisting of 
+
+     - four hyphens 
+
+     - square brackets containing the default command
+
+     - address of the next instruction to be executed
+
+     - the symbolic form of the next instruction
+
+     - the hex form of the next instruction
+
+For example, in the prompt
+
+---- [T7] 0: ld   /0 018/ 
+
+T7 is the default command, 0 is the address of the next machine 
+instruction to be executed, ld is the mnemonic of the next 
+machine instruction, and /0 018/ is the hex form of the ld   
+instruction (the space within the hex form separates the opcode 
+field from the address field). 
+
+The default command, T7 (trace 7), tells sim to trace seven 
+machine instructions.  The default command is always the last 
+trace command entered.  For example, if the command T3 (trace 3 
+machine instructions) is entered, then T3 becomes the default 
+until a different T command is entered. 
+
+     Commands to the debugger consist of a command identifier, 
+followed by, in some commands, one or more arguments.  IF SIM IS 
+RUNNING DISABLED (i.e., the microlevel is hidden), THEN ALL 
+COMMANDS--UPPER AND LOWERCASE-- ARE TREATED AS MACHINE-LEVEL 
+COMMANDS.  For example, both t1 and T1 trace one machine-level 
+instruction when sim is disabled.  In this document, we generally 
+show machine-level commands in uppercase.  But please note that 
+if sim is disabled, machine-level commands can be entered in 
+EITHER upper or lowercase.  
+
+     If sim is enabled, then machine-level commands use uppercase 
+letters; microlevel commands use lowercase letters.  For example, 
+the command T1 means trace one machine instruction.  The same 
+command, but in lowercase, t1, means trace one microinstruction.  
+Commands that apply to both levels are case insensitive--that is, 
+they can be entered with either upper or lowercase letters.  For 
+example, the Q command is case insensitive--Q and q both do the 
+same thing (quit the simulation run) whether sim is disabled or 
+not. 
+
+     An easy way to debug at the machine level when sim is 
+enabled is to press the caps lock key.  Then all commands entered 
+are automatically appropriate for the machine level. 
+Alternatively, you can run sim disabled--then all commands, upper 
+and lowercase--are machine-level commands. 
+
+     sim has five display modes:
+
+     1) Machine-level (commands: M, MC, MC-, MR, MR-, MS, MS-, 
+                       MSO, MSO-) 
+     
+             Activity at the machine level is displayed. 
+             
+             Optionally, count information (the number of 
+             microinstructions executed for each machine 
+             instruction), read information (the contents and 
+             address of any main memory location read from other 
+             than for instruction fetches), and source 
+             information (the line of source code from which the 
+             executing instruction was assembled) can be 
+             displayed in machine-level display mode IN ADDITION 
+             to all the regular information.  Thus, these options
+             are called the "plus counts", "plus reads", and 
+             "plus source" options.  These options are activated 
+             by the MC (machine-level display plus counts), MR 
+             (machine-level display plus reads), and MS (machine-
+             level display plus source) commands.  They are 
+             canceled by the MC-, MR-, and MS- commands, 
+             respectively.  These canceling commands also
+             activate the machine-level display mode if it is
+             not already active.
+             
+             A "source only" option (activated by the MSO 
+             command) is also available which is like the "plus 
+             source" option except that the former displays only 
+             source code.  That is, it does not display the 
+             activity associated with the execution of each 
+             instruction.  Nor does it display the hex machine 
+             code of each instruction.  The "source only" option 
+             is canceled with either the MSO- or MS- command. 
+             These canceling commands also activate the machine-
+             level display mode if it is not already active. 
+
+             When the machine-level "plus source" or "source 
+             only" option is active, symbolic debugging at the 
+             machine-level is activated.  That is, the address 
+             arguments in debugger commands can be either hex 
+             addresses or source-program labels.  
+             
+     2) microlevel (commands: m, ms, ms-, mso, mso-)   
+
+             Activity at the microlevel (which includes all 
+             activity at the machine level) is displayed. 
+             
+             Optionally, the line of source code from which the 
+             executing microinstruction was assembled can be 
+             displayed IN ADDITION to all the regular information 
+             This microlevel "plus source" option is activated by 
+             the ms (microlevel display plus source) command.  It 
+             is canceled by the ms- command. 
+
+             A microlevel "source only" option (activated by the 
+             mso command) is also available which is like the 
+             microlevel "plus source" option except that the 
+             former displays only source code.  The "source only" 
+             option is canceled with either the mso- or ms- 
+             command.  These canceling commands also activate
+             the microlevel display mode if it is not already
+             active.
+
+             When the microlevel "plus source" or "source only" 
+             option is active, symbolic debugging at the 
+             microlevel is activated.  That is, the address 
+             arguments in debugger commands can be either hex 
+             addresses or source-program labels.  
+
+                                                          
+     3) Partial machine (command: P)
+
+             The machine-level program counter is displayed 
+             whenever a machine instruction is fetched.  Program 
+             output and trace output is suppressed.
+
+     4) partial micro (command: p)  
+     
+             The microlevel program counter is displayed whenever 
+             a microinstruction is fetched.  Program output and 
+             trace output is suppressed.
+
+     5) None (command: N)   
+     
+             No display, except for the output produced by the 
+             program itself. 
+
+All the display commands are case sensitive when sim is in the 
+enabled state except for MC, MC-, MR, MR-, and N).  Program 
+output is NOT displayed when sim is in the Partial machine-level 
+or partial microlevel display mode. 
+
+     An example of a line produced in machine-level display mode 
+is 
+
+     0: ld   /0 003/ ac=0000/0002  
+
+This line indicates that at location 0, a ld instruction (0 and 
+003 are its opcode and address fields, respectively) was 
+executed.  The debugger also shows the instruction's effect: the 
+ac register changes its contents from 0000 to 0002 (whenever a 
+register is loaded, its old and new values are displayed with an 
+intervening "/"). 
+
+     An example of a line produced in machine-level display mode 
+plus counts is 
+
+     0: ld   /0 003/ ac=0000/0002  11t
+
+The number 11t at the end of the line indicates that 11 
+microinstructions are executed for the ld instruction.  The "t" 
+indicates that 11t is a base ten number.  This number is the 
+count of the microinstructions needed to fetch, increment the pc, 
+decode, and execute the machine instruction.  
+
+     An example of a line produced in machine-level display mode 
+plus reads is 
+
+  5: subr /7 005/ 0009<m[069]  ac=000E/0005  
+                   ^      ^
+                   |      |
+                   |      +-------- address read from
+                   +--------------- contents read
+
+
+The number immediately preceding "<" is the contents of the 
+memory slot that the instruction read from.  The address of this 
+slot is given in "m[...]".  Thus, this instruction read the value 
+0009 from location 69 hex, and then subtracted this value from 
+the ac register, lowering the value in the ac register from 000E 
+to 0005. 
+
+     An example of a line produced in machine-level display mode 
+plus source is 
+
+  0: loop:    ld     sum      ; get current sum
+     ld   /0 018/ ac=0000/0014  
+
+The first line is the source code from which the ld instruction 
+was assembled.
+
+     An example of a line produced in microlevel display mode is 
+
+     5: dc = left(dc); if (s) goto 12; 
+        dc=0030/0060  
+
+The first line shows the microstore address and the 
+microinstruction in unassembled symbolic form at that address.  
+The second line indicates that this microinstruction changes the 
+dc register from 0030 to 0060.  
+
+     An example of a line produced in microlevel display mode 
+plus source is 
+
+     5: L00:        dc = left(dc); if (s) goto L001; 
+        dc=0030/0060  
+
+The first line above is the line of source code from which the 
+microinstruction at location 5 was assembled.  The second line 
+above indicates that this microinstruction changes the dc 
+register from 0030 to 0060. 
+
+     When a microinstruction reads the machine instruction to be 
+executed next, the microlevel display modes (except for the 
+"source only" and partial modes) display the mnemonic and machine 
+code of the fetched machine instruction.  For example, the 
+following is the trace of a rd microinstruction that reads a ld 
+machine instruction from location 005 in main memory, changing 
+the mdr (memory data register) from 9000 to 0018 (0018 is the 
+machine code for the ld instruction): 
+
+     1: rd; 
+        Rd from m[005] mdr=9000/0018  0: ld   /0 018/ 
+
+
+     An example of the partial machine-level display mode is 
+
+     0/1/2/3/4/B/C/D/E/
+
+A partial machine-level display shows the address of every 
+machine instruction as it is fetched.  
+
+     An example of the partial microlevel display mode is
+
+     0/1/2/3/4/5/6/7/52/53/54
+
+A partial microlevel display shows the address of each 
+microinstruction that is executed. 
+
+The partial microlevel and partial machine-level displays make it 
+easy to determine the pattern of execution. 
+
+     The display mode is initially set to machine-level.  It can 
+be changed at any time with a debugger command.  The commands for 
+the five display modes are M (machine), m (micro), P (partial 
+machine), p (partial micro), and N (no display).  
+
+     To activate the machine-level "plus counts", "plus reads", 
+or "plus source" options, enter the MC, MR, or MS commands, 
+respectively.  If machine-level display is not already active, it 
+will be activated (in addition to activating the counts, reads, 
+or source information).  In other words, you do NOT have enter M 
+before you enter MC, MR, or MS.  To cancel counts, reads, or 
+source from machine-level display mode, enter MC-, MR-, or MS-, 
+respectively.  These canceling commands also activate machine-
+level display if it is not already active (in addition to 
+canceling the counts, reads, or source information).  
+
+     The "plus counts", "plus reads", and "plus source" options 
+may be simultaneously active.  For example, entering MC does not 
+cancel "plus reads" or "plus source" if they are active.   
+
+     The "plus counts" option produces counts that are a precise 
+relative measure of the execution times of machine instructions. 
+
+     The hex display that appears in a trace of a direct 
+instruction shows the same address that the "plus reads" option 
+shows.  Thus, the "read from" address that the "plus reads" 
+option shows is unneeded in the case of direct instructions.  
+However, for other types of instructions (for example, the 
+relative instructions), the "read from" address is not obvious.  
+For these instructions, the address provided by the "plus reads" 
+option is, indeed, useful information. 
+
+     The "plus source" option at the machine-level is activated 
+with the MS command.  The "plus source" option at the microlevel 
+is activated with the ms command.  These options at the machine 
+and microlevels are canceled by the MS- and ms- commands, 
+respectively. 
+
+     The "source only" options are like the "plus source" options 
+except that they display only source code.  The "source only" 
+option at the machine-level is activated with the MSO command.  
+The "source only" option at the microlevel is activated with the 
+mso command.  The machine-level and microlevel "source only" 
+options are canceled, respectively, by the MSO- (or MS-) and mso- 
+(or ms-) commands.  Note that the MS-/ms- commands cancel either 
+the "plus source" or the "source only" options at the machine and 
+microlevels, respectively.  The MSO-/mso- commands, on the other 
+hand, cancel only the "source only" option on the machine and 
+microlevels, respectively.  All these canceling commands also 
+activate their respective display modes.  For example, mso- 
+activates microlevel display mode in addition to canceling the 
+"source only" option. 
+
+     The debugger can trace any integral number of either machine 
+or microinstructions.  For example, the command T10 traces 10 
+(hex) machine instructions; t10 traces 10 (hex) microinstructions 
+(assuming the microlevel is enabled).  The T command is called 
+the "machine trace" command;  the t command is called the 
+"microtrace" command.  sim allows both machine tracing (using T) 
+and microtracing (using t) in any display mode, with two 
+exceptions:  microtracing is not allowed in machine-level or 
+partial machine-level display modes.
+
+     The debugger allows the setting of a breakpoint at the 
+machine and/or the microlevel with the B and b commands, 
+respectively.  A breakpoint stops execution when an instruction 
+at the specified address is about to be executed.  For example, 
+the commands, B8 and b2,  set a machine-level breakpoint at main 
+memory location 8 and a microlevel breakpoint at microstore 
+location 2, respectively.  The K (or B-) and k (or b-) commands 
+kill (i.e., cancel) a machine-level and a microlevel breakpoint, 
+respectively.  The debugger also allows the setting of a machine-
+level watchpoint with the W command (case insensitive).  A 
+watchpoint is like a breakpoint except it stops execution 
+immediately after any machine instruction writes to the specified 
+address.  A watchpoint is killed with the KW (or W-) command 
+(case insensitive).  
+
+     The G command (case insensitive) causes execution to go 
+without stopping until a breakpoint, watchpoint, or a HALT 
+instruction is reached, at which time the debugger generates its 
+prompt and waits for a user input.  The Z command (case 
+insensitive) is like the G command except that it suppresses any 
+trace output regardless of the display mode, ignores breakpoints 
+and watchpoints, and causes sim to terminate when a HALT 
+instruction is executed.  Think of the Z command as "go to the 
+end" (note that "Z" is at the end of the alphabet). 
+
+     All debugger commands that take an argument can be entered 
+without an argument, in which case the debugger uses a default 
+value.  Generally, the default value is whatever the argument was 
+the last time the command was entered, or, on the first use of 
+the command, some initial value.  For example, if rdc 
+(display/modify the dc register) is entered, then subsequent uses 
+of r alone are taken as the rdc command.  For assembly, 
+unassembly, and memory display/edit commands, however, the 
+argument defaults to the location where the previous use of the 
+command left off.  For example, when D0 (display main memory from 
+location 0) is entered, the block of memory starting from 
+location 0 is displayed.  If the next use of D does not include 
+the address argument, then the next block immediately following 
+the previouly-displayed block is displayed. 
+
+     Some commands take symbolic arguments:
+     
+      Symbolic argument          Meaning
+
+               *                   All addresses occupied by the 
+                                   original code or accessed with
+                                   the A or a commands. 
+
+               @                   Address in the ac register 
+                                   (more precisely, the address 
+                                   in the I/O register as 
+                                   specified by the current
+                                   configuration).
+
+               %                   Address in the pc register 
+                                   (when using a machine-level 
+                                   command) or in the mpc 
+                                   register (when using a 
+                                   microlevel command) 
+
+               $                   Address in the sp register 
+
+           label                   Allowed when a source 
+                                   display option is in effect.
+
+               -                   Cancel setting
+
+For example, U% means start unassembling machine code from the 
+address in the pc register (i.e. from the instruction to be 
+executed next).  D$ means start displaying from the address in 
+the sp register (i.e., display the stack). 
+
+     Whenever a file name is provided to sim without an 
+extension, sim will assume an extension based on the type of the 
+file, as shown in the following table: 
+
+     File type          Extension assumed
+
+     machine code        .mac
+     microcode           .hor or .ver 
+     log                 .log
+     answer              .ans
+     config              .cfg
+     
+     All debugging activity can be recorded to a "log" file.  To 
+turn on the log option, enter L (case insensitive) or LN (case 
+insensitive).  L appends data to the current log file, if any.  
+LN erases the current log file, if any.  To turn off the log 
+option, enter L- (case insensitive).  Each time the log is turned 
+on, a time-stamped notice is posted to the log file.  The name of 
+the log file is 
+
+     <machine_code_file_name_less_extension>.log
+or
+
+     <machine_code_file_name_less_extension>.<studentname>.log
+
+unless a different name is specified using the /L command line 
+argument.  The latter form above is used if a name with a 
+leading '.' was previously entered in response to the first 
+prompt when modifying sim with the mod program.  <studentname> is 
+forced to lower case when used as part of a log file name.  If 
+there is no machine code file (i.e., "none" is specified for the 
+machine code file name), then the log file base name is "none" 
+unless an answer file is in effect, in which case the log file base 
+name is the answer file's base name. 
+
+The log file contains everything displayed on the screen during a 
+debugging session, except for help screens.  The log file will 
+show both the machine and micro instruction counts when a program 
+halts even when sim is disabled (the display screen shows only 
+machine instruction counts when a program halts when sim is 
+disabled). 
+  
+
+
+Source-level tracing
+
+     sim has two types of source options (i.e., modes in which 
+source code is displayed): "plus source" and "source only".  In 
+the latter, only source code is displayed.  In the former, all 
+the activity associated with the execution of each instruction 
+PLUS its source code are displayed.  
+
+     If the source code at either the machine or microlevels is 
+out-of-date (because of changes either the user or the executing 
+program makes), it is still displayed when sim is in a source 
+mode, but with a leading "+" to indicate that it is out-of-date.  
+The "+" symbol appears both in the trace and in the output 
+produced by the U/u commands.  
+
+     Unassembled microinstructions do not normally appear in a 
+microlevel trace when the "plus source" option is active.  
+However, if a source instruction is out-of-date, then the 
+unassembled microinstruction is displayed in a trace immediately 
+following the out-of-date source line.  The unassembled 
+microinstruction is always up-to-date. 
+
+     When the "plus source" or "source only" options are active, 
+the U/u commands display source code even when the code is out-
+of-date.  Out-of-date source code is flagged with "+".  If you 
+wish to see the up-to-date instruction in symbolic form, use the 
+UO/uo (unassemble one) commands to unassemble the hex code 
+displayed by the U/u commands (the hex code represents the 
+current contents of main memory, and, therefore, is always up-to-
+date).  Alternatively, you can cancel the "plus source" or 
+"source only" option with the MS-/ms- commands--then the symbolic 
+code displayed by the U/u commands is always up-to-date (it is 
+unassembled from what is in memory).  
+
+     When the machine-level "plus source" or "source only" option 
+is active, debugger commands that take address arguments will 
+accept labels as well as numbers for addresses.  For example, 
+after activating the machine-level "plus source" option with the 
+MS command,  you can set a breakpoint at the location 
+corresponding to the label "loop" in your program with 
+
+     Bloop
+
+Labels can be used in the A, B, D, E, F, J, U, and W commands 
+when the machine-level "plus source" or "source only" option is 
+active.  You can similarly use labels at the microlevel when the 
+microlevel "plus source" or "source only" option is active. 
+
+     If a label matches a hex constant, sim will treat it as a 
+hex constant.  For example, the command 
+
+     Bf1
+
+sets a breakpoint at location f1 hex, even if there is a label 
+"f1".  To force sim to treat "f1" as a label, prefix it with 
+either a single or double quote (the terminating quote is 
+optional) .  For example, to set a breakpoint at the label "f1", 
+enter 
+
+     B'f1
+
+or
+
+     B'f1'
+
+or
+
+     B"f1
+
+or   
+
+     B"f1"
+
+A quote is also necessary in the a, e, and d commands if the 
+label is "@" or "$" (to avoid treating the label as the symbolic 
+argument "@" (ac reg contents) or "$" (stack reg contents), or 
+if it is "h" and you are using the d command (dh is the decimal-
+to-hex command), or if it is "o" and you are using the u command 
+(uo is the unassemble one command).  
+
+The built-in assemblers (that are invoked with the A/a commands) 
+can process pre-existing labels when sim is in a source mode.  
+New labels, however, cannot be created with these assemblers. 
+
+     For its "plus source" and "source only" options, sim needs a 
+program's ".lst" file if its ".mac" file was produced by mas; or 
+its ".cat" file if its ".mac" file was produced by lin. 
+
+     Execution time can be considerably longer if the "plus 
+source" or "source only" options are active.  The ".cat" file lin 
+creates is filtered to minimize source-level tracing overhead. 
+
+     If you have a ".mac" file produced by mas, you can reduce 
+its execution time when the "plus source" or "source only" 
+options are active by linking its ".mac" file.  The resulting 
+output ".mac" file is identical to the input ".mac" file.  
+However, the ".cat" file that lin creates will allow sim to 
+execute more quickly.  For example, suppose a.mac is a file 
+produced by mas.  Enter 
+
+     lin a.mac
+
+lin will create the file "a.cat" that is a filtered version of 
+"a.lst".  Thus, sim (which gives priority to a ".cat" file if 
+both a ".cat" and ".lst" file exists for a ".mac" file) will run 
+faster when the "plus source" or "source only" option is active. 
+
+     If the "plus source" or "source only" option is active and 
+instruction execution occurs for an address for which no source 
+code is available, sim will automatically (and temporarily) 
+switch to a non-source display mode.  Once execution is back in 
+a region for which source is available, sim automatically 
+reactivates the source mode from which it switched.
+
+
+
+Instruction Profiling
+
+     When the "plus source" or the "source only" option at the 
+machine-level is activated with the MS or MSO command, 
+respectively, the U command, for each address, will display the 
+address IN HEX, the reference count IN DECIMAL, the contents of 
+main memory in hex, and the source code from which the code in 
+memory was assembled.  The reference count for an address is the 
+number of reads and writes to that address mod 1000000 (65536 for 
+the DOS version of sim).  That is, the count wraps around to zero 
+when it reaches 1,000,000 (or 65,536 on DOS).  An instruction's 
+reference count is the number of times the instruction has been 
+executed (unless the program has performed extra reads or writes 
+to the instruction's address).  Thus, the reference counts 
+provide a "profile" of the execution and data reference pattern 
+of the program.  The u command at the microlevel behaves 
+similarly when the "plus source" or "source only" option at the 
+microlevel is activated with the ms or mso command, respectively.  
+
+
+T Command Defaults
+
+    Whenever a particular T or t command is used, it becomes the 
+default command for the current display mode.  For example, if 
+T20 is used, then T20 becomes the default until a different T 
+command is used 
+
+A reminder:  "20" in T20 is a hex number--20 equals 32 decimal.  
+To trace 20 decimal, enter T20t or T14.  The suffix "t" specifies base 
+10--that is, decimal.  
+
+When a switch between display modes occur, sim reestablishes the 
+last default in effect for the new mode.  For example, suppose 
+the commands 
+
+     M
+     T20 
+     m 
+     T10 
+     M 
+
+are entered.  When the second M is entered, a switch back to 
+machine-level display occurs.  The default command that was last 
+in effect in machine-level display mode (T20) is reestablished as 
+the default.  
+
+     On program start-up, the initial default command is T7 in 
+machine-level display mode.  The initial defaults for the various 
+display modes are: 
+
+   machine-level display                        T7
+   microlevel  display                          T1
+   partial machine-level display                T77 (119 decimal)
+   partial microlevel display                   T1
+   no display                                   T7
+
+     The initial default T command for the machine-level display 
+mode and the no display mode can be changed by the mod program 
+(one initial value applies to both).  The initial default T 
+command for the partial machine-level display is 17 times the 
+value on the machine-level display default value.  Thus, if the 
+latter is T7, the former is 17 x 7 = 119 decimal = 77 (hex).  
+
+     The T1 default in microlevel display mode is particularly 
+useful: every time the ENTER key is hit, all the micro activity 
+associated with the execution of just the current machine 
+instruction is shown. 
+
+
+Help Screen
+
+     The following help screen is displayed by the debugger 
+whenever the ? or h command is entered in response to the 
+debugger's prompt: 
+
+A|A<addr>|A@|A%|A$|/A          Assemble; /A activates answer file.
+B | B<addr> | K or B-          Brkpt on | on <addr> | kill.
+C<char> | DH<num> | HD<num>    Convert char|dec to hex|hex to dec.
+D | D<addr> | D* | D@ | D% |D$ Display memory. 2nd arg allowed.
+Disable | Enable               Disable | enable microlevel.
+E | E<addr> | E@ | E% | E$     Edit memory.
+F | F<addr> <addr> | F*        File out.
+G | Z | Q                      Run | run no debug, quit | quit.
+I | I-                         Mem-map I/O on | off.
+J | J<addr>                    Jump to instruction.
+L|L-|LN|LD<cnt>|LD|LD^         Log on|off|new|back|next|prev.
+M | MC | MR | MS | MSO         Display on|+cts|+rds|+src|src only.
+MC- | MR- | MS- | MSO-         Cancel cts | rds | src | src only.
+N | P                          No display | partial display.
+O | O& | O#                    Do Over|new files|no reinit memory.
+R | R* | R<regname>            Register display|display all|modify.
+S | S1 | SB | SD               Status|1-pos|barrel|src display.
+T<count>                       Trace <count> instructions.
+U|U<addr>|U*|U@|U%|U$|UO<inst> Unassemble. 2nd arg allowed.
+W | W<addr> | KW or W-         Watchpt on | on <addr> | kill.
+Hit ENTER first                Execute default command.
+'*', '@', '%', '$','O' = all, I/O, pc/mpc, sp, One, respectively
+
+
+Pseudo Instructions
+
+     sim supports several special instructions, called pseudo 
+instructions.  HALT is one such instruction.  These instructions 
+are "pseudo" in the sense that they are implemented by sim and 
+not by microcode.  A complete list of the pseudo instructions 
+follows: 
+
+
+Opcode   Name     Description
+
+ FFF5    uout     output a unsigned number in decimal
+
+ FFF6    sin      input a string
+ FFF7    sout     output a string
+
+ FFF8    hin      input a hex number
+ FFF9    hout     output number in hex
+
+ FFFA    ain      input an ASCII character
+ FFFB    aout     output an ASCII character
+
+ FFFC    din      input a decimal number (signed or unsigned) 
+ FFFD    dout     output a signed number in decimal 
+
+ FFFE    bkpt     set breakpoint 
+ FFFF    halt     halt execution
+
+     The I/O pseudo instructions all use a register (or 
+optionally the top of the stack) in their I/O operations.  In the 
+standard instruction set, the ac register functions as this I/O 
+register.  For example, the din instruction inputs into the ac 
+register.  However, sim can be configured to use any register as 
+the I/O register.  sim can also be configured to use the top of 
+the stack as the "I/O register". 
+
+     For the sin and sout instructions, the I/O register holds 
+the main memory address of the string used in the input or output 
+operation.  For the other I/O instructions, the I/O register 
+holds the number or character inputed or outputed. 
+
+     HALT and BKPT are similar--they both stop execution.  They 
+differ in that BKPT allows execution to continue to the next 
+instruction if a command that causes execution to continue is 
+entered (for example, T1, G, etc.).  HALT does not allow 
+execution to continue.  To reexecute a program after a HALT, the 
+O (do over) command (case insensitive) must be entered.  This 
+command reinitializes registers and memory, resulting in the 
+reexecution of the program from its beginning. 
+
+     SOUT outputs characters until the null character (i.e., the 
+"character" whose binary representation is all zeros) is reached.  
+
+     The string that SIN inputs is automatically terminated with 
+the null character (the null character replaces the new line 
+character produced by the ENTER key).  SIN inputs the entire line 
+entered, including leading, embedded, and trailing white space. 
+The transfer of data during the execution of sin and sout is 
+terminated if the top of main memory is reached. 
+
+     DOUT suppresses leading zeros; HOUT by default does not 
+(however, the mod program can change sim so that hout suppresses 
+leading zeros).  For example, the program
+
+     ldc  10
+     hout
+     ldc  ' '
+     aout
+     ldc  10
+     dout
+     ldc  '\n'
+     aout
+     halt
+
+outputs 
+
+000A 10
+
+     The HOUT and DOUT instructions do not output a newline 
+character after displaying a number.  Thus, it is necessary to 
+explicitly output the newline character, '\n', if one is desired. 
+In the program above, the newline is outputed by the AOUT 
+instruction that immediately precedes the HALT instruction. 
+
+     On the execution of a DIN, HIN, or AIN instruction, any
+excess input is saved and used for subsequent input instructions.  
+If an input item is bad (e.g., a non-decimal item for din), all 
+saved input is flushed and a "reenter" prompt is generated.
+
+     AIN ignores white space.
+
+     All the pseudo input instructions generate the prompt ">>" 
+in all display modes except the no display mode. 
+
+     A program illustrating the use of some of these instructions 
+follows (it prompts for, reads in a decimal number, and displays 
+its value in hex): 
+
+================================================================
+                                ;                     pseudo.mas
+         ldc    msg1            ; load ac with address of string
+         sout                   ; display string
+         din                    ; read decimal number into ac reg
+         st     save            ; save number          
+         ldc    msg2
+         sout
+         ld     save            ; get number
+         hout
+         ldc    '\n'            ; get newline
+         aout                   ; go to next line
+         halt
+save:    dw     0
+msg1:    dw     "Enter decimal number: "
+msg2:    dw     "Hex value = "
+
+================================================================
+
+     If a configuration file is used in which the entry for the 
+I/O register number is the dollar sign instead of a register 
+number, then the top of the stack acts as the I/O register.  Then 
+all input operations, except SIN, push the inputed item onto the 
+stack.  All output operations, except SOUT, pop and output the 
+top of the stack.  SIN inputs to the location the top of the 
+stack points to, and then pops the stack.  SOUT outputs from the 
+location the top of the stack points to, and then pops the stack. 
+     Entering  "^" (without the quotes) in response to AIN, DIN, 
+HIN, or SIN, memory-mapped input, or to a filename prompt 
+terminates sim.  Entering q in response to a DIN or HIN also 
+terminates sim (q cannot be similarly used with AIN, SIN, file 
+prompts or memory-mapped input because q is treated simply as the 
+character "q" in these situations). 
+               
+
+Execution Limits
+
+    sim automatically pauses whenever the number of 
+microinstructions executed is a multiple of the "pause count" if 
+a tracing display mode is active.  If "none" is the display mode, 
+sim pauses whenever the number of microinstructions executed is a 
+multiple of twenty times the pause count for the tracing modes. 
+
+As shipped, sim has a pause count equal to 20000.  However, the 
+pause count can be modified by the mod program.
+
+The pause triggered by the pause count is a safeguard against 
+infinite loops.  At a pause, sim generates a warning message and 
+activates the debugger's prompt, at which time the user can enter 
+any debugger command. 
+
+     A user can set a temporary execution limit by using the T or 
+t command with an appropriate count (for example, t1000) instead 
+of the g or z commands. 
+
+
+
+Command Line Arguments
+
+sim usage:  sim <arg> <arg> ... <arg>
+
+   All command line arguments
+
+       - are optional
+
+       - are case insensitive, except for file names on systems
+         with case sensitive file names
+
+       - can be specified in any order, except for "argv" args
+
+       - must be separated by at least one space
+
+       - have a leading "/" or "-", except for the machinecode
+         file name and other C++ "argv" arguments.
+
+     To display a help screen on command line arguments, invoke 
+sim with the "/?", "-?", "/h", or "-h" argument.  For example: 
+
+     sim /?
+or
+     sim /h
+
+Warning: On some platforms, "/?" or "-?" will not work because of 
+the special way the command shell interprets the question mark on 
+the command line.  On these systems, use /h or -h.
+
+
+Description of Each Argument:
+
+<macname>    - Machinecode file name (must precede other "argv" 
+               args).  Extension defaults to ".mac".  If "none" 
+               is entered, a machine code file is not loaded into 
+               main memory.  If <macname> starts with a pathname 
+               that starts with "/", then substitute "//" for the 
+               leading "/" in the pathname when entering 
+               <macname>.  
+
+<argv arg>   - Additional "argv" args. These arguments along with 
+               <macname> are passed to the C++ main function by 
+               start-up code.  These additional arguments must 
+               follow <macname> on the command line.  If any of 
+               these arguments start with "/", then substitute 
+               "//" for the leading "/" when entering them. 
+
+/h or /?     - Displays help screen.
+
+/a<ansname>  - Answer file name.  Extension defaults to ".ans".  
+               An answer file is a file that contains  inputs for 
+               the debugger in sim.  After all the inputs in an 
+               answer file are processed, control returns to the 
+               keyboard (unless the answer file contains a Q or Z 
+               command).  If <ansname> is missing (i.e., no name 
+               follows "/a"), <ansname> defaults to 
+               <macname_less_ext>.ans.  /a cancels the /z command 
+               line argument if one is specified.  /a also 
+               activates sim's program verifier (for more 
+               information, see the discussion of the /a debugger 
+               command near the end of this document). 
+
+/c<cfgname>  - Configuration file name.  Extension 
+               defaults to ".cfg".
+
+/e or /d     - /e enables sim; /d disables sim.
+               The enabled/disabled status can also be set
+               with the enable and disable debugger commands.
+
+/hor or /ver - Horizontal or vertical simulation mode.  Also 
+               determines the default extensions for microcode 
+               files names.  Ignored if the user specifies a 
+               microcode file with an extension, in which case, 
+               the microcode itself--horizontal or vertical--
+               determines the simulation mode. 
+
+/i<mmadd>    - Activates memory-mapped I/O starting at the 
+               address <mmadd> (hex is assumed unless the address 
+               is suffixed with a "t").  If <mmadd> is missing 
+               (i.e., no address follows "/i"), <mmadd> assumes 
+               its default value.  <mmadd> can also be specified 
+               by an &-directive in the assembly language 
+               program. 
+
+               <mmadd>:   keyboard status
+               <mmadd>+1: keyboard data
+               <mmadd>+2: monitor status
+               <mmadd>+3: monitor data
+
+               Keyboard status = 0/1 indicates data is not 
+               available/is available at the address <mmadd>+1. 
+
+               Monitor status = 0/1 indicates that the monitor is 
+               not ready/is ready for output at the address 
+               <mmadd>+3. 
+
+               Memory-mapped I/O can also be activated and 
+               deactivated with the i and i- debugger 
+               commands. 
+                              
+/m<micname>  - Microcode file name.  Extension defaults to
+               ".hor"/".ver", depending on the simulation mode. 
+               if "none" is entered for <micname>, the built-in
+               microcode is used.
+
+/l<logname>  - Log file name.  Extension defaults to ".log".  All 
+               screen output, except help screens, will be 
+               written to this file.  If <logname> is omitted, then 
+               the logfile name defaults to 
+
+               <machine_code_file_name_less_extension>.log
+
+/p<loadpt>   - Load point address (hex is assumed unless the 
+               address is suffixed with a "t").  The machine code 
+               file will be loaded starting at this address.  If 
+               this argument is omitted, <loadpt> assumes its 
+               default value.
+
+/w<cladd>    - Command line address (hex is assumed unless 
+               address is suffixed with a "t").  sim places the 
+               "argv" arguments at this address.  If this 
+               argument is omitted, then <cladd> assumes its 
+               default value.  Start-up code in sup.mas and 
+               ksup.mas must be assembled with the command line 
+               address given by <cladd>.  If <cladd> is missing 
+               (i.e., if no address follows "/w)", the command line 
+               is not loaded into memory. 
+
+/z           - run sim with debugger off, and terminate sim on 
+               program halt.  /z is canceled if /a is specified.
+
+
+
+Problem with a Leading "/" in Command Line Arguments
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with either "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems causes a problem.  
+For example, the command 
+
+     sim /mnt/floppy/xxx.mac
+
+does NOT cause sim to execute the xxx.mac file in the /mnt/floppy 
+directory.  Instead, sim interprets "/mnt/floppy/xxx" as 
+specifying the microcode file nt/floppy/xxx.hor--that is, sim 
+treats the initial "/m" as signaling sim's microcode command line 
+argument.  This problem does not occur on Microsoft systems 
+because they use "\" as a filename separator, and, thus, there is 
+never any confusion with the "/" that can start command line 
+arguments. 
+
+You will probably rarely run into the problem described above 
+because full pathnames are rarely needed when using the programs 
+in the H1 Software Package.  However, if the problem does occur, 
+it can easily be circumvented: simply use "//" to represent a 
+leading "/" in a path name.  For example, if you enter 
+
+     sim //mnt/floppy/xxx.mac
+
+sim will interpret "//mnt/floppy/xxx.mac" as representing the 
+file /mnt/floppy/xxx.mac.  Thus, sim will execute the file
+/mnt/floppy/xxx.mac.  
+
+You should use a leading "//" in place of a leading "/" ONLY when 
+you first invoke a program.  If a program subsequently prompts 
+for files, it will not be expecting its command line arguments.  
+Thus, it will correctly interpret a single leading "/" as the 
+start of a pathname rather than the start of a command line 
+argument.  For example, in response to the o& command, sim 
+prompts for a machine code file name.  Here you should not 
+substitute "//" for a leading "/". 
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 
+
+    If you want to specify an "argv" argument that starts with 
+"/" when you invoke sim, use "//" in place of the leading "/".  
+For example, if you invoke sim with 
+
+     sim a //p1 //p2 
+
+sim will pass the string "a /p1 /p2" to start-up code.
+
+
+Start-up Defaults
+
+     If command line arguments do not specify otherwise, sim, as 
+shipped, runs with the following default setup: 
+
+Current settings in sim.exe:
+Your name                         = .DosReis Anthony J.
+Microlevel status                 = disabled
+Simulation mode                   = horizontal
+Horizontal microcode file name    = none
+Vertical microcode file name      = none
+SD default extension              = .mas
+Command line address              = F3C  (hex) =  3900 (dec)
+Memory-mapped I/O start address   = BB8  (hex) =  3000 (dec)
+Memory-mapped delay count         = C8   (hex) =   200 (dec)
+Load point                        = 0    (hex) =     0 (dec)
+T count                           = 7    (hex) =     7 (dec)
+Tracing mode pause count          = 4E20 (hex) = 20000 (dec)
+LD max size                       = 18   (hex) =    24 (dec)
+Machine-level source only status  = n (no source only)
+Plus counts status                = n (no plus counts)
+Plus reads status                 = n (no plus reads)
+Machine-level plus source status  = n (no plus source)
+Microlevel source only status     = n (no source only)
+Microlevel plus source status     = n (no plus source)
+Label status                      = s (sensitive)
+Hout status                       = z (leading zeros)
+Log file status                   = n (no log file)
+Program verification status       = v (verification on)
+Return code                       = z (0 return code)
+Message status                    = m (messages on)
+
+These defaults, however, can be changed by the mod program.  mod 
+makes changes directly to the sim executable file.  
+
+To reset these defaults to their original settings, run mod and 
+enter "<" (without the quotes) each time mod requests a setting. 
+
+Microlevel status, simulation mode, horizontal microcode file 
+name, vertical microcode file name, command-line address, memory-
+mapped I/O start address, and load point can be overridden by 
+command line arguments.  Source only, plus counts, plus reads, 
+and plus source status can be controlled by the debugger commands 
+MC, MC-, MR, MR- MS, MS-, MSO, MSO-, ms, ms-, mso, and mso-.  
+
+To determine the current defaults in sim, enter
+               
+     mod sim
+
+and hit the ENTER key in response to all prompts.  mod will then 
+display the current settings without making any changes to sim.  
+                                
+     sim displays a variety of informational messages.  For 
+example, the copyright notice and the message that sim is reading 
+a microcode file are informational messages.  When message status 
+is "m" (messages on), all informational messages are displayed by 
+sim.  When message status is "n", all informational messages, 
+except for error and warning messages, are suppressed.  Message 
+status has no effect on the debugger's trace output.  
+
+
+Log Files
+
+     The following items are displayed at the top of a log file
+conditionally:
+
+     name (not displayed if none)
+
+     answer file (not displayed if not used)
+
+     shifter (not displayed if one-position shifter in effect)
+
+     cmd line address (not displayed if none or equal to 3900 decimal)
+
+     memory-mapped address (not displayed if not in effect)
+
+     memory-mapped delay (not displayed if not in effect)
+
+     load point (not displayed if 0)
+
+If you want complete status information in a log file, then
+enter the s (status) debugger command.
+
+     When sim is first invoked, the log file is initially off, 
+unless the /L command line argument is specified.  The log file 
+can be turned on or off at any time.  To turn on the log file, 
+enter (in either upper or lowercase) 
+
+     L  
+
+Whenever the log file is on, all activity that is displayed on 
+the screen, except help screens, is also written to the log file.  
+To turn off the log file, enter (in either upper or lowercase). 
+
+     L-
+
+The command
+
+     LD<count>
+
+displays the segment of the log file that starts <count> lines 
+back from the current end of the log file (excluding debugger 
+prompt lines).  The command 
+
+     LD^
+
+displays the segment of the log file just preceding the current 
+segment.  An LD command without a count or ^ displays the segment 
+of the log file just following the current segment. 
+
+The log file name defaults to 
+
+     <machine_code_file_name_less_extension>.log 
+
+unless the /L command line argument specifies a name. 
+
+
+Answer Files
+
+     Whenever sim requires input from the user, it prompts the 
+user and reads in a response from the standard input device 
+(i.e., the keyboard unless input has been redirected).  An 
+alternative approach is to provide all the responses in advance 
+in the form of an "answer" file.  Then whenever sim requires a 
+response, it simply reads it from the answer file--sim does not 
+have to wait for a response from the user.  Whenever the 
+responses in an answer file are exhausted, sim automatically 
+switches back to the standard input device, unless, of course, 
+the answer file contains a reply that terminates the simulation 
+(Q or Z).  Comments are allowed in an answer file wherever a 
+command is allowed.  They are NOT allowed at points where an 
+input instruction (ain, din, hin, or sin) is executed (the input 
+instruction will attempt to input the comment).  Comments must 
+start with a semicolon. Lines containing only a comment are 
+ignored. Completely blank lines in an answer file are treated as 
+inputs.  That is, a blank line corresponds to an entry in which 
+the user hits ENTER without first entering a command. 
+
+     To specify an answer file, invoke sim with the /a command 
+line argument or enter the /a debugger command.  If the extension 
+of the answer file name is not specified, it defaults to ".ans".  
+If no filename follows "/a", the answer file defaults to 
+<macfilename_less_ext>.ans. 
+
+
+Configuration Files
+
+     The microcode implementing the standard instruction set of 
+the H1 and V1 computers is built into sim.  It is also contained 
+in the files s.has (symbolic horizontal microcode), s.hor (binary 
+horizontal microcode), s.vas (symbolic vertical microcode), and 
+s.ver (binary vertical microcode).  If microcode implementing a 
+different instruction set architecture is to be used, sim needs 
+to be informed of the new mnemonics, register names, and special 
+numbers.  This is done by means of a configuration file.  
+
+     A configuration file is specified on the command line using 
+the /c argument.  For example,
+
+     sim /cs.cfg
+
+specifies the configuration file s.cfg.  If the extension is 
+not specified, it defaults to ".cfg".  For example, 
+
+     sim /cs
+
+also specifies s.cfg.
+
+     If a configuration file or a microcode file but not both is 
+specified on the command line when sim is invoked, the 
+unspecified file will default to the same base name as the 
+specified file.  Moreover, sim will take the unspecified file, if 
+one exists, from the same directory as the specified file.  
+For example, all three of the following commands have the same 
+effect (all cause sim to use k.cfg and k.hor), assuming both 
+k.cfg and k.hor are in the current directory: 
+
+     sim ak /ck
+     sim ak /mk
+     sim ak /ck /mk
+
+Suppose k.cfg is in the current directory but k.hor is not. 
+Also suppose both k.cfg and k.hor are in the directory specified 
+by the H1DIR environment variable.  Then
+
+     sim ak /mk  
+
+will use the k.cfg and k.hor in the directory specified by the 
+H1DIR environment variable.  However, 
+
+     sim ak /mk /ck
+
+and
+
+     sim ak /ck
+
+will use the k.cfg in the current directory and the k.hor in the 
+directory specified by the H1DIR environment variable. 
+
+     Alternatively, a configuration and microcode file can be 
+specified at the beginning of a mas assembly language program.  
+To do this, insert an !-directive at the beginning of an assembly 
+language program.  An !-directive contains "!" followed by the 
+common base name of the configuration and microcode files.  Only 
+comments, completely blank lines, or an &-directive may precede 
+the line containing an !-directive.  An !-directive can start in 
+any column.  However, if it does not start in the first column, 
+it must have only white space to its left.  When the assembled 
+program is run on sim, sim will automatically access both the 
+configuration file and the microcode file with the base name 
+specified by the !-directive.  For example, suppose 
+
+     !k
+
+is at the beginning of the file ak.mas.  To assemble 
+ak.mas, we enter
+
+     mas ak
+
+mas will automatically access k.cfg and output the machine code 
+file ak.mac or ak.mob, depending on how ak.mas is set up.  In the 
+former case, to run ak.mac, enter 
+
+     sim ak
+
+In the latter case, enter
+
+     lin ak ksup
+     sim ak
+
+The lin command links ak.mob with the start-up code ksup.mob. In 
+either case, sim will automatically access both k.cfg (a 
+configuration file) and k.hor or k.ver (microcode files).  sim 
+will use k.hor if the horizontal mode is in effect, or k.ver if 
+the vertical mode is in effect.  If both the /c and/or the /m 
+command line arguments and the !-directive in a assembly language 
+program are used, sim will use the command line arguments and 
+ignore the !-directive. 
+         
+     sim will not be able to find an !-directive if the ".mac" 
+file it is running has a different base name than the ".mas" file 
+that contains the !-directive.  This can occur when linking 
+programs.  For example, if you compile and link m1.mas and m2.mas 
+to produce an executable machine code file m.mac, sim will 
+attempt to find and search a file named m.mas (which doesn't 
+exist) for an !-directive.  In this case, you should use the /m 
+or /c command line argument to specify the 
+microcode/configuration file basename when you invoke sim.  sim 
+will then use it and the corresponding configuration file. 
+
+     A configuration file consists of the following three parts, 
+each separated from the next by a line containing "%%": 
+
+     Mnemonics in opcode order
+%%
+     Register names in register number order starting from reg 6
+%%
+     Special numbers
+
+
+A configuration file should contain one entry per line.  Comments 
+may appear to the right of an entry, or by themselves on separate 
+lines.  Comments should start with ";" or "/".  Blank lines may 
+appear anywhere within a configuration file.  
+
+Mnemonics should be given in opcode order:  
+
+                  opcodes 0xxx - Exxx
+                  opcodes F0xx - FExx
+                  opcodes FF0x - FFEx
+                  opcodes FFF0 - FFF4
+
+In the first section of a configuration file, a maximum of 50 
+mnemonics, one for each opcode listed above, can be given.  
+Names should not be specified for opcodes FFF5-FFFF--they are 
+reserved for the pseudo instructions.  If fewer then 50 opcode 
+names are given, then the unspecified names all default to "?". 
+Specified to the right of each mnemonic is the number of operands 
+(0 or 1) in the corresponding instruction.  To the right of the 
+number of operands is the instruction length (1 or 2).  The 
+number of operands is optional unless an instruction length is 
+specified.  If the number of operands is omitted, mas will not 
+check if instructions in assembly language programs have the 
+correct number of operands.  The instruction length is optional 
+unless it is 2.  For example if an instruction with the mnemonic 
+mult is a one-operand, two-word instruction, its mnemonic entry 
+in part 1 should be 
+
+mult 1 2
+
+Instructions longer than two words are not directly supported.  
+However, they can still be included in an assembly language 
+program by using dw directives to define those words in the 
+instruction beyond the second.  For example, suppose LI is four-
+word instruction, consisting of a one-word opcode followed by 
+three words, each containing the address of an operand.  If we 
+indicate that LI is a two-word instruction in the configuration 
+file, the following assembly language statements then define a 
+single LI instruction: 
+
+     li   a    ; defines first two words
+     dw   b    ; defines third word
+     dw   c    ; defines fourth word
+
+     In the second section of a configuration file, register 
+names in number order (6 to 1F) should be given for all registers 
+used by the instruction set.  To skip a register, use ? in place 
+of the name.  For example, if an instruction set uses registers 6 
+and 8, but not 7, an entry still must be specified for register 7 
+in the configuration file.  In this case, ? should be specified 
+for register 7, in which case the name of register 7 defaults to 
+its hex number.  The unspecified names following the last entry 
+default to the hex number (without leading zeros) of the 
+corresponding register.  For example, if names are specified for 
+registers 6 to A only, the names of registers B to 1F default to 
+their hex numbers (without leading zeros).  Register names should 
+consist of letters and/or digits only.  The names of registers 0 
+to 5, respectively, are 0, 1, xmask, ymask, zmask, and mdr.  
+These names cannot be modified.  
+
+     IT IS CRITICAL THAT THE NUMBERS IN THE THIRD SECTION OF A 
+CONFIGURATION FILE BE CORRECT.  INCORRECT NUMBERS WILL RESULT IN 
+A GARBLED TRACE OUTPUT AND POSSIBLY AN INFINITE LOOP. 
+
+     In the third section of a configuration file, the following 
+special numbers should be given in the specified order (note: all 
+these numbers are treated as hex unless they are suffixed with 
+the letter "t", in which case they are treated as decimal). 
+
+
+Horizontal microinstruction address at which a machine inst fetch starts
+
+Vertical microinstruction address at which a machine inst fetch starts
+
+Horizontal microinstruction address at which machine pc reg is incremented
+
+Vertical microinstruction address at which machine pc reg is incremented
+
+Horizontal microinstruction address at which machine inst is read 
+
+Vertical microinstruction address at which machine inst is read
+
+Number of the machine pc register 
+
+Number of the machine sp register (use 0 if there is no sp reg) 
+
+Number of the I/O register (the register to be used with the I/O 
+pseudo instructions), or the dollar sign (in which case the top of 
+the stack acts as the I/O register). 
+
+Number of every register visible at the machine level (listed one 
+per line) 
+
+
+
+The configuration file s.cfg supplied in the H1 software package 
+configures sim exactly like the default configuration.  An easy 
+way to create a new configuration file is to start with s.cfg and 
+modify it as required.  A listing of s.cfg follows: 
+
+================================================================
+;                                                        s.cfg
+
+;        Configuration file for the standard instruction set
+
+
+         ; Part 1 (mnemonics in opcode order)
+
+ld   1        ; mnemonic and number of operands for opcode 0
+st   1        ; mnemonic and number of operands for opcode 1
+add  1        ; mnemonic and number of operands for opcode 2
+sub  1        ; mnemonic and number of operands for opcode 3
+ldr  1        ; mnemonic and number of operands for opcode 4
+str  1        ; mnemonic and number of operands for opcode 5
+addr 1        ; mnemonic and number of operands for opcode 6
+subr 1        ; mnemonic and number of operands for opcode 7
+ldc  1        ; mnemonic and number of operands for opcode 8
+ja   1        ; mnemonic and number of operands for opcode 9
+jzop 1        ; mnemonic and number of operands for opcode A
+jn   1        ; mnemonic and number of operands for opcode B
+jz   1        ; mnemonic and number of operands for opcode C
+jnz  1        ; mnemonic and number of operands for opcode D
+call 1        ; mnemonic and number of operands for opcode E
+ret  0        ; mnemonic and number of operands for opcode F0
+ldi  0        ; mnemonic and number of operands for opcode F1
+sti  0        ; mnemonic and number of operands for opcode F2
+push 0        ; mnemonic and number of operands for opcode F3
+pop  0        ; mnemonic and number of operands for opcode F4
+aloc 1        ; mnemonic and number of operands for opcode F5
+dloc 1        ; mnemonic and number of operands for opcode F6
+swap 0        ; mnemonic and number of operands for opcode F7
+
+
+%%       ; Part 2 (reg names in number order starting with reg 6)
+
+pc            ; register 6
+sp            ; register 7
+ac            ; register 8
+ir            ; register 9
+dc            ; register A
+              ; remaining regs can be referenced by their hex numbers
+
+
+%%       ; Part 3 (special addresses and numbers)
+
+0             ; horizontal start fetch address (hex)
+0             ; vertical start fetch address (hex)
+
+0             ; horizontal increment pc address (hex)
+3             ; vertical increment pc address (hex)
+
+1             ; horizontal read machine instruction address (hex)
+1             ; vertical read machine instruction address (hex)
+
+6             ; pc register number (hex)
+7             ; sp register number (hex)
+8             ; I/O register number (hex)
+
+6             ; machine-level register numbers (hex)
+7
+8
+
+================================================================
+
+Memory-mapped I/O
+
+     Memory mapped I/O can be activated with the /i command line 
+argument, with an &-directive, or with the debugger i command.  
+An &-directive, like an !-directive, must appear at the beginning 
+of an assembly language program.  Only comment lines, completely 
+blank lines, or an !-directive may precede the line containing an 
+&-directive.  An &-directive contains "&" followed by an optional 
+address in hex (or in decimal if suffixed with "t").  If an 
+address is specified, it must follow "&" immediately with no 
+intervening spaces.  When sim runs a program, it activates 
+memory-mapped I/O if the program's assembly language file 
+contains an &-directive.  If an address is specified on the &-
+directive, sim uses that address.  If not, sim uses the default 
+address. 
+
+     If the /i command line argument and the &-directive in a 
+assembly language program are both used, sim will use the 
+command line argument and ignore the &-directive. 
+
+     Hitting the ENTER key on memory-mapped keyboard input 
+injects the newline character.  For example, entering the letter 
+"a" and then hitting the ENTER key provides two input characters: 
+the letter "a" and the newline character. 
+
+     Excess input is saved for subsequent keyboard read 
+operations, in which case the keyboard status word will remain 
+set to 1 until the saved input is consumed by keyboard read 
+operations. 
+
+     The mod program can change the memory-mapped addresses to 
+any four consecutive addresses in main memory.  It can also 
+change the memory-mapped delay--the time from a write of a 
+character to the appearance of that character on the monitor.  
+The delay time is specified in units of microinstructions.  For 
+example, if the delay is 200, a character appears on the monitor 
+after 200 microinstructions have executed since the write of that 
+character.
+
+
+Encrypted Microcode File o.hor, o2.hor, k.hor, and r.hor
+
+     o.hor is a horizontal microcode file in binary form that 
+implements the "optimal instruction set" (see o.txt).  o.cfg is 
+its configuration file.  Although it is encrypted, o.hor can 
+still be used by sim.  However, when sim is using this file, sim 
+will run only with the microlevel disabled.  Thus, the user 
+cannot examine the microcode in o.hor via sim's microlevel 
+commands, such as u or d.  Encrypted microcode files can be 
+created with the enc (microcode ENCrypt) program. 
+
+     o2.hor, a slight modification of o.hor (o2.hor implements a 
+two-word mult instruction), is also encrypted.  o2.cfg is its 
+corresponding configuration file.
+
+     k.hor, the microcode for the stack instruction set, is also 
+encrypted.  k.cfg is its corresponding configuration file. 
+
+     r.hor, the microcode for the really-simple instruction set, 
+is also encrypted.  r.cfg is its corresponding configuration 
+file. 
+
+     Encrypted files are different for each platform.  Thus, an 
+encrypted file has to match the platform on which sim is running.  
+For example, you cannot use the DOS version of k.hor when running 
+the Windows version of sim. 
+
+
+Search Path for Microcode, Configuration, and Answer Files
+
+     If a directory is specified by the /m argument, sim searches 
+for the microcode file in that directory.  Otherwise, sim 
+searches for the microcode file in the current directory and in 
+the directory specified by the H1DIR environment variable, if 
+any, in that order.  sim uses the same search pattern for 
+configuration and answer files specified by the /c and /a command 
+line arguments. 
+
+     If a microcode and configuration file are specified by an !-
+directive, sim searches the directory in which the ".mas" file 
+containing the !-directive is located, and the directory 
+specified by the H1DIR environment variable, if any, in that 
+order. 
+
+
+Batch Files/Shell Scripts
+
+The run batch file/shell script runs sim with the debugger off.  
+To use the run batch file/shell script, enter 
+
+      run <machine_code_file_name>
+
+where <machine_code_file_name> is the name of a ".mac" file (with 
+or without its extension).  
+
+The arun batch file/shell script first assembles the specified 
+".mas" file and then, if the assembly is without error, runs the 
+program.  To use arun, enter 
+
+     arun <mas_file_name_less_extension>
+
+The alr batch file/shell script assembles, links with sup.mob 
+(the standard start-up code), and runs the specified file.  To 
+use alr, enter 
+
+     alr <mas_file_name_less_extension>
+
+The akr batch file/shell script is like alr, except that it links 
+with ksup.mob (the start-up code for the stack instruction set). 
+
+run, arun, alr, and akr all invoke sim with the /z argument 
+(which runs sim with the debugger off). 
+
+runc does what run does and, in addition, displays the return 
+code from sim.
+
+The batch files/shell scripts asim, als, and aks are like arun, 
+alr, akr, respectively, except that they all invoke sim without 
+the /z argument (thus, sim runs with the debugger on). 
+
+The batch file/shell script aa assembles the specified ".mas" 
+file and runs it on sim with the /a argument. ala and aka are 
+like aa, but, in addition perform a link with start-up code to 
+create a ".mac" file.  ala and aka link with sup.mob and 
+ksup.mob, respectively. 
+
+cakr and calr are like and akr and alr , respectively, except 
+that they assume the input file extension is ".cpp" rather than 
+".mas".   For example,
+
+     alr t
+
+processes the file t.mas.  But
+
+     calr t
+
+processes the file t.cpp.  In the latter case, t.cpp should 
+contain assembler code in the form of // comments (see iss.txt).
+caka and cala are like cakr and calr, respectively, except that 
+they run sim with the /a command line argument.
+
+atest and ltest are batch files/shell scripts that test 
+respectively the student-written assembler (masv1) and linker 
+(linv1) by comparing their outputs with the outputs from the 
+model versions masv1m and linv1m supplied in the software 
+package.  
+
+To run atest, Java class files or a C++ executable file for 
+masv1 must be available.  To test the Java class files, enter 
+
+     atest java
+
+To test a C++ executable file, enter
+
+     atest
+
+ltest is invoked similarly.
+
+
+Search Sequence for ".mas" files
+
+     Whenever sim runs a ".mac" file, sim looks at the 
+corresponding source code file to check for ! and & directives.  
+It first checks the file with a ".mas" extension.  But if such a 
+file does not exist, it checks the file with a ".cpp" 
+extension.  For example, when sim runs t.mac, it checks t.mas if 
+it exists for ! and &-directives.  If t.mas does not exist, then 
+sim checks t.cpp if it exists for directives. 
+
+
+
+Return Codes from sim
+
+     If a simulation fails for any reason, sim returns a non-zero 
+return code.  However, on a normal termination of a simulation 
+run, sim returns the code returned by the program it has just run 
+if this program is at a halt AND if the return code option is on.  
+Otherwise, sim returns 0.  For example, consider the following 
+program: 
+
+      ldc   5
+      halt
+
+If you run this program on sim to its end with the return code 
+option on, and then quit sim, sim will return 5.  If, however, 
+you execute only the ldc instruction and then quit sim, sim will 
+return 0.  The return code returned by sim can be detected by 
+batch files/scripts (see the batch/script file runc and page 454 
+in the textbook). 
+     Use the mod program to turn on the return code option.  The 
+default setting is off. 
+
+
+
+Debugger Command Summary
+
+     Uppercase and lowercase commands are for the machine and 
+micro levels, respectively, unless the command is case sensitive.  
+*, @, %, $, and - are used as symbolic arguments in some debugger 
+commands.  Their meanings are as follows: 
+
+     *      all addresses occupied by the original code or 
+            accessed by the A and a commands.  Remember the 
+            meaning of "*" by noting it points it all directions. 
+
+     @      address in the I/O register as specified by the 
+            current configuration.  This argument is not valid in 
+            microlevel commands.  Remember the meaning of "@" by 
+            noting it looks like the "a" in "ac". 
+
+     %      address in the pc register (in machine-level 
+            commands) or in the mpc register (in microlevel 
+            commands).  Remember the meaning of "%" by noting 
+            that the first letter of "percent" matches the first 
+            letter of "pc". 
+
+     $      address in the sp register (this argument is not 
+            valid for microlevel commands).  Remember the meaning 
+            of "$" by noting it looks like the "s" in "sp".  
+
+   label    allowed when a source display option is in effect.
+
+     -      Cancel setting
+
+
+For example, U% unassembles the machine code pointed to by the pc 
+register (i.e., it unassembles the instructions that are about to 
+be executed).  One particularly useful command is D$.  It 
+displays main memory starting at the location pointed to by the 
+sp register (i.e., it displays the stack). 
+   
+     Spaces are allowed between a command and any arguments.  For 
+example, to display all of main memory, you may enter
+
+     D *
+
+However, two-letter commands must not have intervening spaces.  
+For example, to enter the KW command, you must enter
+
+     KW
+
+in upper or lowercase with no intervening spaces.  
+
+At least one space should separate arguments when multiple 
+arguments are used. 
+ 
+    When the "source only" or "plus source" option is active, a 
+label that spells out a hex number is treated as a hex number.  
+For example, the command 
+
+     Bf1
+
+sets a breakpoint at the address f1 hex, even if your program 
+contains a label 'f1'.  To force sim to treat 'f1' as a label, 
+prefix it with a single or double quote (a terminating quote is 
+optional).  Thus, to set a breakpoint at the label 'f1', enter 
+
+     B'f1
+
+or
+
+     B'f1'
+
+A quote is also necessary in the a, e, and d commands if the 
+label is "@" or "$" (to avoid treating the label as the symbolic 
+argument "@" (ac reg contents) or "$" (stack reg contents), or 
+if it is "h" and you are using the d command (dh is the decimal-
+to-hex command), or if it is "o" and you are using the u command 
+(uo is the unassemble one command).  
+
+In the summaries that follow, <addr> represents an absolute 
+address or a symbolic address (i.e., a label).  The latter is
+allowed only if a source display option is in effect.
+
+================================================================= 
+Activate answer file
+   Format (case insenstive):
+    
+        /A
+        /A<answerfilename>
+
+   Description:
+
+        Activates an answer file.  If <answerfilename> is not 
+        specified, the answer file whose name is 
+        <macfilename_less_extension>.ans will be used.  If 
+        <answerfilename> has no extension, ".ans" is assumed.  
+        The /A command checks for correct program output if the 
+        answer file includes the q command and if the first line 
+        of the answer file contains a ";" followed by a "#", 
+        followed by a 4 hex digit checksum.  The result of this 
+        check is both displayed to the screen and written to the 
+        log file.  Any characters except for "#" are allowed 
+        between the ";" and the "#".  Whitespace is allowed 
+        between the "#" and the checksum.  A debugger command may 
+        appear on the same line as the checksum as long as it is 
+        before the ";".  Optionally, following the checksum there 
+        may appear five decimal numbers corresponding to machine 
+        code size, microcode size, machine inst count, 
+        microinstruction count, and a checksum for the preceding 
+        five numbers.  For example: 
+
+        ; #5364 95 93 73 519 49927
+            ^   ^  ^  ^   ^   ^
+            |   |  |  |   |   |
+            |   |  |  |   |   +--- checksum for preceding five data
+            |   |  |  |   +------- micro inst count limit
+            |   |  |  +----------- machinine inst count limit
+            |   |  +-------------- microcode size limit
+            |   +----------------- machine code size limit
+            +--------------------- output checksum
+
+        If these optional numbers are specified, sim performs 
+        "full" checking when the /A command is entered.  With 
+        full checking, sim checks if the current program's sizes 
+        and counts are within the limits specified by the 
+        optional numbers (in addition to checking for correct 
+        output).  If within the limits, "under" is displayed and 
+        written to the log file; if not, "OVER" is displayed and 
+        written to the log file.  In either case, the sizes
+        and counts and the amount over or under are displayed
+        and written (in decimal) to the log file.  For example: 
+
+
+Report for:         User's name
+Check data:         EDITED!!!                    <-------- ERROR
+Program output:     NOT correct                  <-------- ERROR
+Machine code size:  25     (5     OVER  limit )  <-------- warning
+Microcode size:     147    (7     OVER  limit )  <-------- warning
+Machine inst count: 165    (5     OVER  limit )  <-------- warning
+Micro inst count:   1600   (600   OVER  limit )  <-------- warning
+
+                            ^
+                            |
+                            +-- amount over by
+
+        Here is an example of a report in which all requirements 
+        are satified:
+
+ 
+Report for:         User's name
+Program output:     correct
+Machine code size:  19     (1     under limit)
+Microcode size:     140    (0     under limit)
+Machine inst count: 151    (9     under limit)
+Micro inst count:   1000   (0     under limit)
+
+                            ^
+                            |
+                            +-- amount under by
+
+        If sim has been modified with the mod program to contain 
+        the user's name, sim will label the verifer report it 
+        writes to the log file with this name. 
+
+        If only an output checksum appears on the first line of 
+        an answer file, then sim simply reports "Program output: 
+        correct" or "Program output: NOT correct", which reflects 
+        only the correctness of the program's output. 
+
+        Here is a typical answer file with "full" checking for
+        a program that does not require input:
+
+        ; #5364 95 93 73 519 49927
+        n
+        o
+        ln
+        g
+        SD 
+        q
+
+        Because the program verifier performs its checks on the 
+        log file created, the answer file must contain commands 
+        to create a log file.  In the example above, the ln 
+        command creates a new log file.  Trace out is typically 
+        turned off (with the n command) as well (otherwise, 
+        identical trace outputs are required for a program's 
+        output to be considered correct). 
+
+        Adding full or partial checking data to an answer file is 
+        performed by tools provided in the Instructor's Package.  
+        The Instructor's Package is available at www.course.com 
+        to instructors. 
+
+        The /a command line argument has the same effect as the
+        /a debugger command.
+
+        If "none" is the machine code file name and an answer 
+        file name is specified with the /a command, then the log 
+        file base name defaults to the base name of the answer 
+        file. 
+
+   Examples:
+        /A 
+        /Ap21
+        /Ap21.ans
+                                            
+================================================================= 
+Assemble
+   Format:    
+
+        A
+        A<addr> 
+        A@
+        A%
+        A$
+        a
+        a<addr>   
+        a%
+
+   Description:
+
+        Displays the designated address, the instruction there, 
+        and then waits for a new assembly instruction to be 
+        entered.  To exit from assembly mode, hit ENTER without 
+        first entering an instruction.  If A or a is used alone, 
+        the assembly starts where the previous one left off.  The 
+        END, EQU, EXTERN, ORG, PUBLIC directives, the DUP 
+        operator, and blank lines are not allowed.  Comments 
+        starting with ";" are allowed.  When a "plus source" or 
+        "source only" option is active, pre-existing labels can 
+        be used in the assembly language instructions entered.  
+        However, new labels cannot be created.  When saving 
+        microcode created with the a command, be sure the 
+        appropriate shifter is active (see S1 and SB).  Unlike 
+        mas, the A command does not check for the correct number 
+        of operands.  If A or a extends the size of a program, 
+        the commands using a "*" argument will respond 
+        accordingly. 
+
+   Examples:
+        A 
+          0:  ld   /0 003/   ldc 45
+          1:  add  /2 004/    
+
+        a    (horizontal microcode)
+          0:  mar = pc; rd; / ac = pc + 1; 
+          1:  pc = pc + 1; rd; / 
+
+        a0   (vertical microcode)
+  0: mar     pc                    / 40006 / add ac ac 1
+  1: rd                            / 68000 /
+                                            
+=================================================================
+Breakpoint
+
+   Format:
+
+        B
+        B<addr>
+        B-
+        b
+        b<addr>
+        b-
+
+   Description:
+
+        Sets or kills a breakpoint.  A breakpoint stops execution 
+        whenever an instruction at the specified address is about 
+        to be executed.  If only B or b is entered, the previous 
+        breakpoint address is reestablished.  If an address is 
+        entered following B, a breakpoint is established at that 
+        address, killing any previously-set breakpoint of the 
+        same type.  If  "-" is entered following B or b, the 
+        current breakpoint is killed.  At most one machine-level 
+        and one microlevel breakpoint may be set at any given 
+        time. 
+
+   Examples:
+
+        B
+        B-
+        B3f
+        b
+        b-
+
+      
+=================================================================
+Character to Hex/Decimal
+
+   Format (case insensitive):
+
+        C<char>
+
+   Description:
+
+        Converts a character to its ASCII numeric equivalent in
+   hex and decimal.
+
+   Examples:
+       
+        cA
+        41 (hex) = 65 (dec)   
+
+=================================================================
+Decimal to Hex
+
+   Format (case insensitive):
+
+        DH<decimal number>
+
+   Description:
+
+        Converts a decimal number in the range -32,768 to 
+   65,535 to hex.  It also displays the corresponding ASCII
+   character if its value is between 32 (decimal) and 127 
+   (decimal).
+
+   Examples:
+       
+        dh 65
+        41 (hex) = 'A'    
+
+=================================================================
+Disable
+
+   Format (case insensitive):
+
+        DISABLE
+
+   Description:
+
+        Disables (i.e., hides) the microlevel.
+
+   Examples:
+       
+        disable
+
+=================================================================
+Display
+
+   Format:
+
+        D
+        D<arg1>
+        D<arg1> <arg2>
+
+   where <arg1> and <arg2> can be <addr>, *, @, %, or $.
+
+
+        d
+        d<arg1>
+        d<arg1> <arg2>
+        
+   where <arg1> and <arg2> can be <addr>, *, or %.     
+        d<addr>
+
+   Description:
+
+        Displays memory in hex/ASCII (for the machine level) or 
+        hex format (for the microlevel) starting from the address 
+        designated by <arg1>.  If D or d are used alone, the 
+        display starts where the previous one left off.  If D or 
+        d are followed by two arguments, the first and second 
+        arguments specify the starting and ending addresses, 
+        respectively.  If two arguments are not specified, a 
+        default number of lines is displayed.  If <arg2> is *, 
+        it represents the last address of the program.  For 
+        example, 
+        
+             d 5 *
+             
+        displays the program from location 5 to its end.  If 
+        <arg1> is *, <arg2>, if any, is ignored.  The D command 
+        displays main memory even when the address corresponds to 
+        memory-mapped I/O locations--that is, you cannot display 
+        I/O status or data information with the D command. 
+
+
+
+   Examples:
+
+        D
+  0: 0018 2010 1018 0010 300F C008 1010 9000    ........
+  8: 8011 FFF7 0018 FFFD 800A FFFB FFFF 0001    ........
+ 10: 0020 0053 0075 006D 0020 003D 0020 0000     Sum = .
+ 18: 0000 0000 0000 0000 0000 0000 0000 0000    ........
+
+        d8
+  8: 5281820F    52818216    5281826D    0000066C    
+  C: 52818214    52818261    0000065D    52818218    
+ 10: 52818276    00000673    5281825A    00000657    
+ 14: 52818268    00000664    52818270    0000066E    
+
+=================================================================
+Edit
+
+   Format:
+
+        E
+        E<addr>
+        E@
+        E%
+        E$
+        e
+        e<addr>
+        e%
+
+   Description:
+
+        Allows editing of storage.  Editing continues with 
+        successive locations until ENTER is hit without first 
+        entering a new value.  If E/e is used alone, editing 
+        starts where the previous one left off.  The E/e commands 
+        do not affect the range of addresses corresponding to the 
+        argument "*". 
+
+   Examples:
+
+        E
+  0: 0003/7777
+  1: 2004/
+
+        e
+ 0: 304D2000/80000000    
+ 1: 00001000/
+
+=================================================================
+Enable
+
+   Format (case insensitive):
+
+        ENABLE
+
+   Description:
+
+        Enables the microlevel (i.e., makes it visible to the 
+        user).
+
+   Examples:
+       
+        enable
+
+=================================================================
+ENTER key
+
+   Format (case insensitive):
+      
+        Hit ENTER key without first entering any text.
+
+   Description:
+
+        Executes the default command shown within square brackets.
+
+=================================================================
+File
+
+   Format:
+
+        F
+        F<addr> <addr>
+        F*
+        f
+        f<addr> <addr>
+        f*
+
+   Description:
+
+        Writes storage to a file.  The machine or micro file so 
+        created can then be used as a machine or microcode input 
+        file on subsequent runs of sim.  F<addr> <addr> writes 
+        out all storage between the specified addresses.  If F is 
+        used alone, then F writes out whatever locations were 
+        written out on its previous use (if the first use, then 
+        the effect is the same as F*).  The f command behaves 
+        similarly.  The default file names initially are "f.mac" 
+        and "f.hor"/"f.ver", but are reset to the name the user 
+        enters.  The default start and stop addresses are 
+        initially equal to the addresses of the current machine 
+        and microprograms, but are reset with the addresses 
+        specified on the F/f commands. 
+           
+   Examples:    
+
+        F
+        Enter file name.   [f.mac]
+        testf.mac
+
+        f
+        Enter file name.   [f.hor]
+        testf.hor
+
+=================================================================
+Go
+
+   Format (case insensitive):
+
+        G
+
+   Description:  
+        
+        Execute until a breakpoint, watchpoint, or a HALT is 
+        reached. 
+
+   Examples:
+
+        g
+
+=================================================================
+Hex to Decimal
+
+   Format (case insensitive):
+
+        HD<hex number>
+
+   Description:
+
+        Converts a hex number (zero-extended to the left to four 
+        digits) to decimal.  Two decimal numbers are displayed 
+        corresponding to the unsigned and signed values of the 
+        hex number. It also displays its corresponding ASCII 
+        character if its value is between 20 (hex) and 7F (hex); 
+
+   Examples:
+      
+        hd ffff 
+        unsigned: 65535 (dec)   signed: -1 (dec)   
+        hd 41
+        unsigned: 65 (dec)   signed: 65 (dec)   char: 'A'
+=================================================================
+Jump
+
+   Format:
+
+        J
+        J<addr>
+        j
+        j<addr>
+
+
+   Description:
+        
+        Causes a jump to the given address (J and j load the pc 
+        and mpc registers, respectively, with the address 
+        specified).  If no address is specified, then the 
+        previous address jumped to is used. 
+
+   Examples:
+        
+        J
+        J3f
+        j0
+
+=================================================================
+Kill Breakpoint
+
+   Format:
+      
+        K
+        B-
+        k
+        b-
+
+   Description:
+
+        K or B- kills current machine-level breakpoint.
+        k or b- kills current microlevel breakpoint.
+
+   Examples:
+
+        K
+        B-
+        k
+        b-
+
+=================================================================
+Kill Watchpoint
+
+   Format (case insensitive):
+      
+        KW
+        W-
+
+   Description:
+
+        Kills current watchpoint.
+
+   Examples:
+
+        KW
+        W-
+
+
+=================================================================
+Log file
+
+   Format (case insensitive):
+
+        L
+        LN
+        L-
+        LD<count>
+        LD
+        LD^
+
+   Description:
+
+        L turns on the log file and causes new log data to
+        be appended to the current log file, if one exists.  LN
+        erases the current log file, if any.  It then turns on 
+        a new log file.  L- turns off the log file.
+        
+        LD<count> displays the segment of the log file that 
+        starts from <count> lines back from its end, excluding 
+        the debugger's prompt lines.  LD^ displays the segment of 
+        the log file just preceding the current segment.  LD 
+        without a count or ^ argument displays the segment of the 
+        log file just following the current segment.  The LD 
+        command can be used only when a log file is on.  Each 
+        line of the LD display is flagged with a ')' in place of 
+        the usual ":" that follows the address. 
+
+   Examples:
+
+        l
+        l-
+        ld5
+        ldAB
+        ld20t
+        ld
+        ld^
+
+=================================================================
+Machine/microlevel display
+
+   Format:
+
+        M
+        MC  (case insensitive)
+        MR  (case insensitive)
+        MS
+        MSO 
+        MC- (case insensitive)
+        MR- (case insensitive)
+        MS-
+        MSO-
+        m
+        ms
+        mso
+        ms-
+        mso-
+
+   Description:
+
+        M activates machine-level display mode.  If the "plus 
+        counts", "plus reads", "plus source" or "source only" 
+        option was active when the machine-level display mode 
+        was last used, it is reactivated. 
+
+        MC activates machine-level display mode plus counts.
+        The number of microinstructions executed for each
+        machine instruction is displayed in decimal (a "t"
+        suffix on the microinstruction count indicates decimal).
+
+        MR activates machine-level display mode plus reads.  Main 
+        memory addresses read from (other than for instruction 
+        fetches) and their corresponding contents are displayed. 
+
+        MS activates machine-level display mode plus source.  The 
+        line from the source file corresponding to the machine 
+        instruction executed is displayed.  When the "plus 
+        source" or "source only" option is active, the U command 
+        displays source code from the ".cat" or ".lst" file whose 
+        base name matches that of the executing ".mac" file (with 
+        priority given to the ".cat" file if both a ".cat" and 
+        ".lst" file exist).  In addition, the debugger commands 
+        that take address arguments will accept labels as well as 
+        numbers for addresses. 
+
+        MSO activates machine-level display source only. This 
+        command is like MS, except that only source code is 
+        displayed. 
+
+        MC- activates machine-level display mode without counts. 
+
+        MR- activates machine-level display mode without reads. 
+
+        MS- activates machine-level display mode without source.
+
+        MSO- cancels only the machine-level "source only" option.  
+        MS-, on the other hand, cancels either the machine-level 
+        "plus source" or "source only" options. 
+
+        m activates microlevel display mode.  If the "plus 
+        source" or "source only" option was active when the 
+        microlevel display mode was last used, it is reactivated. 
+
+        ms activates microlevel display plus source.  When the 
+        "plus source" or "source only" option is active, the u 
+        command displays source code from the ".hst"/".vst" file 
+        whose base name matches that of the executing 
+        ".hor"/".ver" file.  In addition, the debugger commands 
+        that take address arguments will accept labels as well as 
+        numbers for addresses. 
+
+        mso activates microlevel display source only. This 
+        command is like ms, except that only source code is 
+        displayed.  
+
+        ms- activates microlevel display mode without source.
+
+        mso- cancels only the microlevel "source only" option.
+        ms-, on the other hand, cancels either the microlevel 
+        "plus source" or "source only" options. 
+
+   Examples:
+
+        M
+        MC
+        MC-
+        MR
+        MR-
+        MS
+        MSO
+        MS-
+        m
+        ms 
+        mso
+        ms-
+
+
+=================================================================
+Memory-mapped I/O
+
+     Format (case insensitive):
+
+          I
+          I-
+
+     Description:
+
+          I activates memory-mapped I/O; I- deactivates memory-
+          mapped I/O. 
+
+     Examples:
+
+          i
+          i-
+
+=================================================================
+No display
+
+   Format (case insensitive):
+        
+        N
+
+   Descriptions:
+
+        Activates no display mode.  Only program-generated output
+        is displayed
+
+   Examples:
+
+        N
+
+=================================================================
+Over again
+
+   Format (case insensitive):
+
+        O
+        O&
+        O#
+
+   Description:
+
+   Description:
+
+        Do over from the beginning of the program.  
+        
+        O reinitializes main memory and microstore with the 
+        current files.  O& reads in new machine code and 
+        microcode files, and initializes main memory and 
+        microstore with these files.  O# does not reinitialize 
+        main memory or microstore. 
+        
+        The display mode is not affected unless a switch from
+        "plus source" or "source only" is forced by the lack
+        of a required file. 
+        
+        O and O# leave any existing breakpoints or watchpoints in 
+        effect.  O& kills all breakpoints and watchpoints.  
+        
+        O& resets all default addresses.  O and O# resets all 
+        default addresses except for breakpoint and watchpoint 
+        addresses.  
+        
+        If "none" is the current machine code file name, O asks 
+        the user for permission to reinitialize main memory (to 
+        zeros).  If "none" is the microcode file name, O does not 
+        reinitialize microstore.  
+
+        Additional "argv" arguments can be entered following the 
+        machine code file name.  sim passes these "argv" 
+        arguments to start-up code.
+
+        O& does not prompt for and read in a new microcode file 
+        if sim is disabled or if the /m and/or /c command line 
+        arguments are used.  Instead, microstore is reinitialized 
+        with the microcode from the current microcode file 
+        (unless "none" is the current microcode file name, in 
+        which case microstore is not reinitialized). 
+        
+   Examples:
+
+        o
+        o&
+        o#
+
+=================================================================
+Partial
+
+   Format:
+
+        P
+        p
+
+   Description:
+        
+        P sets partial machine-level display mode; p sets partial 
+        microlevel display mode.  Only the location of each 
+        executing instruction is displayed.  Output generated by 
+        the executing program is not displayed.  sim uses ">>"  
+        to prompt for input when in partial machine-level or 
+        partial microlevel display mode.
+                        
+   Examples:
+
+        P
+        p
+
+=================================================================
+Quit
+
+   Format (case insensitive):
+
+        Q
+
+   Description:
+
+        Terminates the execution of sim
+
+   Examples:
+
+        q
+
+=================================================================
+Register display/modify
+
+   Format:
+
+        R
+        R<regname>
+        R*
+        r
+        r<regname>
+        r*
+
+   Description:
+
+        If <regname> is given, displays the specified register's 
+        contents and waits for a new value to be entered by the 
+        user.  R*/r* display all registers.  If R or r are used 
+        alone, then the previous action taken is repeated (if the 
+        first use, the effect of R/r is the same as R*/r*).  
+
+   Examples:
+
+        rac
+     ac = 0000/33
+
+        r*
+     mpc   = 000      mar   = 000
+     0     = 0000     1     = 0001     xmask = 0FFF     ymask = 00FF
+     zmask = 000F     mdr   = 0000     pc    = 0000     sp    = 0000
+     ac    = 0000     ir    = 0000     dc    = 0000     b     = 0000
+     c     = 0000     d     = 0000     e     = 0000     f     = 0000
+     10    = 0000     11    = 0000     12    = 0000     13    = 0000
+     14    = 0000     15    = 0000     16    = 0000     17    = 0000
+     18    = 0000     19    = 0000     1a    = 0000     1b    = 0000
+     1c    = 0000     1d    = 0000     1e    = 0000     1f    = 0000
+
+        R
+     pc    = 0000     sp    = 0000     ac    = 0000
+
+=================================================================
+Shifter
+
+   Format (case insensitive):
+
+        S1
+        Sb
+
+   Description:
+
+        S1 activates the one-position shifter.  SB activates the 
+        barrel shifter.  Note: when microcode assembled by has or 
+        vas is loaded by sim, the appropriate shifter is 
+        automatically activated.  Thus, the S1 and SB commands 
+        may be needed only if you execute microcode written with 
+        the a or e commands.  
+
+=================================================================
+Source Display
+
+   Format:
+
+        SD
+        SD<filename>
+        sd
+        sd<filename>
+
+   Description:
+
+        SD without an argument displays the source file 
+        corresponding to the ".mac" file that sim is currently 
+        executing.  The source file is the file with the same 
+        base name as the executing ".mac" file but with the 
+        extension ".mas" (or other extension--such as ".lst"--as 
+        specified by the mod program).  If this file does not 
+        exist, then SD displays instead the corresponding ".mas" 
+        file.  If a corresponding ".mas" file also does not 
+        exist, SD displays the corresponding ".cpp" file.  If a 
+        ".cpp" file does not exist, SD displays the corresponding 
+        ".lst" file. 
+
+        If a file name is specified as an argument, SD/sd 
+        displays that file.  The specified file name is used as 
+        is--no default extension is added if it has no extension.  
+        Thus, the SD/sd commands can display any text file, 
+        including files without any extension. 
+
+        sd displays the ".has" or ".vas" file corresponding to 
+        the microcode currently in use.  If a ".has" or ".vas" 
+        file does not exist, sd displays the corresponding ".hst" 
+        or ".vst" file. 
+
+        SD/sd displays the entire file with no intermediate stops 
+        even if the file cannot be displayed on a single screen.  
+        To display increments of source code, use the U/u 
+        commands with sim in the "plus source" or "source only" 
+        mode.  Alternatively, if a log file is active when the 
+        SD/sd command is entered, the LD command can be used to 
+        display any portion of the file that was displayed by 
+        SD/sd. 
+        
+
+
+
+   Examples:
+
+        SD
+start: ldc  10            ; example of dout instruction
+       dout
+       halt
+
+        sd
+fetch: mar = pc; pc = pc + 1;             / increment pc
+       rd;                                / fetch mach inst
+       ir = mdr;                          / put mach inst in ir
+
+=================================================================
+Status
+
+   Format (case insensitive):
+        
+        S
+
+   Description:
+
+        Displays current simulator status.
+
+   Examples:
+
+        s
+
+Machinecode file   = a.mac        Size = 19  (hex) =   25 (dec)
+Microcode file     = s.hor        Size = 93  (hex) =  147 (dec)
+Config file        = s.cfg
+Log file (on)      = a.log
+MS/MSO file        = a.cat
+ms/mso file        = s.hst
+Answer file        = none
+Simulation mode    = horizontal
+Microlevel         = enabled
+Shifter            = barrel
+Display mode       = machine-level source only
+Cmd line addr      = F3C   (hex) =   3900 (dec)
+Mem-map addr (on)  = BB8   (hex) =   3000 (dec)
+Mem-map delay      = C8    (hex) =    200 (dec)
+Load point         = 0     (hex) =      0 (dec)
+Machine inst count = 0     (hex) =      0 (dec)
+Micro   inst count = 0     (hex) =      0 (dec)
+
+=================================================================
+Trace
+
+   Format:
+
+        T
+        T<count>
+        t
+        t<count>
+
+   Description:
+
+        Traces <count> number of instructions.  If <count> is not 
+        specified, then the previous count is used.  If the "plus 
+        source" or "source only" options are active, a "+" marks 
+        a modified instruction. 
+
+
+   Examples:
+
+        T1 (in machine-level display)
+
+  0: ld   /0 016/ ac=0000/0014  
+
+
+        T1 (in microlevel display)
+
+  0: pc = 1 + pc; mar = pc; 
+     mar=001/002  pc=0002/0003  
+  1: rd; 
+     Rd from m[002] mdr=FFFD/8019  2: ldc  /8 019/ 
+  2: ir = mdr; 
+     ir=0016/8019  
+  3: dc = ir; if (s) goto 8; 
+     dc=0058/8019  
+  8: dc = left(ir); if (s) goto F; 
+     dc=8019/0032  
+  9: dc = left(dc); if (s) goto 16; 
+     dc=0032/0064  
+  A: 0 = left(dc); if (s) goto 6D; 
+  B: goto 6C; 
+ 6C: ac = ir & xmask; goto 0; 
+     ac=0014/0019  
+
+        T1 (in partial microlevel display)
+
+0/1/2/3/8/9/A/B/6C
+
+=================================================================
+Unassemble
+
+   Format:
+
+        UO<machine inst in hex>
+        U
+        U<arg1>
+        U<arg1> <arg2>
+
+   where <arg1> and <arg2> can be <addr>, *, @, %, or $.
+
+
+        uo<microinstruction in hex>
+        u
+        u<arg1>
+        u<arg1> <arg2>
+   where <arg1> and <arg2> can be <addr>, *, or %.
+
+
+   Description:  
+
+        Unassembles (i.e., produces a symbolic instruction from 
+        the binary instruction) starting from the address 
+        designated by <arg1>.  If U or u are used alone, the 
+        unassembly starts where the previous one left off.  If U 
+        or u are followed by two arguments, the first and second 
+        arguments specify the starting and ending addresses, 
+        respectively.  If two arguments are not specified, a 
+        default number of lines is displayed.  If <arg2> is *, it 
+        represents the last address of the program.  For example, 
+        
+             u 5 *
+             
+        unassembles the program from location 5 to its end.  If 
+        <arg1> is *, <arg2>, if any, is ignored.  If U or u are 
+        followed by the letter "O" and a machine/micro 
+        instruction in hex form, then the given instruction is 
+        unassembled (UO stands for unassemble one).  If the "plus 
+        source" or "source only" options are active (see the MS, 
+        MSO, ms, and mso commands), U and u display for each 
+        address 
+        
+             - the address in hex
+
+             - the reference count in decimal mod 1,000,000
+               (mod 65536 on DOS).  The reference count is 
+               the number of reads and writes to the 
+               corresponding address. 
+
+             - the contents of main memory in hex (a "+" marks
+               locations whose contents have changed since the
+               program was loaded).
+
+             - the source code
+
+       Blank and comment-only lines from the source file are not 
+       not displayed.  To display the complete source file,
+       use the SD or sd commands.
+
+   Examples:
+
+        U (with no source mode active)
+  0: ld   /0 018/ add  /2 010/ st   /1 018/ ld   /0 010/ 
+  4: sub  /3 00F/ jz   /C 008/ st   /1 010/ ja   /9 000/ 
+  8: ldc  /8 011/ sout /FFF7 / ld   /0 018/ dout /FFFD / 
+  C: ldc  /8 00A/ aout /FFFB / halt /FFFF / ld   /0 001/ 
+
+        U (with "source only" or "plus source" option active)
+0   20t    0018  loop:    ld     sum      ; get current sum
+1   20t    2010           add    n        ; add n to it
+2   20t    1018           st     sum      ; store new sum back in sum
+3   20t    0010           ld     n        ; decrement n
+4   20t    300F           sub    @1 
+5   20t    C008           jz     done     ; when n is zero, go to done
+6   19t    1010           st     n        ; put new value in n
+7   19t    9000           ja     loop     ; jump always to loop to repeat
+
+        u (with horizontal mode active but no source mode active)
+      C       A       B      ALU    MAR  RD   WR  COND  ADDR
+/  0: pc      1       pc      +      1    0    0    0     0
+   0:     pc = 1 + pc; mar = pc; 
+
+/  1: 0       0       0       0      0    1    0    0     0
+   1:     rd; 
+
+/  2: ir      mdr     0       0      0    0    0    0     0
+   2:     ir = mdr; 
+
+/  3: dc      ir      0       0      0    0    0    1     8
+   3:     dc = ir; if (s) goto 8; 
+
+
+        u (vertical mode active)
+  0: mar     pc                    / 40006
+  1: rd                            / 68000
+  2: move    ir      mdr           / 2A4A0
+  3: add     pc      pc      1     / 018C1
+
+        UO 2015
+     add  /2 015/ 
+
+        uo 304d6000 (horizontal mode active)
+     pc = 1 + pc; mar = pc; 
+
+        uo 40006 (vertical mode active)
+     mar pc
+
+=================================================================
+Watchpoint
+
+   Format (case insensitive):
+
+        W
+        W<addr>
+        W-
+
+   Description:
+
+        Sets or kills a watchpoint.  A watchpoint stops execution 
+        immediately AFTER any machine instruction writes to the 
+        specified address.  If only W is entered, the previous 
+        watchpoint address is reestablished.  If an address is 
+        entered following W, a watchpoint is set at that address, 
+        killing any previously-set watchpoint.   If "-" is 
+        entered following W, the current watchpoint is killed.  
+        At most one watchpoint may be set at any given time. 
+
+   Examples:
+
+        w
+        w18
+        W-
+      
+=================================================================
+Z (Go to end)
+
+   Format (case insensitive):
+        
+        Z
+
+   Description:
+
+        Execute with trace output suppressed until a HALT is 
+        reached.  Ignore breakpoints and watchpoints.  Quit 
+        sim when a HALT is reached. 
+
+   Examples:
+
+        z

@@ -1,0 +1,40 @@
+;-------------------------------------------------------------
+; Translate the program 8.63 to assembly language.
+;-------------------------------------------------------------
+
+;-----------------------
+; main()
+;-----------------------
+
+main:	ldc	enter	; cout << "enter\n";
+	sout
+
+	din		; cin >> x;
+	st	x
+
+	ldc	enter	; cout << "enter\n";
+	sout
+
+	din		; cin >> y;
+	st	y
+
+	ld	x	; if(x >= y)
+	sub	y
+	jn	end_p
+
+	ldc	hello	; cout << "hello\n";
+	sout
+	ldc	bye	; cout << "bye\n";
+	sout
+	
+end_p:
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	0
+y:	dw	0
+enter:	dw	"enter\n"
+hello:	dw	"hello\n"
+bye:	dw	"bye\n"

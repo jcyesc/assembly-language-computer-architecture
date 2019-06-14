@@ -1,0 +1,274 @@
+Machine-level Assembler Version 6.1    Sat Dec 27 11:55:22 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 27-dic-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	:
+               ;		Program that reads in a string, determines
+               ;		if it's a palindrome, and displays "yes" or "no"
+               ;		accordingly.
+               ;	
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    80F1  	ldc	msg		; load the address of msg
+1  *1    FFF7  	sout			; string output
+2  *2    E04D  	call	printLine	; call printLine
+3  *3    8050  	ldc	pali		; load the address of pali
+4  *4    FFF6  	sin			; string input
+               	
+5  *5    E044  	call	getLength	; call length to calculate the length of the str
+6  *6    E04D  	call	printLine	; call printLine
+7  *7    8110  	ldc	msg_len		; load the address of msg_len
+8  *8    FFF7  	sout			; string output
+9  *9    00F0  	ld	length		; load the value of length
+A  *10   FFFD  	dout			; decimal output
+               
+B  *11   E030  	call	inverse		; call inverse to turn around the string
+C  *12   E018  	call 	compare		; call compare strings, to identify if they are 
+               	
+D  *13   E04D  	call	printLine	; call printLine
+E  *14   011A  	ld	isPalindromo	; load the value of isPalindromo
+F  *15   C014  	jz	printYes	; if zero, jump to printYes
+10 *16   9011  	ja	printNo		; Jump always to printNo
+               
+               printNo:
+11 *17   811F  	ldc	no		; load the address of no
+12 *18   FFF7  	sout			; string output
+13 *19   9017  	ja	end		; jump always to end
+               
+               printYes:
+14 *20   811B  	ldc	yes		; load the address of yes
+15 *21   FFF7  	sout			; string output
+16 *22   9017  	ja	end		; jump always to end
+               
+               end:
+17 *23   FFFF  	halt			; end of the program
+               
+               ;----------------------------------------------------------
+               ; compare()
+               ;
+               ; Function that compares the string "pali" and "inver" and
+               ; verify if they are equals.
+               ;
+               ; If they are equals, store ZERO in "isPalindromo" otherwise
+               ; store A NOZERO value.
+               ;----------------------------------------------------------
+               
+               compare:
+18 *24   00F0  	ld	length		; load the length of pali
+19 *25   3119  	sub	@1		; subtract 1 to the lenght, to avoid an index out of bo
+1A *26   102D  	st	index_c		; store the value in index_c
+               	
+               	; start the comparison from the last character to the first one
+1B *27   8050  for_c:	ldc	pali		; load th address of pali
+1C *28   202D  	add	index_c		; add index_c to the address
+1D *29   F100  	ldi			; load the content that is stored in the address of ac
+1E *30   102E  	st	char_p		; store the value in char_p
+               
+1F *31   80A0  	ldc	inver		; load the address of inver
+20 *32   202D  	add	index_c		; add index_c to the address of inver
+21 *33   F100  	ldi			; load the content that is stored in the address of ac
+22 *34   102F  	st	char_i		; store the value in char_i
+               	
+               	; decrement index_c--
+23 *35   002D  	ld	index_c		; load the value of index_c
+24 *36   3119  	sub	@1		; subtract one to index_c
+25 *37   102D  	st	index_c		; store the value in index_c
+               	
+               	; compare the values of the characters
+26 *38   002E  	ld	char_p		; load the value of char_p
+27 *39   302F  	sub	char_i		; subtract the value of char_i (char_p - char_i)
+28 *40   111A  	st	isPalindromo	; store the result in isPalindromo
+29 *41   D02C  	jnz	end_comp	; if it's no zero, it's not a palindromo
+               
+2A *42   002D  	ld	index_c		; load index_c
+2B *43   A01B  	jzop	for_c		; if it's zero or positive jump to for_c
+               end_comp:
+2C *44   F000  	ret			; return to the caller
+               
+2D *45   0000  index_c: dw 	0
+2E *46   0000  char_p:	 dw	0	; store the character of pali
+2F *47   0000  char_i:  dw	0	; store the character of inver
+               
+               ;---------------------------------------------------------------
+               ; inverse()
+               ;
+               ; Function that turns around the pali "string", for doing that,
+               ; it's necessary to know the length, so before to call this
+               ; function is necessary to store the length in the variable
+               ; "length"
+               ;
+               ; The inverse string is store
+               ; This function doesn't validate if the length is zero.
+               ; To turn around  the string we copy the last character of pali 
+               ; to the first position of inver, and we do that in a loop.
+               ;---------------------------------------------------------------
+               
+               inverse:
+30 *48   00F0  	ld	length		; load the length of the string
+31 *49   3119  	sub	@1		; subtract 1 to the length ( length - 1)
+32 *50   1042  	st	index_p		; store the result in index_p
+               	
+               for_in:
+33 *51   8050  	ldc	pali		; load the address of pali
+34 *52   2042  	add	index_p		; add to the address of pali the value of index_p
+35 *53   F100  	ldi			; load the value that is in the address pointed by ac
+36 *54   F300   	push			; push the value in the stack
+               	
+37 *55   80A0  	ldc	inver		; load the address of inver
+38 *56   2043  	add	index_i		; add to the adderss of inver the value of index_i
+39 *57   F200  	sti			; store the value that is in stack in the address pointed
+               
+               	; index_i++		
+3A *58   0043  	ld	index_i		; load the value of index_i
+3B *59   2119  	add	@1		; increment index_i
+3C *60   1043  	st	index_i		; store the value of index_i
+               	
+               	; index_p--		
+3D *61   0042  	ld	index_p		; load the value of index_p
+3E *62   3119  	sub	@1		; decement index_p
+3F *63   1042  	st	index_p		; store the value of index_p
+               
+40 *64   A033  	jzop	for_in		; if zero or positive, jump to for_in
+               
+41 *65   F000  	ret			; return to the caller
+               
+42 *66   0000  index_p:dw	0
+43 *67   0000  index_i:dw	0
+               
+               ;---------------------------------------------------------------
+               ; getLength()
+               ;
+               ; Function that calculate the length of pali. The length
+               ; is then store in the var "length". This function is going to
+               ; adding 1 for each character that finds. If it finds ZERO or
+               ; NULL, that means we're in the final of the string.
+               ;---------------------------------------------------------------
+               
+               getLength:
+44 *68   8050  	ldc	pali		; load the address of pali
+45 *69   20F0  	add	length		; add length to pali
+46 *70   F100  	ldi			; load the content that is in the address that points ac
+47 *71   C04C  	jz	endLength	; if the content is ZERO or NULL, jump to endLengh
+               				; We're in the end of the string
+48 *72   0119  	ld	@1		; load @1
+49 *73   20F0  	add	length		; add 1 to length
+4A *74   10F0  	st	length		; store the new value of length in length
+4B *75   9044  	ja	getLength	; jump always to getLength
+               endLength:
+4C *76   F000  	ret			; return to the caller
+               
+               ;---------------------------------------------------------------
+               ; printLine()
+               ;
+               ; Funtion that prints a line feed
+               ;---------------------------------------------------------------
+               
+               printLine:
+4D *77   800A  	ldc	'\n'	; load the value in ASCII of '\n'
+4E *78   FFFB  	aout		; ASCII output
+4F *79   F000  	ret		; return to the caller	
+               
+               ;---------------------
+               ; VARIABLES
+               ;---------------------
+50 *80   0000  pali:	dw  80 dup 0	; store the string to verify (PALINDROMO)
+A0 *160  0000  inver:  dw  80 dup 0	; store the string INVERSE
+F0 *240  0000  length: dw  0
+F1 *241  0049  msg:	dw "Introduce the string to verify"
+F2 *242  006E
+F3 *243  0074
+F4 *244  0072
+F5 *245  006F
+F6 *246  0064
+F7 *247  0075
+F8 *248  0063
+F9 *249  0065
+FA *250  0020
+FB *251  0074
+FC *252  0068
+FD *253  0065
+FE *254  0020
+FF *255  0073
+100*256  0074
+101*257  0072
+102*258  0069
+103*259  006E
+104*260  0067
+105*261  0020
+106*262  0074
+107*263  006F
+108*264  0020
+109*265  0076
+10A*266  0065
+10B*267  0072
+10C*268  0069
+10D*269  0066
+10E*270  0079
+10F*271  0000
+110*272  004C  msg_len:dw "Length: "
+111*273  0065
+112*274  006E
+113*275  0067
+114*276  0074
+115*277  0068
+116*278  003A
+117*279  0020
+118*280  0000
+119*281  0001  @1:	dw  1
+11A*282  0000  isPalindromo: dw	0	; store if it is palindromo or no
+11B*283  0059  yes:	dw  "YES"
+11C*284  0045
+11D*285  0053
+11E*286  0000
+11F*287  004E  no:	dw  "NO"
+120*288  004F
+121*289  0000
+122*290  ========= end of palindromo.mas =========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ printNo                   11          10 
+ printYes                  14          F  
+ end                       17          13  16 
+ compare                   18          C  
+ for_c                     1B          2B 
+ end_comp                  2C          29 
+ index_c                   2D          1A  1C  20  23  25 
+                                       2A 
+ char_p                    2E          1E  26 
+ char_i                    2F          22  27 
+ inverse                   30          B  
+ for_in                    33          40 
+ index_p                   42          32  34  3D  3F 
+ index_i                   43          38  3A  3C 
+ getLength                 44          5   4B 
+ endLength                 4C          47 
+ printLine                 4D          2   6   D  
+ pali                      50          3   1B  33  44 
+ inver                     A0          1F  37 
+ length                    F0          9   18  30  45  49 
+                                       4A 
+ msg                       F1          0  
+ msg_len                   110         7  
+ @1                        119         19  24  31  3B  3E 
+                                       48 
+ isPalindromo              11A         E   28 
+ yes                       11B         14 
+ no                        11F         11 
+
+Input file   = palindromo.mas
+Output file  = palindromo.mac
+List file    = palindromo.lst 
+Number base  = decimal
+Label status = case sensitive

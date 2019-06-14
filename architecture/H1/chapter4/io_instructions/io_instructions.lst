@@ -1,0 +1,26 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 12:09:37 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    8017  	ldc   23  ; load ac with 23
+1  *1    FFFD  	dout	  ; output 23 to display
+2  *2    2005  	add   @1  ; add 1 to ac
+3  *3    FFFD  	dout	  ; output 24 to display
+4  *4    FFFF  	halt
+5  *5    0001  @1:	dw    1
+6  *6    ========= end of io_instructions.mas ====================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @1                        5           2  
+
+Input file   = io_instructions.mas
+Output file  = io_instructions.mac
+List file    = io_instructions.lst 
+Number base  = decimal
+Label status = case sensitive

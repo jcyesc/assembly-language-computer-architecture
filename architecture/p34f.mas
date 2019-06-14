@@ -1,0 +1,10 @@
+                ld   6
+                add  x
+                add  x + 1
+                add  z + 3
+                add  y - 5
+                add  * - 2
+            z:  st   y
+                halt
+            x:  dw   3 dup 33
+            y:  dw   0

@@ -1,0 +1,107 @@
+;---------------------------------------------------------------------------------
+; Version	: 1.0
+; Created	: 31-december-2008
+; Author	: Juan Carlos Yescas
+; Description	: Program that reads in a string and outputs that string
+;		  with all letters removed. For example, if the input string is
+;		  "A&B*", the output string should be "&*".
+;---------------------------------------------------------------------------------
+
+main:
+	ldc	msg		; load the address of msg
+	sout			; string output
+
+	ldc	string		; load the address of string
+	sin			; string input
+		
+	call	removeLetters	; call removeLetter
+	
+	ldc	onlysym		; load the address of onlysym
+	sout			; string output
+
+	halt			; end of the program
+
+;-----------------------------------------------------------------------------------------
+; removeLetters()
+;
+; Function that removes the letters that are in the string named 'string' and store
+; the new string in 'onlysym'
+;
+; The char must acomplish the next condition
+;
+;	(char < 97 || char > 122) && (char < 65 || char > 90)
+;-----------------------------------------------------------------------------------------
+
+removeLetters:
+
+for:	ldc	string	; load the address of string
+	add	index	; add index to the address
+	st	address	; store the address in that we're processing
+	
+	ldi		; load the value that is in the address pointed by ac
+	st	char	; store	the value in char
+	jz	end	; if it's ZERO, jump to emp
+	
+firstOr:		; it executes the comparision (char < 97 || char > 122)
+	sub	@97	; subtract 97 to char
+	jn	nextOr	; if the result it's negative, jump to nextOr, it means that char < 97.
+	
+	ld	@122	; load the value of @122
+	sub	char	; subtract char to 122
+	jn	nextOr	; if the result it's negative, jump to nextOr, it means that char > 122
+	
+	ja	inc	; The condition (char < 97 || char > 122) is false
+
+nextOr:			; it executes the next comparison (char < 65 || char >90)
+	ld	char	; load the value of char
+	sub	@65	; subtract 65 to char
+	jn	copy	; if it's negative, jump to copy,
+			; it means that the condition (char < 65) is true	
+	
+	ld	@90	; load the value of @90
+	sub	char	; subtract char to 90
+	jn	copy	; if it's negative, jump to copy
+			; it means that the condition (char > 90) is true
+
+	ja	inc	; The condtion (char < 65 || char > 0) is false
+
+copy:
+	ld	char	; load the char
+	push		; push the value of ac in the stack
+	ldc	onlysym	; load the address of onlysym
+	add	newInd	; add newInd to the address of onlysym
+	sti		; store indirect, store the value that is in the top of the stack
+			; in the address pointed by ac
+
+	; ++newInd
+	ld 	newInd	; load newInd
+	add	@1	; add 1 to newInd
+	st	newInd	; store newInd
+
+inc:	; ++index
+	ld	index	; load index
+	add	@1	; add 1 to index
+	st	index	; st index
+	
+	ja	for	; jump always to for
+
+end:	ret		; return to the caller
+
+;------------------
+; VARIABLES
+;------------------
+
+string:	dw	80 dup 0	; store the original string
+onlysym:dw	80 dup 0	; store the string without letters
+index:	dw	0
+address:dw	0
+char:	dw	0
+newInd: dw	0		; index of the new string
+
+@1:	dw	1
+@65:	dw	65		; 'A'
+@90:	dw	90		; 'Z'
+@97:	dw	97		; 'a'
+@122:	dw	122		; 'z'
+msg:	dw	"Write the string to be processed -> "
+

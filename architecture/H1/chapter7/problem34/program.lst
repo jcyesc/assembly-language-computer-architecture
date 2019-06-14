@@ -1,0 +1,88 @@
+Machine-level Assembler Version 6.1    Mon Mar  9 22:53:18 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;-------------------------------------------------------------
+               ; For the following problems, translate the given program to
+               ; assembly languague, assemble, and run on sim.
+               ;-------------------------------------------------------------
+               
+               
+               ;-------------
+               ; f(int x)
+               ;-------------
+               
+0  *0    F501  f:	aloc  1		; int y = 7;
+1  *1    8007  	ldc   7
+2  *2    5000  	str   0
+               	
+3  *3    4000  	ldr   0		; x = y;
+4  *4    5002  	str   2
+               
+5  *5    4002  	ldr   2		; cout << x << " " << y << endl;
+6  *6    FFFD  	dout
+7  *7    8022  	ldc   msg
+8  *8    FFF7  	sout
+9  *9    4000  	ldr   0
+A  *10   FFFD  	dout 
+B  *11   800A  	ldc   '\n'
+C  *12   FFFB  	aout
+               
+D  *13   F601  	dloc  1		; return the memory
+E  *14   F000  	ret		; return to the calling function
+               
+               ;-------------
+               ; main()
+               ;-------------
+               
+F  *15   0020  main:	ld    x		; f(x)
+10 *16   F300  	push		
+11 *17   E000  	call  f
+12 *18   F601  	dloc  1
+               	
+13 *19   0021  	ld    y		; f(y)
+14 *20   F300  	push
+15 *21   E000  	call  f
+16 *22   F602  	dloc  2
+               
+17 *23   0020  	ld    x		; cout << x << " " << y << endl;
+18 *24   FFFD  	dout
+19 *25   8022  	ldc   msg
+1A *26   FFF7  	sout
+1B *27   0021  	ld    y
+1C *28   FFFD  	dout
+1D *29   800A  	ldc   '\n'
+1E *30   FFFB  	aout
+               
+1F *31   FFFF  	halt
+               	
+                    end main;
+               
+               ;-------------------
+               ; GLOBAL VARIABLES
+               ;-------------------
+20 *32   0001  x: 	dw 1
+21 *33   0002  y:	dw 2
+22 *34   0020  msg:	dw " "
+23 *35   0000
+               
+24 *36   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           11  15 
+ main                      F           20 
+ x                         20          F   17 
+ y                         21          13  1B 
+ msg                       22          7   19 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

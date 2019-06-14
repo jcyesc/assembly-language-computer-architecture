@@ -1,0 +1,39 @@
+;-------------------------------------------------------------
+; Translate the program 8.64 to assembly language.
+;-------------------------------------------------------------
+
+main:	ld	y	; z = x < y;
+	sub	x
+	st	z
+	
+	ld	z	; cout << z << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ld	y	; if(x < y)
+	sub	x
+	jn	else
+	jz	else	
+
+	ldc	good	; cout << "good\n";
+	sout
+	
+	ja	end_p
+else:
+	ldc	bad	; cout << "bad\n";
+	sout
+
+end_p:
+	halt		; end of the program
+	end main	
+
+; GLOBAL VARIABLES
+
+x:	dw	1	; int x = 1;
+y:	dw	10	; int y = 10;
+z:	dw	0	; int z = 0;
+
+good:	dw	"good\n"
+bad:	dw	"bad\n"
+

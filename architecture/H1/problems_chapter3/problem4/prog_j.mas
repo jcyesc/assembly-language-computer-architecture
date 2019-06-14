@@ -1,0 +1,6 @@
+s1:	dw   "abc"
+s2:	dw   "AB\nC"
+s3:	dw   'abc'
+s4:	dw   5 dup "XYZ"
+p1:	dw   s4
+	halt

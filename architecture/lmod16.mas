@@ -1,0 +1,16 @@
+         ;                                       lmod16.mas
+         ; Test module for linv1
+         ; Link by itself
+         ; Generates error message
+         public a
+         public b
+         public c
+         public d
+         public e
+         public f
+a:
+b:
+c:       
+d:      
+e:       
+f:       dw     0 

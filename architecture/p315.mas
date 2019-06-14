@@ -1,0 +1,6 @@
+            halt
+            ld   x
+            add  x
+            halt
+        x:  dw   5
+            end  1

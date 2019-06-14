@@ -1,0 +1,46 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 21:33:30 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Write and run an assembly language program that displays
+               ; all the odd numbers from 1 to 99 in ascending order.
+               
+               calculate: 
+               
+0  *0    000B  	ld   number		; load number
+1  *1    FFFD  	dout			; print as decimal ac
+               printnumbers:
+2  *2    000B  	ld   number		; load number
+3  *3    FFFD  	dout 			; print as decimal ac
+4  *4    800C  	ldc  blank		; load the address of blank
+5  *5    FFF7  	sout			; print the string
+6  *6    000B  	ld   number		; load number
+7  *7    300E  	sub  @2			; subtract 2 to ac
+8  *8    100B  	st   number		; store number
+9  *9    A002  	jzop printnumbers	; if zero or positive jump to printnumbers.
+A  *10   FFFF  	halt			; end of the problem
+               
+B  *11   0063  number:    dw   99		; array of number
+C  *12   0020  blank:	   dw   " "
+D  *13   0000
+E  *14   0002  @2:	   dw   2
+F  *15   ========= end of odd.mas ================================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ calculate                 0          
+ printnumbers              2           9  
+ number                    B           0   2   6   8  
+ blank                     C           4  
+ @2                        E           7  
+
+Input file   = odd.mas
+Output file  = odd.mac
+List file    = odd.lst 
+Number base  = decimal
+Label status = case sensitive

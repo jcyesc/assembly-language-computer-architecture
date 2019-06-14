@@ -1,0 +1,16 @@
+; #7715
+;The display should look exactly like this (with the 
+;data from the test cases replacing the numbers):
+;Enter integer
+;5
+;5 * 7 = 35
+n
+o
+ln
+g
+5
+o
+g
+-1
+SD
+q

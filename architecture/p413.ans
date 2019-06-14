@@ -1,0 +1,18 @@
+; #fed1
+;Your program should generate the capitalized string 
+;ASCII TABLE 
+;left justified on the first line.  The second line should be
+;empty.  The third line should be the capitalized string
+;CHAR DEC HEX
+;left justified.  The fourth line should be empty.  Starting on 
+;the fifth line, your program should generate the letters A to Z, 
+;one per line left justified. Following each letter should be 4 
+;spaces followed by the corresponding ASCII code in decimal, 
+;followed by two spaces, followed by the 4-digit hex code (Note 
+;that hout outputs 4 digits). 
+n
+o
+ln
+g
+SD
+q

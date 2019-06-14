@@ -1,0 +1,13 @@
+;----------------------------
+; Example 10.3
+; Relocatable fields
+;----------------------------
+
+	ja	add
+x:	dw	1
+y:	dw	8
+z:	dw	0
+add:	ld	x
+	add	y
+	st	z
+	halt

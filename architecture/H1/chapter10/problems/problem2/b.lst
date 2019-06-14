@@ -1,0 +1,27 @@
+Machine-level Assembler Version 6.1    Sun May  3 14:26:31 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    E000  b:	call	c
+1  *1    F000  	ret
+               
+               	public	b	; b is a public symbol.
+               	extern	c	; c is external.
+               	
+2  *2    ========= end of b.mas ==================================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ b                         0           2  
+ c                         ext         2   0  
+
+Input file   = b.mas
+Output file  = b.mob
+List file    = b.lst 
+Number base  = decimal
+Label status = case sensitive

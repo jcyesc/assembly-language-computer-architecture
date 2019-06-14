@@ -1,0 +1,100 @@
+;------------------------------------------------------------------
+; Translate the program 8.56 to assembly language.
+;------------------------------------------------------------------
+
+;------------------------------------------
+; void f(int x, unsigned y, short z)
+;------------------------------------------
+
+@f$iuis:
+	ldc	1	; x = 1;
+	str	1
+
+	ldc	2	; y = 2;
+	str	2
+
+	ldc	3	; z = 3;
+	str	3
+
+	ldr	1	; cout << x << " " << y << " " << z << endl;
+	dout
+	ldc	msg
+	sout
+	ldr	2
+	dout
+	ldc	msg
+	sout
+	ldr	3
+	dout
+	ldc	'\n'
+	aout
+
+	ret		; return to the calling function.
+
+;---------------------------------------------
+; void f(int x, int y, int z)
+;---------------------------------------------
+
+@f$iii:
+	ldc	4	; x = 4;
+	str	1
+
+	ldc	5	; y = 5;
+	str	2
+
+	ldc	6	; z = 6;
+	str	3
+	
+	ldr	1	; cout << x << " " << y << " " << z << endl;
+	dout
+	ldc	msg
+	sout
+	ldr	2
+	dout
+	ldc	msg
+	sout
+	ldr	3
+	dout
+	ldc	'\n'
+	aout
+
+	ret		; return to the calling function.
+
+;-------------------------------
+; main()
+;-------------------------------
+
+main:	ldc	12	; f(10, -11, 12);
+	push
+	ldc	-11
+	push
+	ldc	10
+	push
+	call	@f$iii
+	dloc	3
+
+	ldc	12	; f(10, 11, 12);
+	push
+	ldc	11
+	push
+	ldc	10
+	push
+	call	@f$iii
+	dloc	3
+
+	ldc	12	; f(10, 400, 12);
+	push
+	ldc	4000
+	push
+	ldc	10
+	push
+	call	@f$iii
+	dloc	3
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+msg:	dw	" "
+	

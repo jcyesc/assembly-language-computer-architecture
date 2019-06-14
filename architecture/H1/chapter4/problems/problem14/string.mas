@@ -1,0 +1,104 @@
+;---------------------------------------------------------------------------------------
+; Program that reads in a string and then determines and displays
+; the frequency of occurrence of each character in the string.
+; For example, if the string "aAbazAA" is read in, your program would display
+;
+;	A   3
+;	a   2
+;	b   1
+;	z   1
+;
+; The ASCII code for A is 32, and the ASCII code for z is 126.
+;
+; How is the problem going to be solved?
+; 	
+;  Place the counter for each character at the location that equals
+;  that character's ASCII code. For example, place the counter 'A' in location 65.
+;  Then an ld instruction with 'A' as its address field would load the counter for 'A'.
+;---------------------------------------------------------------------------------------
+
+main:
+	ldc    string		; load the address of string
+	sin   			; input a string
+	
+for_m:	ldc    string		; load the address of string
+	add    index		; add index to the address
+	ldi			; load the value that is in the address of ac.
+	jz     continue		; the end of the string (null=0000)
+	st     address_char	; store the current address that we're analizing
+	ldi 			; store the value that is in the address_char
+	add    @1		; add 1 to the value
+	push			; push the value in the stack
+	ld     address_char	; load address_char
+	sti			; store the value in the address that is in address_char
+	ld     index		; load the value of index
+	add    @1		; add 1 to the index
+	st     index		; store the value of index
+	ja     for_m		; jump to form_m
+		
+continue:
+	call   printAlphabet	; call printAlphabet
+
+	halt			; end of the program
+
+;-----------------
+; Variables area
+;-----------------
+index:	dw  0
+address_char:   dw  0
+dataarea:  org  32
+alphabet:  dw   95 dup 0	; this label is used to reserve the space for all the ASCII codes
+string:    dw   80 dup 0
+@1:	   dw   1
+limite:     dw  127 ; end of the ASCII CODE 127 + 1, to end the cycle when contador equal to 127
+inicio_ascii: dw 32 ; start of the ASCII CODE
+
+;----------------------------------------------------------
+; printAlphabet()
+;
+; Function that prints the alphabet.
+; The alphabet is contained in the addresses 32d to 126d.
+; This function only is going to print the letters that
+; appear with a value greater than zero.
+;----------------------------------------------------------
+printAlphabet:
+	ld     inicio_ascii 	; load the value that is in inicio_ascii
+	st     contador		; store the value in contador
+for:	ld     contador		; load contador
+	ldi			; load the value that is stored in the address pointed by contador
+	jnz    print		; if the value is no zero, jump print
+	
+siguiente:
+	ld     contador		; load the value of cantador
+	add    @1		; add 1 to contador
+	st     contador		; store the value of contador
+	sub    limite		; subtract limite to contador ( contador - limite)
+	jz     endfunc		; if the result is ZERO, jump endfun
+	ja     for		; continue with the for
+
+endfunc: ret			; return to the caller
+
+print:	ld     contador		; load contador
+	aout			; ASCII output
+	call   printBlank	; call printBlank
+	ld     contador		; load contador
+	ldi			; load the value that is in the address pointed by contador
+	dout			; decimal output
+	ldc    '\n'		; load a line feed
+	aout			; ASCII output
+	ja     siguiente	; jump siguiente
+
+contador:  dw  0
+
+;-----------------------------------------------------------
+; printBlank()
+;
+; Function to print a blank space
+;-----------------------------------------------------------
+printBlank:
+        ldc   blank             ; load the address of blank
+        sout                    ; print the string
+        ret                     ; return to the caller
+
+blank:  dw  " "
+ 

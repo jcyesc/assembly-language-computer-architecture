@@ -1,0 +1,17 @@
+Machine-level Assembler Version 6.1    Wed Feb 17 13:28:57 2010
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               &		; Configure H1 for memory-mapped I/O
+0  *0    0BB8  ld    3000	; get keyboard status
+1  *1    C000  jz    * -1	; jump if not ready
+2  *2    0BB9  ld    3001	; get character from keyboard
+3  *3    FFFF  halt
+4  *4    ========= end of keyboard.mas ===========================
+
+Input file   = keyboard.mas
+Output file  = keyboard.mac
+List file    = keyboard.lst 
+Number base  = decimal
+Label status = case sensitive

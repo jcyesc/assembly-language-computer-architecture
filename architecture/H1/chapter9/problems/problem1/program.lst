@@ -1,0 +1,142 @@
+Machine-level Assembler Version 6.1    Thu Apr 30 23:20:39 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Problem 9.1
+               ;
+               ; In call by value-result, the called function behaves exactly a
+               ; by value. Another implementation of call by value-result is to
+               ; sequence behave exactly as if would in call by reference. Tran
+               ; Figure 9.12 using this alternative approach to call by value-r
+               ;
+               ;---------------------------------------------------------------
+               
+               ;---------------------------------------------------------------
+               ; void ref(int &x)	// & signals the reference mechanism
+               ;---------------------------------------------------------------
+               
+0  *0    4001  @ref$ri:	ldr	1	; x = x + 5;
+1  *1    F100  		ldi
+2  *2    2031  		add	@5
+3  *3    F300  		push
+4  *4    4002  		ldr	2
+5  *5    F200  		sti
+               		
+6  *6    F000  		ret
+               
+               ;---------------------------------------------------------------
+               ; void vr(int $x)	// $ signals the value-result mechanism
+               ; 
+               ;	This value-result mechanism use a temporal variable to store t
+               ; 	value of x, at the end the value of the temporal variable is 
+               ; 	to x, that produces the side effect.
+               ;---------------------------------------------------------------
+               
+7  *7    F501  @vr$mi:		aloc	1	; x = x + 5;
+8  *8    4002  		ldr	2
+9  *9    F100  		ldi
+A  *10   5000  		str	0
+B  *11   2031  		add	@5
+C  *12   5000  		str	0
+D  *13   4002  		ldr	2
+E  *14   F200  		sti
+               		
+F  *15   F000  		ret
+               
+               ;---------------------------------------------------------------
+               ; void v(int x)		// just x signals the value mechanism
+               ;---------------------------------------------------------------
+               
+10 *16   4001  @v$i:		ldr	1	;x = x + 5;
+11 *17   2031  		add	@5
+12 *18   5001  		str	1
+               
+13 *19   F000  		ret
+               
+               ;-------------------------------------------------
+               ; void cout() // print the value of y
+               ;-------------------------------------------------
+               
+14 *20   8033  cout:	ldc	msg_y
+15 *21   FFF7  	sout
+16 *22   0032  	ld	y
+17 *23   FFFD  	dout
+18 *24   800A  	ldc	'\n'
+19 *25   FFFB  	aout
+               
+1A *26   F000  	ret
+               
+               ;--------------------------------------------------
+               ; int main()
+               ;--------------------------------------------------
+               
+1B *27   8001  main:	ldc	1	; y = 1;
+1C *28   1032  	st	y
+               
+1D *29   8032  	ldc	y	; ref(y);
+1E *30   F300  	push
+1F *31   E000  	call	@ref$ri
+20 *32   F601  	dloc	1
+               
+21 *33   E014  	call	cout
+               
+22 *34   8001  	ldc	1	; y = 1;
+23 *35   1032  	st	y
+               
+24 *36   8032  	ldc	y	; vr(y);
+25 *37   F300  	push
+26 *38   E007  	call	@vr$mi
+27 *39   F601  	dloc	1
+               
+28 *40   E014  	call	cout
+               
+29 *41   8001  	ldc	1	; y = 1;
+2A *42   1032  	st	y
+               
+2B *43   0032  	ld	y	; v(y);
+2C *44   F300  	push
+2D *45   E010  	call	@v$i
+2E *46   F601  	dloc	1
+               
+2F *47   E014  	call	cout
+               
+30 *48   FFFF  	halt
+               	end main
+               
+               
+               ; GLOBAL VARIABLES
+               
+31 *49   0005  @5:	dw	5
+32 *50   0000  y:	dw	0
+33 *51   0079  msg_y:	dw	"y = "
+34 *52   0020
+35 *53   003D
+36 *54   0020
+37 *55   0000
+               
+               
+38 *56   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @ref$ri                   0           1F 
+ @vr$mi                    7           26 
+ @v$i                      10          2D 
+ cout                      14          21  28  2F 
+ main                      1B          31 
+ @5                        31          2   B   11 
+ y                         32          16  1C  1D  23  24 
+                                       2A  2B 
+ msg_y                     33          14 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

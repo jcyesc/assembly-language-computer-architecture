@@ -1,0 +1,28 @@
+; #0b2b
+;The Fibonacci numbers are 1, 1, 2, 3, 5, 8, 13, ...
+;If there are no numbers to list, do not output anything.
+;Your display should look exactly like this (with data from the
+;test replacing the numbers):
+;Enter a number
+;4
+;Fibonacci numbers less than entered number
+;1
+;1
+;2
+;3
+n
+o
+ln
+g
+4
+o
+g
+1
+o
+g
+12
+o
+g
+2
+SD
+q

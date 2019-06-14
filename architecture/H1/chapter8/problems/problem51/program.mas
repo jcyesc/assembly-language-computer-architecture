@@ -1,0 +1,157 @@
+;----------------------------------------------------------------------------
+; Translate the program 8.51 to assembly language.
+;	
+;	Note: This program has a problem, it couldn't work well if
+;		more than two process use it, because in the function
+;		f() I use two global variables "b" and "pi" to calculate
+;		the address of the pointers instead of local variables.
+;
+;		But this shows me why it's better to use local variables.
+;
+;---------------------------------------------------------------------------
+
+;-----------------------------
+; void f()
+;-----------------------------
+
+@f$v:	aloc	10	; int b[10]
+	swap
+	st	b	; initial address of b.
+	swap
+	
+	aloc	6	; int *p, *q, *r, *s, *t, *u;
+	swap
+	st	pi	; initial address of the pointers.
+	swap
+	
+	ldc	a	; p = a;
+	push
+	ld	pi	; get the address of p
+	sti		; store the address of a in p
+
+	ld	b	; q = b;
+	push
+	ld	pi	
+	add	@1	; get the address of q
+	sti		; store  b in q
+	
+	ldc	s0_c	; r = c;
+	push
+	ld	pi
+	add	@2	; get the address of r
+	sti
+	
+	ldc	10	; *p = 10;
+	push
+	ld	pi	; load the address that is stored in pi
+	ldi		; load the address that is being pointed by p
+	sti
+
+	ldc	11	; *q = 11;		
+	push
+	ld	pi	; load the address that is stored in pi
+	add	@1	; get the address of g
+	ldi		; load the address that is being pointed by g
+	sti		
+
+	ldc	12	; *r = 12
+	push
+	ld	pi	; load the address that is store in pi
+	add	@2	; get the address of r
+	ldi		; load the address that is being pointed by r
+	sti
+
+	ldc	a + 3	; s = &a[3];
+	push
+	ldc	3	; calculate the address of s.
+	add	pi
+	sti
+
+	ldc	3	; t = &b[3];
+	add	b
+	push
+	ldc	4	; get the address of t
+	add	pi
+	sti
+
+	ldc	s0_c + 3	; u = &c[3];
+	push
+	ldc	5	; get the address of u
+	add	pi
+	sti
+
+	ldc	1	; *s = 1;
+	push
+	ldc	3	; get the address of s
+	add	pi
+	ldi		; get the address that is being pointed by s
+	sti
+
+	ldc	2	; *t = 2;
+	push
+	ldc	4	; get the address of t
+	add	pi
+	ldi		; get the address that is being pointed by t
+	sti
+
+	ldc	3	; *u = 3;
+	push
+	ldc	5	; get the address of u
+	add	pi
+	ldi		; get the address that is being pointed by u
+	sti
+
+	ld	a	; cout << a[0] << " " << a[3] << endl;
+	dout
+	ldc	msg
+	sout
+	ld	a + 3
+	dout
+	ldc	'\n'
+	aout
+
+	ld	b	; cout << b[0] << " " << b[3] << endl;
+	ldi
+	dout
+	ldc	msg
+	sout
+	ldc	3
+	add	b
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	ld	s0_c	; cout << c[0] << " " << c[3] << endl;
+	dout
+	ldc	msg
+	sout
+	ld	s0_c + 3
+	dout
+	ldc	'\n'
+	aout
+
+	dloc	16	; release the memory
+
+	ret		; return to the calling function
+
+;----------------------------
+; main()
+;----------------------------
+
+main:	call	@f$v	; f();
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+a:	dw	10 dup 0	; int a[10];
+s0_c:	dw	10 dup 0	; static int c[10]
+b:	dw	0		; store the address of b
+pi:	dw	0		; store the address of the pointers
+msg:	dw	" "
+@1:	dw	1
+@2:	dw	2
+
+

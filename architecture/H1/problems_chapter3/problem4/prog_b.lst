@@ -1,0 +1,25 @@
+Machine-level Assembler Version 6.1    Tue Dec 16 23:31:34 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0004  	ld   x
+1  *1    2004  	add  x
+2  *2    1004  	st   * + 2
+3  *3    FFFF  	halt
+4  *4    FFFD  x:	dw   -3
+5  *5    ========= end of prog_b.mas =============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         4           0   1  
+
+Input file   = prog_b.mas
+Output file  = prog_b.mac
+List file    = prog_b.lst 
+Number base  = decimal
+Label status = case sensitive

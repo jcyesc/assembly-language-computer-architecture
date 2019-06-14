@@ -1,0 +1,55 @@
+; Translate de program 8.14 to assembly language
+
+;-------------------------------
+; void tests(Coordinate *ps)
+;-------------------------------
+
+@tests$p11Coordinates:
+	aloc	2	; Coordinates ls;
+
+	ldc 5		; int li = 5;
+	push
+
+			; ls.y = 4;
+	ldc	4	; get relative address of ls.y
+	str	2	; store into ls.y
+
+			; ps->y = li;
+	ldr	0	; get li
+	push		; push it
+	ldc	1	; get offset of y field
+	addr	5	; add ps
+	sti		; assign li to ps -> y
+
+	dloc	3	; deallocate locals
+	ret
+
+;------------------------------
+; main()
+;------------------------------
+
+main:	ldc	gs	; tests(&gs);
+	push
+	call	@tests$p11Coordinates
+	dloc	1
+
+	ld	gs + 1	; cout << gs.y << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	3	; gs.y = 3
+	st	gs + 1
+
+	ld	gs + 1	; cout << gs.y << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt
+	
+	end main
+	
+; GLOBAL VARIABLES
+
+gs:	dw	2 dup 0	

@@ -1,0 +1,106 @@
+/ Basic Instruction Set Horizontal Microcode 	b.has
+
+/ The label indicates the opcode decoded up to that point.
+/ For example, control reaches the label L011 when opcode
+/ bits 011 have been decoded.
+
+/*****************************************************************/
+/	Fetch instruction and increment pc register		  /
+/*****************************************************************/
+fetch:	mar = pc; pc = pc + 1;		/ increment pc
+	rd;				/ fetch mach inst
+	ir = mdr;			/ put mach inst in ir
+/*****************************************************************/
+/ 	Decode opcode						  /
+/*****************************************************************/
+	dc = ir; if(s) goto L1			/ test 1st bit
+L0:	dc = left(dc); if (s) goto L01;		/ test 2n bit
+L00:	dc = left(dc); if (s) goto L001;	/ test 3rd bit
+		goto L000;
+L1:	dc = left(dc); if (s) goto L11;		/ test 2nd bit
+L10:	dc = left(dc); if (s) goto L101;	/ test 3rd bit
+		goto L100;
+L01:	dc = left(dc); if (s) goto L011;	/ test 3rd bit
+		goto L010;
+L11:	dc = left(dc); if (s) goto L111;	/ test 3rd bit
+		goto L110;
+L000:   dc = left(dc); if(s) goto L0001:	/ test 4th bit
+		goto L0000;
+L001:   dc = left(dc); if(s) goto L0011;	/ test 4th bit
+		goto L0010;	
+L010:   dc = left(dc); if(s) goto L0101;	/ test 4th bit
+		goto L0100;
+
+/****************************************************************/
+/	Microde for each instruction				 /
+/****************************************************************/
+L0000:	/--------------------------- LD --------------------------
+	mar = ir;			/ get add from inst
+	rd;				/ read operand
+	ac = mdr; goto fetch;		/ load ac with operand
+
+L0001:  /--------------------------- ADD -------------------------
+	mar = ir;			/ get add from inst 
+	rd;				/ read operand
+	ac = ac + mdr; goto fetch;	/ add ac of the operand
+
+L0010:  /--------------------------- ST --------------------------
+	mar = ir; mdr = ac;		/ prepare for write
+	wr; goto fetch;			/ write
+
+L0011:  /--------------------------- SUB -------------------------
+	mar = ir;			/ get add from inst
+	rd;				/ read operand
+	ac = ac - mdr; goto fetch;	/ subtract ac of the operand
+
+L0100:	/--------------------------- SHLL ------------------------
+	f = ir & zmask; if (z) goto fetch;	/ get z-field
+
+L0101:  /--------------------------- DIV -------------------------
+	mar = ir;			/ get add from inst
+	rd;				/ read operand
+	ac = ac / mdr; goto fetch;	/ divide ac of the operand
+
+lloop:	ac = left(ac);				/ shift ac left
+	f = f - 1; if(z) goto fetch;		/ dec ac and test
+	goto lloop;				/ branch to lloop
+L011:	/--------------------------- SHRL ------------------------
+	f = ir & zmask; if (z) goto fetch;	/ get z-field
+rloop:	ac = right(ac);				/ shift ac right
+	f = f - 1; if (z) goto fetch;		/ dec ac and test
+	goto rloop;				/ branch to rloop
+L100:  	/--------------------------- ADDC ------------------------
+	f = ir & xmask;			/ get const from x-field
+	ac = ac + f; goto fetch;	/ add const to ac
+L101:   /--------------------------- FLIP ------------------------
+	ac = ~ac; goto fetch;		/ bitwise compl ac
+L110:	/--------------------------- MULT ------------------------
+	mar = ir;			/ get add from inst
+	rd;				/ read operand
+	ac = ac * mdr; goto fetch;	/ mult ac by operand
+L111:	/--------------------------- JN --------------------------
+	0 = ac; if (s) goto dojn;	/ branch if ac neg
+	goto fetch;			/ branch
+dojn:	pc = ir & xmask; goto fetch;	/ put new add in pc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

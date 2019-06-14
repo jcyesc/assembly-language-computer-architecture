@@ -1,0 +1,12 @@
+; #44ce
+;Display should look exactly like this (with data from test
+;cases replacing numbers):
+;A(0,0) = 1
+;A(1,1) = 3
+;A(2,2) = 7
+n
+o
+ln
+g
+SD
+q

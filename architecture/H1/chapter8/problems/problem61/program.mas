@@ -1,0 +1,58 @@
+;--------------------------------------------------------------
+; Translate the program 8.61 to assembly language
+;--------------------------------------------------------------
+
+;---------------------
+; main()
+;---------------------
+
+main:	ldc	enter	; cout << "enter\n";
+	sout
+
+	din		; cin >> x;
+	st	x
+
+	ld	x	; if(x >= 5)
+	sub	@5
+	jn	next
+	
+	ldc	hello	; cout << "hello\n";
+	sout
+
+next:
+	ld	@_6	; if(x <= -6)
+	sub	x
+	jn	else_if
+	
+	ldc	small	; cout << "small\n";
+	sout
+
+	ja	end_p
+else_if:
+	ldc	big	; cout << "big\n";
+	sout
+
+	ldc	30	; if(x > 30)
+	sub	x
+	jzop	end_p
+
+	ldc	re_big	; cout << "really big\n";
+	sout
+
+end_p:
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	0	; int x;
+enter:	dw	"enter\n"
+hello:	dw	"hello\n"
+small:	dw	"small\n"
+big:	dw	"big\n"
+re_big:	dw	"really big\n"
+
+@5:	dw	5
+@_6:	dw	-6	; It's necessary to define it here because with ldc only the number
+			; is loaded in the first 12 right bits.
+

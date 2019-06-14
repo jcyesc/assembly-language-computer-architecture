@@ -1,0 +1,42 @@
+Machine-level Assembler Version 6.1    Mon Dec  8 20:37:33 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; PROGRAM THAT ADDS SEVERAL NUMBERS
+               
+0  *0    0007  	ld  n1	
+1  *1    2008  	add n2
+2  *2    2009  	add n3
+3  *3    200A  	add n4
+4  *4    200B  	add n5
+5  *5    100C  	st result
+6  *6    FFFF  	halt
+               
+               ; Data area
+7  *7    0004  n1:	dw 4	; first number
+8  *8    FFDD  n2:	dw -35  ; second number
+9  *9    0010  n3:	dw 16	; third number
+A  *10   022B  n4:	dw 555	; fourth number
+B  *11   FFF8  n5:	dw -8	; fifth number
+C  *12   0000  result: dw 0	; result number
+D  *13   ========= end of problem1.mas ===========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ n1                        7           0  
+ n2                        8           1  
+ n3                        9           2  
+ n4                        A           3  
+ n5                        B           4  
+ result                    C           5  
+
+Input file   = problem1.mas
+Output file  = problem1.mac
+List file    = problem1.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,90 @@
+Machine-level Assembler Version 6.1    Mon Jan  5 22:08:30 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 5-january-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	: The latter portion of the program is given below
+               ;		  Add to it its first portion (the new code you add shoult
+               ;		  occupy addresses less than 1000) whose execution has the ef
+               ;		  of executing the code at location 1001 to 1009 backwards(i.
+               ;		  from locations 1009 down to 1001).
+               ;
+               ;		  How is the problem going to be solved?
+               ;			We're going to copy the instructions in inverse order, so we
+               ;			going to use the stack.
+               ;---------------------------------------------------------------
+               	
+0  *0    0016  for:	ld	@1000		; load 1000
+1  *1    2017  	add	counter		; add counter to 1000
+2  *2    F100  	ldi			; load the value that it's in the address pointed by ac
+3  *3    C009  	jz	copyInverse	; if ZERO, jump to copyInverse
+4  *4    F300  	push			; push the instruction in the stack
+5  *5    0017  	ld	counter		; load the value of counter
+6  *6    2015  	add	@1		; add 1 to the counter
+7  *7    1017  	st	counter		; store the counter
+8  *8    9000  	ja	for		; jump always to for
+               
+               copyInverse:			; copy the value of the stack in memory in invers
+9  *9    0017  	ld	counter		; load counter
+A  *10   C014  	jz	execute		; if ZERO, jump to execute
+B  *11   3015  	sub	@1		; subtract 1 to counter
+C  *12   1017  	st	counter		; store the new value in counter
+D  *13   0016  	ld	@1000		; load 1000 in ac
+E  *14   2019  	add	index		; add the value of index
+F  *15   F200  	sti			; store indirect, store the value that is in the top of t
+               				; in the address that is pointing ac
+10 *16   0019  	ld	index		; load the value of index in ac
+11 *17   2015  	add	@1		; add 1 to index
+12 *18   1019  	st	index		; store the new value in index
+13 *19   9009  	ja	copyInverse	; jump to execute
+               	
+               execute:
+14 *20   93E8  	ja	x		; jump to x, where the code is already inverted..
+               
+15 *21   0001  @1:		dw	1
+16 *22   03E8  @1000:		dw	1000
+17 *23   0000  counter:	dw	0
+18 *24   0000  instruction:	dw	0
+19 *25   0000  index:		dw	0
+               
+               ; THE FOLLOWING INSTRUCTIONS ARE GOING TO BE INVERTED.
+               	org	1000
+3E8*1000 0001  x:	dw	1
+3E9*1001 FFFF  	halt
+3EA*1002 FFFD  	dout
+3EB*1003 23E8  	add	x
+3EC*1004 FFFD  	dout
+3ED*1005 23E8  	add	x
+3EE*1006 FFFD  	dout	
+3EF*1007 23E8  	add	x
+3F0*1008 FFFD  	dout
+3F1*1009 03E8  	ld	x
+               
+               
+3F2*1010 ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ for                       0           8  
+ copyInverse               9           3   13 
+ execute                   14          A  
+ @1                        15          6   B   11 
+ @1000                     16          0   D  
+ counter                   17          1   5   7   9   C  
+ instruction               18         
+ index                     19          E   10  12 
+ x                         3E8         14  3EB 3ED 3EF 3F1
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

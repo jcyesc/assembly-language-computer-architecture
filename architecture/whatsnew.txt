@@ -1,0 +1,1034 @@
+                                                 whatsnew.txt
+
+               H1 Software Package Version 6.1
+                What's New Since Version 4.0
+                     June 5, 2007
+
+=================================================================
+Updating the textbook with errata.txt
+
+     Be sure to update your textbook with the corrections 
+described in the latest errata.txt available from www.course.com.  
+
+
+=================================================================
+Potential name conflicts
+
+     Some of the programs, batch files, and scripts in the H1 
+Software Package have common names.  You may have programs, batch 
+files, or scripts elsewhere on your system that are identically 
+named.  Thus, when you attempt to invoke a program, batch file, 
+or script in the H1 Software Package, you may, in fact, invoke 
+one of these other programs, batch files, or scripts, depending 
+on the search path in effect on your system.  The PATH commands 
+described in the installation instructions in readme.txt place 
+the current directory and the H1 directory FIRST in the search 
+path, so you should always be able to invoke the programs in your 
+current directory and in the H1 directory.  If, however, you are 
+using a different search path, and a name conflict occurs, you 
+can simply rename the programs in the H1 directory for which a 
+conflict occurs to unique names.  For example, if you have a name 
+conflict with "pic", you can rename pic to "h1pic".  
+Alternatively, you can change your search path so that the H1 
+directory is first.  
+
+
+=================================================================
+Using mod
+
+     You can set the defaults for most programs in the H1 
+Software Package according to your preferences using the mod 
+program.  For information on what can be set, see the ".txt" file 
+for the program you wish to modify and the file mod.txt.  You may 
+want to make the "plus reads" display mode the default display 
+mode in sim; or for maximum information, both "plus reads" and 
+"plus source".  The "plus reads" display mode displays, in 
+addition to the usual information, the address and contents on a 
+memory read.  It is particularly helpful when tracing relative 
+instructions.  The "plus source" mode, which displays the 
+original assembly source code, can be very helpful when you are 
+debugging. 
+
+     Using the mod program, you can incorporate an identifying 
+name into the sim executable file.  sim then will insert this 
+name at the beginning of every log file.  This feature is 
+convenient if you submit log files for homework assignments.  
+When you use mod, if you enter your name with a leading period, 
+sim will also incorporate your family name into the names of log 
+files it creates (this feature is not available on DOS).  For 
+example, if you enter the name 
+
+.DosReis Anthony J
+
+the log file created for, let's say, the program p412.mac would 
+be "p412.dosreis.log" rather than "p412.log".  This feature is 
+convenient if you submit log files, rather than printouts of log 
+files, for homework assignments.  It allows your instructor to 
+have all the students' files in a single directory without file 
+name conflicts. 
+
+     To incorporate your name into sim with mod, enter 
+
+     mod sim
+
+At the prompt, enter a name, family name first.  Then hit ENTER 
+repeatedly until the prompt "Okay to change sim? Enter y or n." 
+appears.  Then enter 
+
+     y
+
+An even easier way (starting with Version 5.0) to incorporate a 
+name into sim is to enter 
+
+     mod sim /r
+
+The "/r" argument causes mod to use the response file sim.rsp 
+which provides mod with all the required inputs, except for your 
+name.  So the only thing you have to do is enter your name. 
+
+
+=================================================================
+require.txt
+
+     require.txt contains a list of suggested requirements for 
+your homework assignments.  Please consult with your instructor 
+to determine the actual homework requirements in effect for your 
+class. 
+
+
+=================================================================
+Archived files in the H1 Software Package
+
+     The programs in the figures in the textbook are in 
+figwin.zip (for Windows), figdos.zip (for DOS), or fig.tar.gz 
+(for Sun, X86 Linux, or Macintosh OS X).  
+
+     The programs in the end-of-chapter problems are ALREADY 
+unarchived.  However, they are also in eocwin.zip (for Windows), 
+eocdos.zip (for DOS), or eoc.tar.gz (for Sun, X86 Linux, or 
+Macintosh OS X). 
+
+     The answer files are ALREADY unarchived.  However, they are 
+also in ans.zip (for Windows and DOS), or ans.tar.gz (for Sun, 
+X86 Linux, or Macintosh OS X). 
+
+     See the end of readme.txt for a complete list of the files 
+in the H1 Software Package. 
+
+
+=================================================================
+Consistent use of the hyphen in debugger commands
+
+     sim now uses "-" as an argument suffix in debugger commands 
+more uniformly and consistently.  It is used to turn off a 
+feature.  For example, B sets a breakpoint; B- kills (i.e., turns 
+off) a breakpoint.  In particular: 
+
+  -  You can kill a machine-level breakpoint with 
+     either B- or with K. 
+
+  -  You can kill a microlevel breakpoint with 
+     either b- or with k. 
+
+  -  You can kill a watchpoint with either W- or with
+     KW.
+
+  -  You can turn off machine-level "source only" mode 
+     with either MSO- or with MS-. 
+
+  -  You can turn off "plus reads" mode with MR-.
+
+  -  You can turn off "plus counts" mode with MC-.
+
+  -  You can turn off microlevel "source only" mode 
+     with either mso-  or with ms-.
+
+  -  You can turn off the log file with L-.
+
+  -  You can turn off memory-mapped I/O with I-.
+
+
+=================================================================
+Improved plus reads mode
+
+     The new "plus reads" mode (activated by the mr command--see 
+page 132 in the textbook) displays on a memory read operation the 
+contents in addition to the address (the old version does not 
+display the contents).  This additional information--the memory 
+contents on a read--can be very useful when you are debugging or 
+tracing a program.  The following samples show the difference 
+between the old "plus reads" display and the new display: 
+
+
+                Old
+                ---
+
+  5: subr /7 005/ [069]  ac=000E/0005  
+                    ^
+                    |
+                    +-------------- address
+
+
+
+
+
+                New
+                ---
+
+  5: subr /7 005/ 0009<m[069]  ac=000E/0005  
+                   ^      ^
+                   |      |
+                   |      +-------- address
+                   +--------------- contents
+
+
+
+=================================================================
+Source-level tracing
+
+     sim has two types of source options (i.e., modes in which 
+source code is displayed): "plus source" and "source only".  In 
+the latter, only source code is displayed.  In the former, all 
+the activity associated with the execution of each instruction 
+PLUS its source code is displayed.  
+
+     If the source code at either the machine or microlevels is 
+out-of-date (because of changes either you or the executing 
+program makes), it is still displayed when sim is in a source 
+mode, but with a leading "+" to indicate that it is out-of-date.  
+The "+" symbol appears both in the trace and in the output 
+produced by the U/u commands.  If you wish to see the up-to-date 
+instruction in symbolic form, use the UO/uo (unassemble one) 
+commands to unassemble the hex code displayed by the U/u commands 
+(the hex code represents the current contents of main memory, 
+and, therefore, is always up-to-date).  Alternatively, you can 
+cancel the "plus source" or "source only" option with the MS-/ms- 
+commands--then the symbolic code displayed by the U/u commands is 
+always up-to-date (it is unassembled from what is currently in 
+memory).  
+
+     When the machine-level "plus source" or "source only" option 
+is active, debugger commands that take address arguments will 
+accept labels as well as numbers for addresses.  For example, 
+after activating the machine-level "plus source" option with the 
+MS command, you can set a breakpoint at the location 
+corresponding to the label "loop" in your program with 
+
+     Bloop
+
+Labels can be used in the A, B, D, E, F, J, U, and W commands 
+when the machine-level "plus source" or "source only" option is 
+active.  You can similarly use labels at the microlevel when the 
+microlevel "plus source" or "source only" option is active. 
+
+     If a label matches a hex constant, sim will treat it as a 
+hex constant.  For example, the command 
+
+     Bf1
+
+sets a breakpoint at location f1 hex, even if there is a label 
+"f1".  To force sim to treat "f1" as a label, prefix it with 
+either a single or double quote (the terminating quote is 
+optional) .  For example, to set a breakpoint at the label "f1", 
+enter 
+
+     B'f1
+
+or
+
+     B'f1'
+
+or   
+
+     B"f1
+
+or
+
+     B"f1"
+
+A quote is also necessary in the a, e, and d commands if the 
+label is "@" or "$" (to avoid treating the label as the symbolic 
+argument "@" (ac reg contents) or "$" (stack reg contents), or 
+if it is "h" and you are using the d command (dh is the decimal-
+to-hex command), or if it is "o" and you are using the u command 
+(uo is the unassemble one command).  
+
+The built-in assemblers (that are invoked with the A/a commands) 
+can process pre-existing labels when sim is in a source mode.  
+New labels, however, cannot be created with these assemblers. 
+
+     If the "plus source" or "source only" option is active and 
+instruction execution occurs for an address for which no source 
+code is available, sim will automatically (and temporarily) 
+switch to a non-source display mode.  Once execution is back in 
+a region for which source is available, sim automatically 
+reactivates the source mode from which it switched.
+
+
+=================================================================
+Instruction Profiling
+
+     When the "plus source" or the "source only" option at the 
+machine-level is activated with the MS or MSO command, 
+respectively, the U command, for each address, will display the 
+address IN HEX, the reference count IN DECIMAL, the contents of 
+main memory in hex, and the source code from which the code in 
+memory was assembled.  The reference count for an address is the 
+number of reads and writes to that address mod 1000000 (65536 for 
+the DOS version of sim).  That is, the count wraps around to zero 
+when it reaches 1,000,000 (or 65,536 on DOS).  Reference counts 
+provide a "profile" of the execution and data reference pattern 
+of the program.  The u command at the microlevel behaves 
+similarly when the "plus source" or "source only" option at the 
+microlevel is activated with the ms or mso command, respectively.  
+
+
+=================================================================
+/a debugger command (case insensitive)
+
+     When the /a command is entered from within the debugger, sim 
+executes the debugger commands in the answer file corresponding 
+the to ".mac" file it is running.  These commands create a log 
+file containing everything required for your homework assignment 
+(your name, time stamp, program statistics, test runs, source 
+code, and the correct/NOT CORRECT evaluation of the program 
+verifier).  For example, for Problem 4.12, you should create an 
+assembly language file p412.mas which assembles to p412.mac.  
+When you run p412.mac on sim and enter /a, sim uses the answer 
+file p412.ans to create the log file p412.log (or 
+p412.yourname.log, depending on how you incorporated your name 
+into sim with mod--with or without a leading period). 
+
+     Each programming problem has a corresponding answer file 
+whose name reflects the problem number.  For example the answer 
+file for Problem 2.1 is p21.ans.  
+
+     When sim is running a ".mac" file, it determines the answer 
+file from the ".mac" file name.  For example, when sim runs 
+p412.mac, it uses the answer file p412.ans when the /a command is 
+entered.  However, for the problems in Chapter 2, you do not 
+create ".mac" files.  Instead, you specify "none" for the ".mac" 
+file name and you enter the machine code directly into memory 
+using the e (edit) command.  Because there is no ".mac" file for 
+these programs, you must explicitly specify an answer file when 
+you use the /a command.  For example, for Problem 2.1, you should 
+enter 
+
+     /ap21
+
+in which case sim uses p21.ans to create the log file p21.log (or 
+p21.yourname.log).  For the problems starting with Chapter 3 
+(for which you create ".mac" files with mas), you simply enter 
+
+     /a
+
+in which case sim creates a log file with the same base name as 
+the ".mac" file you are running. 
+
+     /a is a new debugger command--it is entered from within the 
+debugger.  /a is also a command line argument that can be 
+specified when you invoke sim.  It has the same effect as the
+/a debugger command.
+
+     The H1 Software Package also contains a generic answer file, 
+any.ans, that you can use for programs for which no answer file 
+exists.  For microprogramming assignments for which no answer 
+file exists, you can use the generic answer file anymicro.ans.  
+You can also use none.ans--a generic answer file for programs 
+entered directly into memory (i.e., when "none" is entered for 
+the machine code file name).  
+
+     Starting with Version 6.0, sim's program verifier can check 
+if a program's size and instruction counts (both machine and 
+micro) are within prescribed limits (in addition to checking for 
+correct output).  This additional capability is triggered 
+automatically if the first line of an answer file has size and 
+count data in addition to a checksum.  For more information on 
+this new capability, see the discussion of the /a command in 
+sim.txt. 
+
+     For more information on the program verifier, see the file 
+require.txt in the H1 Software Package. 
+
+
+=================================================================
+LD Debugger Command (Case insensitive)
+
+     The debugger now supports the LD (log display) command that 
+allows you to see any portion of the log file while sim is still 
+in its debugger.  For example, the debugger command 
+
+     LD 100t
+
+displays the log file starting 100 lines back from its current 
+end (note that without the "t" suffix, sim would interpret "100" 
+as a hex number). 
+    
+      LD^
+
+displays the log file one screen back from the current point.
+
+      LD
+
+displays the log file one screen forward from the current point.  
+
+
+=================================================================
+Batch/script files
+
+     The H1 Software Package contains several batch/script files
+that simplify the use of mas, lin, and sim.  Each of these files 
+contain a sequence of commands.  Whenever you invoke one of these 
+files, you are, in effect, invoking the sequence of commands it 
+contains.
+
+     aa   - assemble and run with /a in effect.
+
+     arun - assemble and run (without the debugger)
+
+     asim - assemble and run (with the debugger)
+
+     run  - run a previously assembled program.  
+
+ 
+     You will not have any use for the following batch 
+     files/scripts until you cover Chapter 10 in the textbook: 
+
+     runc - like run, except runc also generates a message
+            that depends on the return code returned by sim,
+            If you want to use runc, you should turn on sim's
+            return code option using the mod program.
+
+     aka  - assemble, link with stack start-up code
+            and run with /a in effect.
+
+     akr - assemble, link with stack start-up code, run
+           with debugger inactive
+
+     aks - assemble, link with stack start-up code, run
+           with debugger active
+
+     ala  - assemble, link with standard start-up code
+            and run with /a in effect.
+
+     alr - assemble, link with standard start-up code, run
+           with debugger inactive
+
+     als - assemble, link with standard start-up code, run
+           with debugger active
+
+     caka - like cakr but run sim with the /a command line
+            argument.
+
+     cakr - like akr but assumes the input file has a ".cpp"
+            extension (with assembly code as // comments).
+
+     cala - like calr but runs sim with the /a command line
+            argument.
+
+     calr - like alr but assumes the input file has a ".cpp"
+            extension (with assembly code as // comments).
+
+
+For example, to assemble and run a.mas without the debugger, 
+enter 
+
+     arun a
+
+To assemble and run a.mas with the debugger, enter
+
+     asim a
+
+To run a.mac without the debugger, enter
+
+     run a
+
+To run a.mac with the debugger, enter
+
+     sim a
+
+     The batch/script files aka, akr, aks, ala, alr, als, caka, 
+cakr, cala, and calr simplify assembly and linking with start-up 
+code.  Start-up code is discussed in Chapter 10.  So you won't 
+need these commands until you reach Chapter 10.   The following 
+command 
+
+     alr t
+
+assembles t.mas, links with the standard start-up code (sup.mob), 
+and then runs the resulting ".mac" file without the debugger. 
+caka, cala, cakr and calr process files with the ".cpp" extension 
+(see "reverse files" below).  The following command
+
+     calr t
+
+assembles t.cpp (i.e., it assembles the assembler code that 
+appears in t.cpp in the form of // comments), links with the 
+standard start-up code (sup.mob), and then runs the resulting 
+".mac" file without the debugger.  akr and cakr work like alr and 
+calr, respectively, but with ksup.mob (the stack start-up code) 
+instead of sup.mob.  caka and cala are like cakr and calr, 
+respectively, except the former run sim with the /a command line 
+argument.
+
+     The batch/script files aa, aka, ala, caka, and cala simplify 
+the use of the program verification feature of sim (see the 
+section "Automatic Program Verification" below).  They all run 
+sim with the /a command line argument.  Thus, for the problems in 
+the textbook, these commands will generate the log files you can 
+submit for homework.  For example, to assemble and run p412.mas 
+according to the answer file p412.ans, enter 
+
+     aa p412
+
+sim will create a log file p412.log or p412.yourname.log 
+containing the results of the run.  Alternatively, you can enter 
+the individual commands: 
+
+     mas p412
+     sim p412 /a
+
+
+=================================================================
+Caret Lines
+
+     A ^-line (read as "caret line") is a line whose first non-
+whitespace character is "^" (without the quotes).  mas processes 
+^-lines last.  Thus, the effect of "^" on a line is to move that 
+line to the end of the program.  ^-lines allow constants to be 
+defined in line with executable code, making reading and writing 
+programs easier.  It's easy to forget to define constants when 
+you define them at the end of a program.  With caret lines, you 
+can define constants in line as soon as you use them in your 
+code, and mas then places them at the end of the program.  For 
+example, consider the following code: 
+
+          ldc    prompt
+^prompt:  dw     "Enter integer"
+          sout
+          
+          ; more executable code.
+          
+
+Although the dw is physically in line with the executable code, 
+mas places it at the end of the program, out of the flow of 
+control.  mas also creates a ".car" file (if the car file option 
+is on and the program contains careted lines) that contains the 
+original source code but with the ^-lines (now no longer starting 
+with "^") at the end of the program.  For example, the code above 
+would appear in the ".car" file (and in the ".lst" file) as 
+
+
+          ldc    prompt
+          sout
+          
+          ; more executable code.
+
+; ===================== ^-lines follow ============
+prompt:   dw     "Enter integer"
+
+
+Notice that when mas moves a ^-line, it removes the "^".  If the 
+line contains a label, the label and the ":" that follows it are 
+moved to the left one position (filling in the position formerly 
+occupied by the "^").  The rest of the line, however, maintains 
+its columnar position.  If there is no label, then all the 
+characters on a line maintain their columnar positions. 
+
+
+=================================================================
+SD/sd command (case sensitive when sim is enabled)
+
+The SD (machine-level source display) command displays the ".mas" 
+source code file corresponding to the program sim is currently 
+executing, assuming you do NOT specify an argument.  If, however, 
+you specify a file name as an argument, the SD command will 
+display that file.  For example, 
+
+     SD b.txt
+
+displays b.txt.  However,
+
+     SD
+
+without an argument displays the ".mas" file corresponding to the 
+".mac" file sim is executing. 
+
+The sd (microlevel source display) command displays the ".has" or 
+".vas" microcode source file corresponding to the microcode that 
+sim is currently executing, assuming you do NOT specify an 
+argument.  If, however, you specify a file name as an argument, 
+the sd command will display that file. 
+
+The answer files in the H1 Software Package use the SD/sd 
+commands to display source code (which is then written to a log 
+file).
+
+SD/sd displays the entire file with no intermediate stops even if 
+the file cannot be displayed on a single screen.  To display 
+increments of source code, use the U/u commands with sim in the 
+"plus source" or "source only" mode.  Alternatively, if a log 
+file is active when you enter the SD/sd command, you can then use 
+the LD<count>/LD/LD^ commands to display any portion of the log 
+file (which would contain the contents of the file previously 
+displayed by SD/sd) one screen at a time.  For example, if you 
+enter 
+
+     L    (turn on Log file)
+     SD   mas.txt
+
+you can then enter LD100t, LD^, and LD to move back and forth over the
+mas.txt file, displaying one screen at a time.
+
+
+=================================================================
+Automatic Program Verification
+
+     The H1 Software Package has verification data for most of 
+programming assignments from the textbook STARTING FROM Chapter 
+4.  This data allows sim to determine if the program you are 
+running is generating the correct output for the test cases 
+specified in the corresponding answer file.  An answer file 
+contains debugger commands and test case data that are processed 
+by sim when you enter "/a", either on the command line or from 
+within the debugger.  The "/a" command also triggers the program 
+verification feature of sim if verification data is available in 
+the active answer file.  The H1 Software Package has an answer 
+file for each programming assignment.  For example, the answer 
+file for Problem 4.12 is p412.ans.  
+
+     To try out the program verification feature, enter 
+
+     mas caret
+
+to assemble caret.mas.  Then enter
+
+     sim caret
+
+to run caret.mac.  From within the debugger, enter
+
+     /a
+
+sim runs caret.mac using the commands in the answer file 
+caret.ans.  It also indicates on the screen (and at the bottom of 
+the log file) "Program output: correct", indicating that the 
+input/output activity recorded to the log file caret.log is 
+correct.  
+
+     To be correct, a program's input/output behavior must conform 
+exactly to the program specifications, with respect to results, 
+capitalization, and layout, except for empty lines (i.e., 
+verification is insensitive to too few or too many empty lines).  
+
+     If the problem statement in the textbook does not precisely 
+define the program's behavior, there are additional 
+specifications in the corresponding answer file (in the form of 
+comments).  For all the problems in which you have to translate a 
+C++ program (these problems are in Chapters 7, 8, 9, 10, 12, 13, 
+and 15), the C++ program itself precisely defines the program's 
+behavior.  Thus, none of these problems require additional 
+specifications in their answer files. 
+
+     A program must generate some output for it to be verified. 
+Because the I/O instructions are introduced in Chapter 4, the 
+programs from Chapters 2 and 3 do not produce output.  THUS, FOR 
+CHAPTERS 2 AND 3, PROGRAM VERIFICATION IS NOT AVAILABLE.
+
+     Here is a typical answer file (p419.ans) used in conjunction 
+with program verification: 
+
+; #0b2b
+;The Fibonacci numbers are 1, 1, 2, 3, 5, 8, 13, ...
+;If there are no numbers to list, do not output anything.
+;Your display should look exactly like this (with data from the
+;test replacing the numbers):
+;Enter number
+;4
+;Fibonacci numbers less than 4
+;1
+;1
+;2
+;3
+n
+o
+ln
+g
+4
+o
+g
+1
+o
+g
+12
+o
+g
+2
+SD
+q
+
+The first line is a comment containing the verification data 
+preceded by "#". 
+
+The next 11 lines contain comments providing specific information 
+on how to do the programming assignment.  
+
+n turns off the trace (trace output would look like incorrect 
+output to the verifier, resulting in a "NOT correct").  
+
+o positions the execution point at the beginning of the program.
+
+ln starts a new log file for the verifier to examine (data 
+already in a log file before the test cases are run would look 
+like incorrect output to the verifier, resulting in a "NOT 
+correct"). 
+
+Next, are the test runs: g (which runs the program) followed by 
+test data which is read by the program.  Between each test case 
+is o, which repositions execution at the beginning of the 
+program.
+
+SD displays the source code for the program.
+
+q terminates the session.  A "correct"/"NOT correct" notice is 
+displayed on the screen, and is inserted at the end of the log 
+file created. 
+
+     Starting with Version 6.0, sim's program verifier can check 
+if a program's size and instruction counts (both machine and 
+micro) are within prescribed limits (in addition to checking for 
+correct output).  This additional capability is triggered 
+automatically if the first line of an answer file has size and 
+count data in addition to an output checksum.  For example, if 
+the following is the first line of an answer file, then this 
+capability is triggered: 
+
+ ; #5364 95 93 73 519 49927
+     ^   ^  ^  ^   ^   ^
+     |   |  |  |   |   |
+     |   |  |  |   |   +--- checksum for the preceding five data
+     |   |  |  |   +------- micro inst count limit
+     |   |  |  +----------- machinine inst count limit
+     |   |  +-------------- microcode size limit
+     |   +----------------- machine code size limit
+     +--------------------- output checksum
+
+For more information on this new capability, see the discussion 
+of the /a command in sim.txt. 
+
+=================================================================
+Return Codes
+
+     It is not until Chapter 10 that you learn what happens 
+when the main function in a C++ program returns a value, and how 
+a return value can be used.  Thus, to avoid confusion, I have 
+given a void return type to the main functions in all the 
+examples and problems preceding Chapter 10.  The Microsoft and 
+Borland C++ compilers compile a void main function without 
+complaint.  However, g++ (the C++ compiler available on Linux, 
+Sun Solaris, and Macintosh OS X) regards a void return type on 
+main as an error and refuses to compile it.  To compile these 
+programs with g++, you should change the return type of main to 
+int and insert the statement, 
+
+   return 0;
+
+at the end of main.  For Chapters 7, 8, and 9, you should 
+translate this return statement in main to 
+
+   ldc   0 ; load return code into ac register
+   halt    ; return to sim (the "operating system")
+
+However, once you cover Chapter 10, you should then start 
+translating the return statement as described in that chapter. 
+
+The files in the H1 Software Package containing the end-of-
+chapter problems all have main functions with an int return type 
+(unlike the programs in Chapters 7, 8, and 9 in the textbook), so 
+they should compile correctly on any C++ compiler. 
+
+     If a simulation fails for any reason, sim returns a non-zero 
+return code.  However, on a normal termination of a simulation 
+run, sim returns the code returned by the program it has just run 
+if this program is at a halt AND if the return code option is on 
+(the default setting is off; you can turn it on with the mod 
+program).  Otherwise, sim returns 0.  For example, consider the 
+following program: 
+
+      ldc   5
+      halt
+
+If you run this program on sim to its end with the return code 
+option on, and then quit sim, sim will return 5.  If, however, 
+you execute only the ldc instruction and then quit sim, sim will 
+return 0.  If the return code option is off, then sim returns 0 
+for both cases.  The return code returned by sim can be detected 
+by batch/script files as explained in Chapter 10 (see the 
+batch/script file runc and page 454 in the textbook). 
+
+
+=================================================================
+Reverse Comments
+
+     Reverse comments simplify the translation of a C++ program 
+to assembly code.  For example, suppose the assignment is to 
+translate the following file to assembly language: 
+
+#include <iostream>
+using namespace std;
+int x;
+
+int main() {
+
+   x = 5;
+   cout << x << endl;
+   return 0;
+}
+
+You can simply add the assembly code in the form of "//" comments 
+to the C++ code to get the following file: 
+
+#include <iostream>
+using namespace std;
+int x;                //x:        dw    0
+
+int main() {          //main:
+
+   x = 5;             //          ldc   5
+                      //          st    x
+
+   cout << x << endl; //          ld    x
+                      //          dout
+                      //          ldc   '\n'
+                      //          aout
+
+   return 0;          //          ldc   0
+                      //          halt
+
+}                     //          end   main
+
+This one file can be both compiled by a C++ compiler and 
+assembled by mas.  You can then easily compare the outputs 
+of the two versions.  For example, the following sequence both 
+assembles (with mas) and compiles (with the g++ C++ compiler) the 
+above code (assuming it is in a file named t.cpp), and then runs 
+the two versions: 
+
+     g++ t.cpp -ot     (compile the C++ code in t.cpp)
+     mas t.cpp         (assemble the assembly code in t.cpp)
+     t                 (run the g++-produced executable)
+     run t             (run the mas-produced executable on sim)
+
+The ".lst" file that mas creates for the program above looks 
+like this (note that the C++ code now appears as comments):
+
+
+                                        ; #include <iostream>
+                                        ; using namespace std;
+0  *0    0000  x:        dw    0        ; int x;                
+               
+               main:                    ; int main() {          
+1  *1    8005            ldc   5        ; x = 5;             
+2  *2    1000            st    x
+               
+3  *3    0000            ld    x        ; cout << x << endl; 
+4  *4    FFFD            dout
+5  *5    800A            ldc   '\n'
+6  *6    FFFB            aout
+               
+7  *7    8000            ldc   0        ; return 0;          
+8  *8    FFFF            halt
+                         end   main     ; }                     
+9  *9    ========= end of t.cpp ==================================
+
+
+
+mas also creates a ".mas" file in which the comments are 
+reversed.  For example, for the t.cpp file above, mas creates the 
+following file, named t.mas: 
+
+                         ; #include <iostream>   
+                         ; using namespace std;
+x:        dw    0        ; int x;                
+
+main:                    ; int main() {          
+
+          ldc   5        ;    x = 5;             
+          st    x
+
+          ld    x        ;    cout << x << endl; 
+          dout
+          ldc   '\n'
+          aout
+
+          ldc   0        ;    return 0;          
+          halt
+
+          end   main     ; }                      
+
+     A ".cpp" file to which you add assembler code cannot have 
+any actual C++ comments--mas treats any // comment as assembler 
+code.  You, however, can change the reverse comment delimiter 
+that mas uses with the mod program.  For example, if you change 
+it to "//.", then mas will be able to distinguish the actual C++ 
+comments from the assembler code as long as the C++ comments do 
+not have a "." immediately following the "//" in its comments. 
+
+You can use both reverse commenting and ^-lines in the same 
+program which, together, make translating a C++ program easier 
+and less error prone.  Without ^-lines, you have to put the dw 
+directives out of the flow of control (a task that is easy to 
+forget).  But with ^-lines, you code dw directives in line and 
+then let mas move them to the bottom of your program.  In the 
+following program, a ^-line is used to define the constant -5.  
+You do NOT have to use a ^-line for the end directive (or for 
+public or extern) because these directives do not generate any 
+code.  Thus, they may appear anywhere in a program. 
+
+#include <iostream>
+using namespace std;
+int x;                //x:        dw    0
+
+int main() {          //main:
+                      //          end   main ; don't need ^
+
+   x = -5;            //          ldc   @_5
+                      //^@_5:     dw    -5   ; need ^
+                      //          st    x
+
+   cout << x << endl; //          ld    x
+                      //          dout
+                      //          ldc   '\n'
+                      //          aout
+
+   return 0;          //          ldc   0
+                      //          halt
+
+
+=================================================================
+iss program
+
+     The iss (insert slash slash) program in the H1 Software 
+Package inserts lines starting with "//" into a C++, C, or Java 
+file at points you are likely to add assembly code.  It relieves 
+you of the task of inserting lines on which you can add assembler 
+code.  Its command line arguments are the input file name (the 
+extension defaults to ".cpp" if none is given) and an optional 
+repetition count (the number of lines to insert at each insertion 
+point).  The default repetition count is 5.  After you add your 
+assembler code, you can then use iss to remove the inserted lines 
+that remain unused by using iss with a negative insertion count.  
+For example, to remove all unused lines that were previously 
+inserted into t.cpp (assuming 10 or fewer were previously 
+inserted at each insertion point), enter 
+
+     iss t /-10
+
+The negative count should be as large or larger than the 
+insertion count used to insert lines into the file.  Note that
+
+     iss t -10
+
+and
+
+     iss t /10
+
+
+are equivalent.  That is, both commands insert 10 lines.  The 
+hyphen in 
+
+     iss t -10
+
+is not a minus sign.  Rather, it's the argument marker.  Thus, the 
+repetition count is +10.  In
+
+     iss t --10
+
+the repetition count is -10.  Here, the first hyphen is the 
+argument marker; the second is the minus sign.  Thus, this 
+command deletes up to 10 lines.  
+
+iss backs up its input file in a file whose extension is ".iss".  
+For example, if you enter 
+
+     iss t
+
+iss will back up the original t.cpp file in t.iss.  For more 
+information see iss.txt. 
+
+     An alternative to reverse comments is to run mas against the 
+original ".cpp" file.  mas will create a corresponding ".mas" 
+file in which all the C++ code appears as ";" comments.  You can 
+then add assembler code to this ".mas" file.  Thus, the assembler 
+program you create will be commented with the corresponding 
+C++ code.  However, you will not be able to both compile and 
+assemble the same file, as you can with reverse comments. 
+
+
+=================================================================
+LN Command
+
+     The LN (log new) debugger command creates and turns on a new 
+log file.  LN makes it easy  to create the proper log files for a 
+programming assignment.
+
+
+=================================================================
+Modified D and U commands 
+
+The D and U commands now accept a second argument (an ending 
+address) which allows you to precisely control what is displayed. 
+
+
+=================================================================
+Using breakpoint to start at main
+
+      When running a program linked with start-up code (see 
+Chapter 10), you will probably want to position execution at main 
+before you start examining the trace output from the debugger. 
+To do this, simply enter 
+
+     ms             (source display; assuming sim disabled)
+     bmain          (set breakpoint at main)
+     g              (execute until main is reached)
+
+
+=================================================================
+Trying out atest and ltest (Chapter 11)
+
+     The batch/script files atest and ltest simplify the testing 
+of your versions of masv1 and linv1 (the assembler and linker you 
+write in Chapter 11 of the textbook), respectively.  atest and 
+ltest run both your version and the model version and compare 
+results.  The software package contains both sample student 
+versions (masv1 and linv1) and the model versions (masv1m and 
+linv1m).  Thus, you can try out atest and ltest before you write 
+your own versions of masv1 and linv1.  When you write your own 
+versions of masv1 and linv1, you should replace the sample 
+student executables (masv1 and linv1 but NOT masv1m and linv1m) 
+in the software package with the executable versions of your 
+programs.  
+
+     If "java" is an argument to atest or ltest, the model 
+version is compared with the student-written java version in 
+masv1.class or linv1.class.  For example, 
+
+     atest java
+
+compares the output of masv1m (the model version of masv1) with 
+the output from masv1.class (provided by you).  The software 
+package does not contain a sample version of masv1.class.  Thus, 
+the command above (with the java argument) will not work until 
+masv1.class is made available by you.  Similarly, 
+
+     ltest java 
+
+will not work until linv1.class is made available by you.
+However, both 
+
+      atest
+
+and
+
+      ltest
+
+work using the files provided by the software package (try them).

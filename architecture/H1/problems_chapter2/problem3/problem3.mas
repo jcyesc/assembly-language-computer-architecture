@@ -1,0 +1,29 @@
+; SIM
+; Program that computes the value of the decimal expression 
+;(44 + 54 + 64) - (15 + 8 + 33)
+; The problem is going to be solved by adding complement two of 15, 8, 33
+
+	ld   n1 	; load n1
+	add  n2 	; add n2
+	add  n3 	; add n3
+	st   res1	; store the result in res1
+	
+	ld   n4		; load n4
+	add  n5		; add n5
+	add  n6		; add n6
+	st   res2	; store the result in res2	
+
+	ld   res1	; load res1
+	add  res2	; add res2 to res1
+	halt		; stop the program
+
+; Data area
+n1:	dw 44 		; first number
+n2:	dw 54 	 	; second number
+n3:	dw 64 	 	; third number
+n4:	dw FFF1H	; -15 fourth number
+n5:	dw FFF8H	; -8 fifth number
+n6:	dw FFDFH	; -33 sixth number
+res1:	dw 0	; result 1
+res2:	dw 0	; result 2
+

@@ -1,0 +1,54 @@
+;--------------------------------------------------------------------
+; Translate the program 7.46 to assembly language.
+;
+; In this program we are assuming that this is computer is little
+; endian, so first we save the low part and then the high part.
+; 
+; This program uses a lot of pointers.
+;--------------------------------------------------------------------
+
+;---------------------
+; main()
+;---------------------
+
+main:	ldc	x	; p = &x;
+	st	p_p
+
+	ldc	2	; *p = 2
+	push
+	ld	p_p
+	sti		; *p is a long pointer an uses two words (32 bits)
+	ldc     0
+	push
+	ldc	1
+	add	p_p
+	sti
+
+	ld	p_p	; q = (int *)p;
+	st	p_q
+
+	ld	p_q	; r = q + 1;
+	add	@1
+	st	p_r
+
+	ld	p_q	; cout << *q << endl;
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	ld	p_r	; cout << *r << endl;
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+
+; GLOBAL VARIABLES
+
+x:	dw	2 dup 0		; long x
+p_p:	dw	0		; long *p
+p_q:	dw	0		; int *q
+p_r:	dw	0		; int *r
+@1:	dw	1

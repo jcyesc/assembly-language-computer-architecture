@@ -1,0 +1,42 @@
+;---------------------------------------------------------------------------------
+; Version	: 1
+; Created	: 4-december-2009
+; Author	: Juan Carlos Yescas
+; Description	: The loop in Figure 4.14 counts down from 20 and terminates
+;		  when it reaches 0. Rewrite the program so that it counts up
+;		  from 0 and terminates when it reaches 20. Compare your version
+;		  with Figure 4.14. Which is better?
+;---------------------------------------------------------------------------------
+
+loop:	ld	sum	; get sum
+	add	count	; add count to sum
+	st	sum	; store new sum
+	ld	count	; decrement count
+	add	@1
+	st	count	; put new value in count
+	sub	limite
+	jnz	loop	; repeat if count not zero
+done:	ldc	msg	; output "Sum = "
+	sout
+	ld	sum	; output sum
+	dout
+	ldc	'\n'
+	aout
+	halt
+@1:	dw	1
+count:	dw	1
+limite: dw	21
+msg:	dw	"Sum = "
+sum:	dw	0
+
+;----------------------------------------------------------------------------------------
+; CONCLUSION
+;
+; It's better in this case to count down from 20 to 0 than count up from 0 to 20, because
+; we have to add one instruccion and other variable.
+;-----------------------------------------------------------------------------------------
+
+
+
+
+

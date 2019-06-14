@@ -1,0 +1,51 @@
+;---------------------------------------------------------
+; Translate the program 8.45 to assembly language.
+;---------------------------------------------------------
+
+;------------------------
+; void f(int &x)
+;------------------------
+
+@f$pi:	ldr	1	; if(x)
+	ldi
+	jz	end_if
+	
+	ldc	msg	; cout << "hello\n";
+	sout
+	
+	ldr	1	; x = x - 1;
+	ldi		
+	sub	@1
+	push
+	ldr	2
+	sti
+
+	ldr	1	; f(x);
+	push
+	call	@f$pi
+	dloc	1
+
+end_if:	ret	; return to the calling function
+
+;-------------------------
+; main()
+;-------------------------
+
+main:	ldc	y	; f(y);
+	push
+	call	@f$pi
+	dloc	1
+	
+	ld	y	; cout << y << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+y:	dw	3
+@1:	dw	1
+msg:	dw	"hello\n"

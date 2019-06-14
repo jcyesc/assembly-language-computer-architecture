@@ -1,0 +1,82 @@
+Machine-level Assembler Version 6.1    Wed Apr  1 00:08:12 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;-------------------------------------------------------------
+               ; Translate the program 8.63 to assembly language.
+               ;-------------------------------------------------------------
+               
+               ;-----------------------
+               ; main()
+               ;-----------------------
+               
+0  *0    8012  main:	ldc	enter	; cout << "enter\n";
+1  *1    FFF7  	sout
+               
+2  *2    FFFC  	din		; cin >> x;
+3  *3    1010  	st	x
+               
+4  *4    8012  	ldc	enter	; cout << "enter\n";
+5  *5    FFF7  	sout
+               
+6  *6    FFFC  	din		; cin >> y;
+7  *7    1011  	st	y
+               
+8  *8    0010  	ld	x	; if(x >= y)
+9  *9    3011  	sub	y
+A  *10   B00F  	jn	end_p
+               
+B  *11   8019  	ldc	hello	; cout << "hello\n";
+C  *12   FFF7  	sout
+D  *13   8020  	ldc	bye	; cout << "bye\n";
+E  *14   FFF7  	sout
+               	
+               end_p:
+F  *15   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+10 *16   0000  x:	dw	0
+11 *17   0000  y:	dw	0
+12 *18   0065  enter:	dw	"enter\n"
+13 *19   006E
+14 *20   0074
+15 *21   0065
+16 *22   0072
+17 *23   000A
+18 *24   0000
+19 *25   0068  hello:	dw	"hello\n"
+1A *26   0065
+1B *27   006C
+1C *28   006C
+1D *29   006F
+1E *30   000A
+1F *31   0000
+20 *32   0062  bye:	dw	"bye\n"
+21 *33   0079
+22 *34   0065
+23 *35   000A
+24 *36   0000
+25 *37   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           10 
+ end_p                     F           A  
+ x                         10          3   8  
+ y                         11          7   9  
+ enter                     12          0   4  
+ hello                     19          B  
+ bye                       20          D  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

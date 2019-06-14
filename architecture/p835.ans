@@ -1,0 +1,26 @@
+; #b469
+;Display should look exactly like this (with data from test
+;cases replacing numbers):
+;Enter x in hex: 7fff
+;Enter y in hex: ffff
+;FALSE
+n
+o
+ln
+g
+7fff
+ffff
+o
+g
+8000
+0001
+o
+g
+7fff
+0001
+o
+g
+8000
+ffff
+SD
+q

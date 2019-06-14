@@ -1,0 +1,28 @@
+; #4f1f
+;Your display should look exactly like this (with the data from 
+;the test cases replacing the numbers):
+;Enter decimal number
+;2
+;Enter decimal number
+;3     
+;Product = 6
+n
+o
+ln
+g
+2
+3
+o
+g
+-2
+3
+o
+g
+2
+-3
+o
+g
+-2
+-3
+SD
+q

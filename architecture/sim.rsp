@@ -1,0 +1,26 @@
+?        ; ? prompts for name; o.w., no prompt   sim.rsp
+d        ; Microlevel status (d or e)
+h        ; Simulation mode (h or v)
+none     ; Horizontal microcode file name
+none     ; Vertical microcode file name
+.mas     ; SD default extension
+3900t    ; Command-line address
+3000t    ; Memory-mapped I/O start address
+200t     ; Memory-mapped delay count
+0        ; Load point
+7        ; T count
+20000t   ; Tracing mode pause count
+24t      ; LD max size
+n        ; Machine-level source only status (n or o)
+n        ; Plus counts status (n or c)
+n        ; Plus reads status (n or r)
+n        ; Machine-level plus source status (n or s)
+n        ; Microlevel source only status (n or o)
+n        ; Microlevel plus source status (n or s)
+s        ; Label status (s or i)
+z        ; Hout status (z or n)
+n        ; Log file status (n or f)
+v        ; Program verification status (v or n)
+z        ; Return code (0 or r)
+m        ; Msg status (m or n)
+y        ; Okay to change?

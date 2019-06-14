@@ -1,0 +1,7 @@
+              ; t1.mas   
+        a:    dw     5   
+        b:    dw     a+1 
+        c:    dw     x+5 
+              extern x   
+              public a   
+                         

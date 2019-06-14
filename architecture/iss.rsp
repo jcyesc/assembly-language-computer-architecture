@@ -1,0 +1,3 @@
+//       ; Reverse comment delimiter             iss.rsp
+m        ; Message status (m or n) 
+y        ; Okay to change? (y or n)

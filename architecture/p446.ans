@@ -1,0 +1,24 @@
+; #62e8
+;Your display should look exactly like this (with the data from 
+;the test cases replacing the numbers):
+;Enter positive decimal number
+;2
+;Enter positive decimal number
+;3
+;Product = 6
+n
+o
+ln
+g
+2
+3
+o
+g
+16
+16
+o
+g
+15
+16
+SD
+q

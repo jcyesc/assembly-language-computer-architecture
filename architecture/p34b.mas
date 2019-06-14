@@ -1,0 +1,5 @@
+                ld   x
+                add  x
+                st   * + 2
+                halt
+            x:  dw   -3

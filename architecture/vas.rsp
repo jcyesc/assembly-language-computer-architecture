@@ -1,0 +1,5 @@
+d        ; Number base (d or h)                  vas.rsp
+s        ; Label status (s or i)   
+L        ; List status (L or n)    
+m        ; Message status (m or n) 
+y        ; Okay to change? (y or n)

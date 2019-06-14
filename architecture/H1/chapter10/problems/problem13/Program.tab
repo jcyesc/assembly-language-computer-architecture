@@ -1,0 +1,126 @@
+lin Version 6.1 Table Trace             Mon May  4 23:48:30 2009
+
+Tables constructed from user-specified modules:
+
+P Table      Address (hex*dec)         Symbol
+                   D*13                 main
+                   0*0                  polynomio
+
+E Table      Address (hex*dec)         Symbol
+                   3*3                  square
+                   7*7                  square
+
+R Table      Address (hex*dec)         Module Address (hex*dec)
+                   A*10                      0*0
+                   F*15                      0*0
+                  15*21                      0*0
+                  1B*27                      0*0
+                  21*33                      0*0
+                  27*39                      0*0
+
+S Table empty
+===============================================================
+***** Searching for square in fmult15.lib library
+***** Inputing square module from fmult15.lib library
+===============================================================
+Tables updated with header information from square module:
+
+P Table      Address (hex*dec)         Symbol
+                   D*13                 main
+                   0*0                  polynomio
+                  2D*45                 square
+
+E Table      Address (hex*dec)         Symbol
+                   3*3                  square
+                   7*7                  square
+
+R Table      Address (hex*dec)         Module Address (hex*dec)
+                   A*10                      0*0
+                   F*15                      0*0
+                  15*21                      0*0
+                  1B*27                      0*0
+                  21*33                      0*0
+                  27*39                      0*0
+                  33*51                      2D*45
+                  34*52                      2D*45
+                  3A*58                      2D*45
+                  3C*60                      2D*45
+
+S Table empty
+===============================================================
+Text as transformed by E-entry and R-entry processing:
+
+Address           Before E           After  E        After E
+hex*dec           Before R           Before R        After R
+
+0  *0     polynomio F501               F501            F501
+1  *1               4002               4002            4002
+2  *2               F300               F300            F300
+3  *3               E000       change> E02D            E02D
+4  *4               F601               F601            F601
+5  *5               5000               5000            5000
+6  *6               F300               F300            F300
+7  *7               E000       change> E02D            E02D
+8  *8               F601               F601            F601
+9  *9               7000               7000            7000
+A  *10              202C               202C            202C
+B  *11              F601               F601            F601
+C  *12              F000               F000            F000
+D  *13         main 8000               8000            8000
+E  *14              F300               F300            F300
+F  *15              E000               E000            E000
+10 *16              F601               F601            F601
+11 *17              FFFD               FFFD            FFFD
+12 *18              800A               800A            800A
+13 *19              8001               8001            8001
+14 *20              F300               F300            F300
+15 *21              E000               E000            E000
+16 *22              F601               F601            F601
+17 *23              FFFD               FFFD            FFFD
+18 *24              800A               800A            800A
+19 *25              8002               8002            8002
+1A *26              F300               F300            F300
+1B *27              E000               E000            E000
+1C *28              F601               F601            F601
+1D *29              FFFD               FFFD            FFFD
+1E *30              800A               800A            800A
+1F *31              8003               8003            8003
+20 *32              F300               F300            F300
+21 *33              E000               E000            E000
+22 *34              F601               F601            F601
+23 *35              FFFD               FFFD            FFFD
+24 *36              800A               800A            800A
+25 *37              8004               8004            8004
+26 *38              F300               F300            F300
+27 *39              E000               E000            E000
+28 *40              F601               F601            F601
+29 *41              FFFD               FFFD            FFFD
+2A *42              800A               800A            800A
+2B *43              F000               F000            F000
+2C *44              0006               0006            0006
+2D *45       square 0000       change> F502            F502
+2E *46              0000       change> 8000            8000
+2F *47              0000       change> 5001            5001
+30 *48              0000       change> 8001            8001
+31 *49              0000       change> 5000            5000
+32 *50              0000       change> 4003            4003
+33 *51              0000       change> C010    change> C03D
+34 *52              0000       change> 3013    change> 3040
+35 *53              0000       change> 5003            5003
+36 *54              0000       change> 4001            4001
+37 *55              0000       change> 6000            6000
+38 *56              0000       change> 5001            5001
+39 *57              0000       change> 4000            4000
+3A *58              0000       change> 2014    change> 2041
+3B *59              0000       change> 5000            5000
+3C *60              0000       change> 9005    change> 9032
+3D *61              0000       change> 4001            4001
+3E *62              0000       change> F602            F602
+3F *63              0000       change> F000            F000
+40 *64              0000       change> 0001            0001
+41 *65              0000       change> 0002            0002
+
+Output file  = Program.mac
+Table file   = Program.tab
+Cat file     = Program.cat
+Label status = case sensitive

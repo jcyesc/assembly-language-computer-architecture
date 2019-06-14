@@ -1,0 +1,72 @@
+;--------------------------------------------------------------------
+; Translate the program 8.67 to assembly languague.
+;--------------------------------------------------------------------
+
+;----------------------------------
+; int mult(int x, int y)
+;----------------------------------
+
+@mult$ii:	ldr	2	; if( y == 0)
+		jnz	next_rm	
+		ret		; return 0;		
+
+next_rm:	ldr	2	; return mult(x, y - 1) + x
+		sub	@1			
+		push
+		ldr	2
+		push
+		call	@mult$ii
+		dloc	2
+		addr	1
+			
+		ret		; return to the calling function.
+
+;----------------------------------
+; int exp(int x, int y)
+;----------------------------------
+
+@exp$ii:	ldr	2	; if(y == 0)
+		jnz	next_ex
+		ldc	1	; return 1;
+		ret
+
+next_ex:	ldr	2	; return mult(exp(x, y - 1), x);
+		sub	@1
+		push
+		ldr	2
+		push
+		call	@exp$ii
+		dloc	2
+			
+		aloc	1	; store the value return by exp(x, y - 1)
+		str	0	
+
+		ldr	2	; mult(value, x)
+		push
+		ldr	1
+		push
+		call	@mult$ii
+		dloc	3
+
+		ret	
+
+;---------------------------------
+; main()
+;---------------------------------
+
+main:	ldc	3	; cout << exp(2, 3) << endl;
+	push
+	ldc	2
+	push
+	call	@exp$ii
+	dloc	2
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+@1:	dw	1

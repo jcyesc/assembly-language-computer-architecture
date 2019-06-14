@@ -1,0 +1,41 @@
+;----------------------------------------------------------------
+; Translate program 7.41 to assembly language
+;----------------------------------------------------------------
+
+;-------------------
+; main()
+;-------------------
+
+main:	aloc	1	; int x;
+
+	aloc	1	; int y = 3;
+	ldc	3
+	str	0
+
+	ldc	5	; x = y + 5	
+	addr	0
+	str	1
+	
+	ldc	@msg_x	; cout << "x = " << x << endl;
+	sout
+	ldr	1
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	@msg_y	; cout << "y = " << y << endl;
+	sout
+	ldr	0
+	dout
+	ldc	'\n'
+	aout
+	
+	dloc	2
+
+	halt
+
+; GLOBAL VARIABLES
+
+@msg_x:	dw	"x = "
+@msg_y:	dw	"y = "
+

@@ -1,0 +1,13 @@
+               ld   xl
+               rotl 1
+               hout
+               ldc  '\n'
+               aout
+               ld   xr
+               rotr 1
+               hout
+               ldc  '\n'
+               aout
+               halt
+       xl:     dw    8110h
+       xr:     dw    0221h

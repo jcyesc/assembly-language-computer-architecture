@@ -1,0 +1,39 @@
+;---------------------------------------------------------------
+; Translate the program 8.42 to assembly language.
+;---------------------------------------------------------------
+
+;----------------------
+; void f(int &x)
+;----------------------
+
+@f$pi:	ldc	5	; x = 5
+	push
+	ldr	2
+	sti
+
+	ret		; return to the caller
+
+;----------------------
+; main()
+;----------------------
+
+main:	ldc	x	; f(x);
+	push
+	call	@f$pi
+	dloc	1
+
+	ld	x	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+	end main
+
+
+; GLOBAL VARIABLES
+
+x:	dw	0
+
+
+

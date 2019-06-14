@@ -1,0 +1,6 @@
+               extern x   
+               extern y   
+        start: ld   x     
+               st   y - 1 
+        cat:   ja   cat   
+               end  start 

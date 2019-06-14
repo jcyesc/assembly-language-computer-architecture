@@ -1,0 +1,29 @@
+Machine-level Assembler Version 6.1    Wed Dec 17 23:38:30 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0004  	ld   s + 1
+1  *1    0008  	ld   s + 5
+2  *2    FFFF  	halt
+3  *3    0068  s:	dw   "hello"
+4  *4    0065
+5  *5    006C
+6  *6    006C
+7  *7    006F
+8  *8    0000
+9  *9    ========= end of program21.mas ==========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ s                         3           0   1  
+
+Input file   = program21.mas
+Output file  = program21.mac
+List file    = program21.lst 
+Number base  = decimal
+Label status = case sensitive

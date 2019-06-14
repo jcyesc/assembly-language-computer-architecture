@@ -1,0 +1,144 @@
+Machine-level Assembler Version 6.1    Tue Mar 10 23:23:26 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;------------------------------------------------------
+               ; Translate the program 7.40 to assembly language
+               ;------------------------------------------------------
+               
+               ;-----------------------
+               ; void f(int x, int y)
+               ;-----------------------
+               
+0  *0    F501  f:	aloc	1	; int p, q=8;	
+1  *1    F501  	aloc	1
+2  *2    8008  	ldc	8
+3  *3    5000  	str	0
+               	
+4  *4    4000  	ldr	0	; p = q++;
+5  *5    5001  	str	1
+6  *6    4000  	ldr	0
+7  *7    204F  	add	@1
+8  *8    5000  	str	0	
+               
+9  *9    004E  	ld	@s0_t	; s = t++;
+A  *10   104D  	st	@s0_s
+B  *11   204F  	add	@1
+C  *12   104E  	st	@s0_t
+               	
+D  *13   4004  	ldr	4	; x = ++y;
+E  *14   204F  	add	@1
+F  *15   5004  	str	4
+10 *16   5003  	str	3	
+               
+11 *17   4001  	ldr	1	; cout << p << " " << q << " " << s << " " << t << endl;
+12 *18   FFFD  	dout
+13 *19   8050  	ldc	msg
+14 *20   FFF7  	sout
+15 *21   4000  	ldr	0
+16 *22   FFFD  	dout
+17 *23   8050  	ldc	msg
+18 *24   FFF7  	sout
+19 *25   004D  	ld	@s0_s
+1A *26   FFFD  	dout
+1B *27   8050  	ldc	msg
+1C *28   FFF7  	sout
+1D *29   004E  	ld	@s0_t
+1E *30   FFFD  	dout
+1F *31   800A  	ldc	'\n'
+20 *32   FFFB  	aout
+               
+21 *33   F602  	dloc	2
+               
+22 *34   F000  	ret
+               
+               ;-------------------------
+               ; main()
+               ;-------------------------
+               
+23 *35   8005  main:	ldc	5	; z = 5;
+24 *36   104C  	st	z	
+               
+25 *37   004B  	ld	y	; f(x, y);
+26 *38   F300  	push	
+27 *39   004A  	ld	x
+28 *40   F300  	push
+29 *41   E000  	call	f
+2A *42   F602  	dloc	2
+               
+2B *43   004A  	ld	x	; cout << x << " " << y << " " << z << endl
+2C *44   FFFD  	dout
+2D *45   8050  	ldc	msg
+2E *46   FFF7  	sout
+2F *47   004B  	ld	y
+30 *48   FFFD  	dout
+31 *49   8050  	ldc	msg
+32 *50   FFF7  	sout
+33 *51   004C  	ld	z
+34 *52   FFFD  	dout
+35 *53   800A  	ldc	'\n'
+36 *54   FFFB  	aout
+               
+37 *55   004A  	ld	x	; f(y, x);
+38 *56   F300  	push
+39 *57   004B  	ld	y
+3A *58   F300  	push
+3B *59   E000  	call	f
+3C *60   F602  	dloc	2
+               	
+3D *61   004A  	ld      x       ; cout << x << " " << y << " " << z << endl 
+3E *62   FFFD          dout
+3F *63   8050          ldc     msg
+40 *64   FFF7          sout
+41 *65   004B          ld      y
+42 *66   FFFD          dout
+43 *67   8050          ldc     msg
+44 *68   FFF7          sout
+45 *69   004C          ld      z
+46 *70   FFFD          dout
+47 *71   800A          ldc     '\n'
+48 *72   FFFB          aout		
+               		
+49 *73   FFFF  	halt
+               
+               	end main	
+               
+               ; GLOBAL VARIABLES
+               
+4A *74   0000  x:	dw	0
+4B *75   0005  y:	dw	5
+4C *76   0000  z:	dw	0
+               
+4D *77   0000  @s0_s:	dw	0
+4E *78   0011  @s0_t:	dw	17
+4F *79   0001  @1:	dw	1
+50 *80   0020  msg:	dw	" "
+51 *81   0000
+               
+               
+               
+52 *82   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           29  3B 
+ main                      23          4A 
+ x                         4A          27  2B  37  3D 
+ y                         4B          25  2F  39  41 
+ z                         4C          24  33  45 
+ @s0_s                     4D          A   19 
+ @s0_t                     4E          9   C   1D 
+ @1                        4F          7   B   E  
+ msg                       50          13  17  1B  2D  31 
+                                       3F  43 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

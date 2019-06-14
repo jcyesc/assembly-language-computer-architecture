@@ -1,0 +1,105 @@
+;-------------------------------------------------------------
+; 10.54 Translate the next C program to assembly language.
+;
+;	#include<iostream>
+;	using namesace std;
+;	int x = 5;
+;	static int y;
+;	static f(int *p)
+;	{
+;	   *p = 5;
+;	}
+;	
+;	int main()
+;	{
+;	    static int a = 1;
+;	   int b = 2;
+;	   f(&x);
+;	   f(&y);
+;	   f(&a);
+;	   f(&b);
+;	   cout <<  a << " " << b << " " << x << " " << y << endl;
+;	   return 0;
+;	}
+;
+;-------------------------------------------------------------
+
+;----------------------------
+; static f(int *p)
+;----------------------------
+
+@f$pi:	ldc		5	; *p = 5
+		push
+		ldr		2
+		sti
+		
+		ret
+
+;----------------------------
+; int main()
+;----------------------------
+
+main:
+		aloc	1	; int b = 2
+		ldc		2
+		str		0
+		
+		ldc		x		; f(&x);
+		push
+		call	@f$pi
+		dloc	1
+		
+		ldc		y		; f(&y);
+		push
+		call	@f$pi				
+		dloc	1
+		
+		ldc		@s0_a	; f(&a);
+		push
+		call	@f$pi
+		dloc	1
+		
+		swap			; f(&b); // b is an automatic variable
+		st		@tmp	; save the address of &b - 1 in a variable
+		swap
+		ld		@tmp
+		push
+		call	@f$pi
+		dloc	1		; release the memory of the parameter and the address.
+				
+		ld		@s0_a	; cout << a << " " << b << " " << x << " " << y << endl;
+		dout
+		ldc		@msg
+		sout
+		ldr		0
+		dout
+		ldc		@msg
+		sout
+		ld		x
+		dout
+		ldc		@msg
+		sout
+		ld		y
+		dout
+		ldc		'\n'
+		aout		
+		
+		dloc	1	; release memory of b	
+		
+		ldc		0	; return 0;
+		ret
+
+; Global variables
+
+@1:		dw		1
+x:		dw		5
+y:		dw		0
+@s0_a:	dw		1	; static int a = 1;
+@msg:	dw		" "
+@tmp:	dw		0
+
+; Public declarations
+
+public	x
+public	main
+

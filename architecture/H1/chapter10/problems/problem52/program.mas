@@ -1,0 +1,72 @@
+;---------------------------------------------------------------------
+; 10.52 Translate the next C program to assembly language. 
+;
+;	#include <iostream>
+;	using namespace std;
+;	// run with program with the following command line args:
+;	//  a1 a2 a3 a4
+;	int main(int argc, char *argv[])
+;	{
+;    	while(--argc)
+;			cout << argv[argc] << endl;
+;
+;    	return 0;
+;	}
+;---------------------------------------------------------------------
+
+main:
+_while:			; while(--argc)
+	ldr		1	
+	sub		@1
+	str		1
+	jz		_end
+	
+	ldr		2	; cout << argv[argc] << endl;
+	addr	1
+	ldi
+	sout
+	ldc		'\n'
+	aout
+	
+	ja		_while
+	
+_end:	
+	ldc		0	; return 0
+	ret
+	
+; Global variables
+@1:		dw		1	
+
+public	main
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

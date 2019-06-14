@@ -1,0 +1,57 @@
+;---------------------------------------------------------
+; Translate the progrm 8.44 to assembly language
+;---------------------------------------------------------
+
+;-----------------------
+; void f(int &x)
+;-----------------------
+
+@f$pi:  ldr	1	; x--;
+	ldi	
+	sub	@1
+	push
+	ldr	2
+	sti
+
+	ldr	1	; cout << x << endl;
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	ret		; return to the calling function
+
+;-----------------------
+; main()
+;-----------------------
+
+main:	ld	x	; f(x - y);
+	sub	y
+	push
+	swap
+	st	@spsave
+	swap
+	ld	@spsave
+	push
+	call	@f$pi
+	dloc	2
+
+	ld	x	; cout << x << " " << y << endl;
+	dout
+	ldc	msg	
+	sout
+	ld	y
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+x:		dw	1
+y:		dw	2
+@1:		dw	1
+@spsave:	dw	0
+msg:		dw	" "

@@ -1,0 +1,62 @@
+;--------------------------------------------------------------------------------------
+; Version	: 1.0
+; Created	: 5-january-2009
+; Author	: Juan Carlos Yescas
+; Description	: The latter portion of the program is given below.
+;		  Add to it its first portion (the new code you add shoult
+;		  occupy addresses less than 1000) whose execution has the effect
+;		  of executing the code at location 1001 to 1009 backwards(i.e.,
+;		  from locations 1009 down to 1001).
+;
+;		  How is the problem going to be solved?
+;			We're going to copy the instructions in inverse order, so we're
+;			going to use the stack.
+;--------------------------------------------------------------------------------------
+	
+for:	ld	@1000		; load 1000
+	add	counter		; add counter to 1000
+	ldi			; load the value that it's in the address pointed by ac
+	jz	copyInverse	; if ZERO, jump to copyInverse
+	push			; push the instruction in the stack
+	ld	counter		; load the value of counter
+	add	@1		; add 1 to the counter
+	st	counter		; store the counter
+	ja	for		; jump always to for
+
+copyInverse:			; copy the value of the stack in memory in inverse order
+	ld	counter		; load counter
+	jz	execute		; if ZERO, jump to execute
+	sub	@1		; subtract 1 to counter
+	st	counter		; store the new value in counter
+	ld	@1000		; load 1000 in ac
+	add	index		; add the value of index
+	sti			; store indirect, store the value that is in the top of the stack
+				; in the address that is pointing ac
+	ld	index		; load the value of index in ac
+	add	@1		; add 1 to index
+	st	index		; store the new value in index
+	ja	copyInverse	; jump to execute
+	
+execute:
+	ja	x		; jump to x, where the code is already inverted..
+
+@1:		dw	1
+@1000:		dw	1000
+counter:	dw	0
+instruction:	dw	0
+index:		dw	0
+
+; THE FOLLOWING INSTRUCTIONS ARE GOING TO BE INVERTED.
+	org	1000
+x:	dw	1
+	halt
+	dout
+	add	x
+	dout
+	add	x
+	dout	
+	add	x
+	dout
+	ld	x
+
+

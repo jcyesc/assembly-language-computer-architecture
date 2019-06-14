@@ -1,0 +1,26 @@
+         ;                                       lmod3.mas
+         ; Test module for linv1 
+         ; Link with lmod4.mas
+         ; links ok
+start:   ld     x + 2
+         dout
+         ldc    '\n'
+         aout
+         ld     x + 1
+         dout
+         ldc    '\n'
+         aout
+         ld     x
+         dout
+         ldc    '\n'
+         aout
+         ld     x -1
+         dout
+         ldc    '\n'
+         aout
+         ld     x - 2
+         dout
+         ldc    '\n'
+         aout
+         halt
+         extern x

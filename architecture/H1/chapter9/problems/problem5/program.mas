@@ -1,0 +1,81 @@
+;-----------------------------------------------------------------------------
+; Translate the program that you did in exercise 9.5 to assembly language.
+;-----------------------------------------------------------------------------
+
+;-------------------------------------------------------------------------------
+; void last(int count, ...)	
+;	Function that prints the last parameter and nothing if count is zero
+;-------------------------------------------------------------------------------
+
+@last$ipi:
+	ldr	1	; if(count == 0)
+	jz	en
+	
+	aloc	1	; int *p
+	swap		; get the address of count
+	st	sp_save	; int *p = &count + count;
+	swap
+	ldc	2
+	add	sp_save
+	addr	2	; &count + count;
+	str	0
+
+	ldc	msg	; cout << "last -> " << *p << endl;
+	sout
+	ldr	0
+	ldi
+	dout
+	ldc	'\n'
+	aout
+	
+	dloc	1	; release the memory of int *p
+en:	ret
+
+;---------------------------------------------
+; int main()
+;---------------------------------------------
+
+main:	ldc	8	; last(3, -3, 5, 8)
+	push
+	ldc	5
+	push
+	ldc	-3
+	push
+	ldc	3
+	push
+	call	@last$ipi
+	dloc	4
+
+	ldc	4	; last(1, 4);
+	push
+	ldc	1
+	push
+	call	@last$ipi
+	dloc	2
+
+	ldc	50	; last(5, 1, 2, 3, 4, 50);
+	push
+	ldc	4
+	push
+	ldc	3
+	push
+	ldc	2
+	push
+	ldc	1
+	push
+	ldc	5
+	push
+	call	@last$ipi
+	dloc	6
+
+	ldc	0	; last(0);
+	push
+	call	@last$ipi
+	dloc	1
+
+	halt
+	end main
+
+; Global variables
+sp_save:	dw	0
+msg:		dw	"last -> "

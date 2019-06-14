@@ -1,0 +1,31 @@
+;-------------------------------------------------------------
+; Translate the program 7.51 to assembly language
+;-------------------------------------------------------------
+
+;--------------------
+; int f()
+;--------------------
+
+f:	ldc	10	; x + 10;
+	add	x	; The result is stored in ac
+	
+	ret		; return to the caller
+
+;--------------------
+; main()
+;--------------------
+
+main:	call	f	; x = f();
+	st	x
+
+	ld	x	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	20

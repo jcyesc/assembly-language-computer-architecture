@@ -1,0 +1,257 @@
+Machine-level Assembler Version 6.1    Mon May 11 22:56:56 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; 10.41 Same as Problem 10.40, but assume multiple-digit positiv
+               ;---------------------------------------------------------------
+               
+               
+               ;----------------------------------------------------
+               ;int atoi(char c)
+               ;	Function that converts a char to integer
+               ;	(Alpha numeric to integer)
+               ;
+               ;	DECIMAL ASCII
+               ;	0	48
+               ;	1	49
+               ;	2	50
+               ;	  .....
+               ;	9	57
+               ;----------------------------------------------------
+               
+0  *0    4001  @atoi$c:	ldr	1
+1  *1    3088  		sub	@48
+2  *2    F000  		ret
+               		
+               ;--------------------------------------------------------
+               ; int mult(int x, int y)
+               ;	Function that multiplies x by y
+               ;	To perform the multiplication we sum y, x times.
+               ;--------------------------------------------------------
+               
+3  *3    8000  @mult$ii:	ldc	0	; int temp = 0;
+4  *4    F501  		aloc	1	; variable to store the result
+5  *5    5000  		str	0
+               	
+6  *6    4002  _for:		ldr	2	; verify if x is not zero
+7  *7    C00F  		jz	_end	; if zero jump to .en
+8  *8    4003  		ldr	3	; load y
+9  *9    6000  		addr	0	; sum temp to y (tmp += y;)
+A  *10   5000  		str	0
+               		
+B  *11   4002  		ldr	2	; x--;
+C  *12   3085  		sub	@1
+D  *13   5002  		str	2	
+E  *14   9006  		ja	_for
+               		
+F  *15   4000  _end:		ldr	0	; variable that stores the result
+10 *16   F601  		dloc	1	; release the memory of temp
+11 *17   F000  		ret
+               
+               ;--------------------------------------------------------------
+               ; int toInt(char *p)
+               ;	Function that converts a String to and int using
+               ;	the HORNER's METHOD (Use 10 base).
+               ;
+               ;	int toInt(char *p)
+               ;	{
+               ;	    int tmp = atoi(p[0]);  // only the first character
+               ;	    p++;
+               ;	    while(*p != null)
+               ;	    {
+               ;		tmp = 10 * tmp;
+               ;	   	tmp += atoi(p[0]);
+               ;		p++;
+               ;	       
+               ;	    }
+               ;	    return tmp;
+               ;	}
+               ;--------------------------------------------------------------
+               
+12 *18   F501  @toInt$cp:	aloc	1	; int tmp = atoi(p[0]);
+13 *19   4002  		ldr	2
+14 *20   F100  		ldi		
+15 *21   F300  		push	
+16 *22   E000  		call	@atoi$c
+17 *23   F601  		dloc	1
+18 *24   5000  		str	0	
+               		
+19 *25   4002  		ldr	2	; p++
+1A *26   2085  		add	@1
+1B *27   5002  		str	2
+               
+1C *28   4002  _while:		ldr	2	; while(*p != null)
+1D *29   F100  		ldi
+1E *30   C031  		jz	_end2
+               		
+1F *31   4000  		ldr	0	; tmp = mult(10, tmp);
+20 *32   F300  		push
+21 *33   800A  		ldc	10
+22 *34   F300  		push
+23 *35   E003  		call	@mult$ii
+24 *36   F602  		dloc	2		
+25 *37   5000  		str	0
+               
+26 *38   4002  		ldr	2	; tmp += atoi(p[0]);	
+27 *39   F100  		ldi
+28 *40   F300  		push
+29 *41   E000  		call	@atoi$c
+2A *42   F601  		dloc	1
+2B *43   6000  		addr	0	
+2C *44   5000  		str	0
+               		
+2D *45   4002  		ldr	2	; p++;
+2E *46   2085  		add	@1
+2F *47   5002  		str	2
+               
+30 *48   901C  		ja	_while
+               
+31 *49   4000  _end2:		ldr	0	; return tmp
+32 *50   F601  		dloc	1
+               
+33 *51   F000  		ret
+               
+               ;------------------------------------------------
+               ; int main(int argc, char **argv)
+               ; 	argv[0] is the name of the program.
+               ;------------------------------------------------
+               
+               main:
+34 *52   4001  	ldr	1		; if(argc != 3)
+35 *53   3087  	sub	@3		;	cout << "Three parameters are required.\n";
+36 *54   D053  	jnz	_error_main
+               
+37 *55   4002  	ldr	2		; n1 = toInt(argv[1]);
+38 *56   2085  	add	@1		
+39 *57   F100  	ldi
+3A *58   F300  	push
+3B *59   E012  	call	@toInt$cp
+3C *60   F601  	dloc	1
+3D *61   1089  	st	@n1
+               	
+3E *62   FFFD  	dout			; cout << n1 << endl;
+3F *63   800A  	ldc	'\n'
+40 *64   FFFB  	aout
+               
+41 *65   4002  	ldr	2		; n2 = toInt(argv[2]);
+42 *66   2086  	add	@2
+43 *67   F100  	ldi
+44 *68   F300  	push
+45 *69   E012  	call	@toInt$cp
+46 *70   F601  	dloc	1
+47 *71   108A  	st	@n2
+               
+48 *72   FFFD  	dout			; cout << n2 << endl;
+49 *73   800A  	ldc	'\n'
+4A *74   FFFB  	aout
+               
+4B *75   8076  	ldc	@msg2		; cout << "The result is " << (n1 + n2) << endl;
+4C *76   FFF7  	sout
+4D *77   0089  	ld	@n1
+4E *78   208A  	add	@n2
+4F *79   FFFD  	dout
+50 *80   800A  	ldc	'\n'
+51 *81   FFFB  	aout	
+               
+52 *82   9055  	ja	_end_main
+               
+               _error_main:
+53 *83   8056  	ldc	@msg1
+54 *84   FFF7  	sout	
+               
+               _end_main:
+               
+55 *85   F000  	ret			; return to the caller
+               
+               ; Global variables
+               
+56 *86   0054  @msg1:	dw	"Three parameters are required.\n"
+57 *87   0068
+58 *88   0072
+59 *89   0065
+5A *90   0065
+5B *91   0020
+5C *92   0070
+5D *93   0061
+5E *94   0072
+5F *95   0061
+60 *96   006D
+61 *97   0065
+62 *98   0074
+63 *99   0065
+64 *100  0072
+65 *101  0073
+66 *102  0020
+67 *103  0061
+68 *104  0072
+69 *105  0065
+6A *106  0020
+6B *107  0072
+6C *108  0065
+6D *109  0071
+6E *110  0075
+6F *111  0069
+70 *112  0072
+71 *113  0065
+72 *114  0064
+73 *115  002E
+74 *116  000A
+75 *117  0000
+76 *118  0054  @msg2:	dw	"The result is ";
+77 *119  0068
+78 *120  0065
+79 *121  0020
+7A *122  0072
+7B *123  0065
+7C *124  0073
+7D *125  0075
+7E *126  006C
+7F *127  0074
+80 *128  0020
+81 *129  0069
+82 *130  0073
+83 *131  0020
+84 *132  0000
+85 *133  0001  @1:	dw	1
+86 *134  0002  @2:	dw	2
+87 *135  0003  @3:	dw	3
+88 *136  0030  @48:	dw	48	; use to subtract ASCII - 48 to get the number
+89 *137  0000  @n1:	dw	0
+8A *138  0000  @n2:	dw	0
+               
+               	public main
+               
+8B *139  ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @atoi$c                   0           16  29 
+ @mult$ii                  3           23 
+ _for                      6           E  
+ _end                      F           7  
+ @toInt$cp                 12          3B  45 
+ _while                    1C          30 
+ _end2                     31          1E 
+ main                      34          8B 
+ _error_main               53          36 
+ _end_main                 55          52 
+ @msg1                     56          53 
+ @msg2                     76          4B 
+ @1                        85          C   1A  2E  38 
+ @2                        86          42 
+ @3                        87          35 
+ @48                       88          1  
+ @n1                       89          3D  4D 
+ @n2                       8A          47  4E 
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

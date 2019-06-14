@@ -1,0 +1,16 @@
+Machine-level Assembler Version 6.1    Wed Dec 17 00:23:01 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0000  	ld   0
+1  *1    2000  	add  0
+2  *2    1000  	st   0
+3  *3    FFFF  	halt
+4  *4    ========= end of program14.mas ==========================
+
+Input file   = program14.mas
+Output file  = program14.mac
+List file    = program14.lst 
+Number base  = decimal
+Label status = case sensitive

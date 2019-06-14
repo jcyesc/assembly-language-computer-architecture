@@ -1,0 +1,56 @@
+Machine-level Assembler Version 6.1    Mon Dec  8 21:26:59 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; SIM
+               ; Program that computes the value of the decimal expression 
+               ;(44 + 54 + 64) - (15 + 8 + 33)
+               ; The problem is going to be solved by adding complement two of 
+               
+0  *0    000B  	ld   n1 	; load n1
+1  *1    200C  	add  n2 	; add n2
+2  *2    200D  	add  n3 	; add n3
+3  *3    1011  	st   res1	; store the result in res1
+               	
+4  *4    000E  	ld   n4		; load n4
+5  *5    200F  	add  n5		; add n5
+6  *6    2010  	add  n6		; add n6
+7  *7    1012  	st   res2	; store the result in res2	
+               
+8  *8    0011  	ld   res1	; load res1
+9  *9    2012  	add  res2	; add res2 to res1
+A  *10   FFFF  	halt		; stop the program
+               
+               ; Data area
+B  *11   002C  n1:	dw 44 		; first number
+C  *12   0036  n2:	dw 54 	 	; second number
+D  *13   0040  n3:	dw 64 	 	; third number
+E  *14   FFF1  n4:	dw FFF1H	; -15 fourth number
+F  *15   FFF8  n5:	dw FFF8H	; -8 fifth number
+10 *16   FFDF  n6:	dw FFDFH	; -33 sixth number
+11 *17   0000  res1:	dw 0	; result 1
+12 *18   0000  res2:	dw 0	; result 2
+               
+13 *19   ========= end of problem3.mas ===========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ n1                        B           0  
+ n2                        C           1  
+ n3                        D           2  
+ n4                        E           4  
+ n5                        F           5  
+ n6                        10          6  
+ res1                      11          3   8  
+ res2                      12          7   9  
+
+Input file   = problem3.mas
+Output file  = problem3.mac
+List file    = problem3.lst 
+Number base  = decimal
+Label status = case sensitive

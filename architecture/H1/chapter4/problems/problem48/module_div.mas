@@ -1,0 +1,83 @@
+;--------------------------------------------------------------------------------------
+; Version 	: 1.0
+; Created	: 4-December-2009
+; Author	: Juan Carlos Yescas
+; Description	: Program that consists of four modules: main,
+;		  input, div and output. main should call input, div
+;		  and output, and then halt. input should prompt for and
+;		  read in two positive decimal numers. div should divide
+;		  the two decimal numbers read in by input by means of a loop that
+;		  repeatedly subtracts. output should output the result computed by
+;		  div.
+;-------------------------------------------------------------------------------------
+
+main:
+	call input
+	call div
+	call output
+
+	halt
+
+;--------------------------------------------------------------------------
+; input()
+;
+;	Input the values to number1 and number2. (number1 / number2)
+;--------------------------------------------------------------------------
+input:
+	ldc	msg	; load the address of msg
+	sout		; string output
+	din		; decimal input
+	st	number1 ; store the value of ac in number1
+	ldc	msg	; load the address of msg
+	sout		; string output
+	din		; decimal input
+	st	number2	; store the value of ac in number2
+	ret		; return to the caller
+
+;--------------------------------------------------------------------------
+; div()
+;
+;	Divide number1 with number2 by subtracting number2 n times, depending 
+; 	of the value of number1.
+;--------------------------------------------------------------------------
+
+div:	
+for:	ld	number1		; load the value of number1
+	sub	number2		; subtract number2 to number1
+	st	number1		; store the value in number1
+	jn	end_div		; if NEGATIVE, jump to end of the division
+	ld	result		; load the value of result
+	add	@1		; add 1 to result
+	st	result		; store the value of ac in result
+	ja	for		; jump always to for
+end_div:
+	ret			; return to the caller
+
+;--------------------------------------------------------------------------
+; output()
+;
+;	Show the result of the multiplication
+;--------------------------------------------------------------------------
+
+output:
+	ldc	'\n'		; load the value of '\n'
+	aout			; string output
+	ldc	msg_result	; load the address of msg_result
+	sout			; string output
+	ld	result		; load the value of result
+	dout			; decimal output
+	ret			; return to the caller
+
+;-----------------------
+; VARIABLES
+;-----------------------
+
+number1:	dw	0
+number2:	dw	0
+result:		dw	0
+msg:		dw	"Write a number "
+counter:	dw	0
+msg_result:	dw	"The result is number1/number2 : "
+@1:		dw	1
+
+

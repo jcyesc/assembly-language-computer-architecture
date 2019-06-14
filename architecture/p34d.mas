@@ -1,0 +1,4 @@
+                ld   x
+                org 1
+                halt
+            x:  dw  5

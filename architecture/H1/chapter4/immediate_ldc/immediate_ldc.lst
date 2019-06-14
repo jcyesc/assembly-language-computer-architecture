@@ -1,0 +1,32 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 12:04:47 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    8041  	ldc   'A'  ; immediate operand is 041
+1  *1    1007  	st     x   ; store code in ac to x
+2  *2    8042  	ldc   'B'  ; immediate operand is 042
+3  *3    1008  	st     y   ; store code in ac to y
+4  *4    8043  	ldc   'C'  ; immediate operand is 043
+5  *5    1009  	st     z   ; store code in ac to z
+6  *6    FFFF  	halt
+7  *7    0000  x: 	dw     0
+8  *8    0000  y:	dw     0
+9  *9    0000  z:	dw     0
+A  *10   ========= end of immediate_ldc.mas ======================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         7           1  
+ y                         8           3  
+ z                         9           5  
+
+Input file   = immediate_ldc.mas
+Output file  = immediate_ldc.mac
+List file    = immediate_ldc.lst 
+Number base  = decimal
+Label status = case sensitive

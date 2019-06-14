@@ -1,0 +1,53 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 12:19:04 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    800D  	ldc   inbuf	; get address of input buffer
+1  *1    FFF6  	sin		; read string into inbuf
+2  *2    FFF7  	sout		; output string from inbuf
+3  *3    800A  	ldc '\n'	; get newline character
+4  *4    FFFB  	aout		; go to next line
+5  *5    805E  	ldc   msg1	; get address of msg1
+6  *6    FFF7  	sout		; output msg1
+7  *7    000C  	ld    x		; load value of x
+8  *8    FFFD  	dout		; output value of x in decimal
+9  *9    8063  	ldc   msg2	; get address of msg2
+A  *10   FFF7  	sout		; output msg2
+B  *11   FFFF  	halt
+C  *12   0005  x:	dw    5
+D  *13   0000  inbuf:  dw    81 dup 0
+5E *94   0078  msg1:   dw    "x = "
+5F *95   0020
+60 *96   003D
+61 *97   0020
+62 *98   0000
+63 *99   0028  msg2:   dw    "(decimal)\n"	
+64 *100  0064
+65 *101  0065
+66 *102  0063
+67 *103  0069
+68 *104  006D
+69 *105  0061
+6A *106  006C
+6B *107  0029
+6C *108  000A
+6D *109  0000
+6E *110  ========= end of io_sim.mas =============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         C           7  
+ inbuf                     D           0  
+ msg1                      5E          5  
+ msg2                      63          9  
+
+Input file   = io_sim.mas
+Output file  = io_sim.mac
+List file    = io_sim.lst 
+Number base  = decimal
+Label status = case sensitive

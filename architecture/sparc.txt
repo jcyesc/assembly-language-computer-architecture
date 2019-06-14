@@ -1,0 +1,310 @@
+                                                 sparc.txt
+
+SPARC Summary
+
+Format 1
+
+     Old branch instructions
+
+     31 30|29|28 25|24 22|21                   0|
+     -----|--|-----|-----|----------------------|
+      0  0| a| cond| 010 |          disp22      |
+
+
+     sethi
+
+     31 30|29 25|24 22|21                      0|
+     -----|-----|-----|-------------------------|
+      0  0| rd  | 100 |          disp22         |
+
+
+     New branch instructions
+
+     31 30|29|28 25|24 22|21 20|19|18          0|
+     -----|--|-----|-----|-----|--|-------------|
+      0  0| a|cond | 010 | cc  |p |  disp19     |
+
+
+Format 2
+
+     Call instruction
+
+     31 30|29                                   0|
+     -----|--------------------------------------|
+      0  1|            disp30                    |
+
+
+Format 3
+
+     Two source registers
+
+     31 30|29 25|24  19|18 14|13|12    5|4     0|
+     -----|-----|------|-----|--|-------|-------|
+     op   | rd  | op3  | rs1 |0 |  ---  |  rs2  |
+
+
+     One source register plus a displacement
+
+     31 30|29 25|24  19|18 14|13|12            0|
+     -----|-----|------|-----|--|---------------|
+     op   | rd  | op3  | rs1 |1 |     simm13    |
+
+
+a:      annul bit
+cc:     condition code set (00: icc, 10: xcc)
+cond:   condition 
+disp19: 19-bit signed word displacment
+disp22: 22-bit signed word displacement
+disp30: 30-bit signed word displacement
+op:     opcode, 10 or 11 for format three instructions
+p:      prediction bit
+rd:     destination register
+op3:    opcode
+rs1:    source register 1
+rs2:    source register 2
+simm13: 13-bit signed immediate value (holds diplacement for load
+        and store instructions)
+
+
+Arithmetic instructions (format 3)
+
+ Op/op3       Mnemonic     Name
+
+ 10/000000      add      Add
+ 10/010000      addcc    Add and modify cc
+ 10/001000      addx     Add extended
+ 10/011000      addxcc   Add extended and modify cc
+ 10/000100      sub      Subtract
+ 10/010100      subcc    Subtract and modify cc
+ 10/001100      subx     Subtract extended
+ 10/011100      subxcc   Subtract extended and modify cc
+
+
+Branch instructions (format 1)
+
+ Op     cond
+
+ 00     1000    ba       Branch always
+ 00     0000    bn       Branch never
+ 00     0001    be       Branch equal (Z == 1)
+ 00     0010    ble      Branch less or equal ((N ^ V) == 1 || Z == 1) 
+ 00     0100    bleu     Branch less or equal unsigned (C == 1 || Z == 1)
+ 00     0011    bl       Branch less ((N ^ V) == 1)
+ 00     0101    bcs      Branch carry set (C == 1)
+                blu      Branch less unsigned (C == 1)
+ 00     0110    bneg     Branch negative (N == 1)
+ 00     1001    bne      Branch not equal (Z == 0)
+ 00     1010    bg       Branch greater (Z == 0 && N ^ V == 0)
+ 00     1100    bgu      Branch greater unsigned (Z == 0 && C == 0)
+ 00     1011    bge      Branch greater or equal (N ^ V == 0)
+ 00     1101    bcc      Branch carry clear (C == 0)
+                bgeu     Branch greater or equal unsigned (C == 0)
+ 00     1110    bpos     Branch positive (N == 0)
+ 00     0111    bvs      Branch signed overflow  (V == 1)
+ 00     1111    bvc      Branch no signed overflow (V == 0)
+
+
+Load and Store Instructions (format 3)
+
+ Op/op3       Mnemonic     Name
+
+ 11/000001      ldub     Load unsigned byte
+ 11/001001      ldsb     Load signed halfword
+ 11/000010      lduh     Load unsigned halfword
+ 11/001010      ldsh     Load signed halfword
+ 11/000000      ld/lduw  Load/load unsigned word
+ 11/001000      ldsw     Load signed word
+ 11/001011      ldx      Load extended
+ 11/000011      ldd      Load double
+
+ 11/000101      stb      Store byte
+ 11/000110      sth      Store halfword
+ 11/000100      st/stw   Store/store word
+ 11/001110      stx      Store extended
+ 11/000111      std      Store double
+ 11/001111      swap     Swap 
+
+
+Logical Instructions (format 3)
+
+ Op/op3       Mnemonic     Name
+
+ 10/000001      and      And
+ 10/010001      andcc    And and modify cc
+ 10/000101      andn     And with complement
+ 10/010101      andncc   And with complement and modify cc
+ 10/000010      or       Or
+ 10/010010      orcc     Or and modify cc
+ 10/000110      orn      Or with complement
+ 10/010110      orncc    Or with complement and modify cc
+ 10/000011      xor      Exclusive or
+ 10/010011      xorcc    Exclusive or and modify cc
+ 10/000111      xnor     Complement of exclusive or
+ 10/010111      xnorcc   Complement of exclusive or and modify cc
+
+
+Multiply (format 3)
+
+ Op/op3       Mnemonic     Name
+
+ 10/100100      mulsc    Multiply shift and modify cc
+ 10/101000      rdy      Read %y register
+ 10/110000      wry      Write %y register
+
+
+Shift Instructions (format 3)
+
+ Op/op3       Mnemonic     Name
+
+ 10/100101      sll      Shift left logical
+ 10/100110      srl      Shift right logical
+ 10/100111      sra      Shift right arithmetic
+
+
+Trap Instructions (format 3)
+
+ Op/op3      rd  Mnemonic   Name
+           (cond)
+
+ 10/111010  x1000  ta    Trap always                                   
+ 10/111010  x0000  tn    Trap never                                    
+ 10/111010  x0001  te    Trap equal (Z == 1)                           
+ 10/111010  x0010  tle   Trap less or equal ((N ^ V) == 1 || Z == 1)   
+ 10/111010  x0100  tleu  Trap less or equal unsigned (C == 1 || Z == 1)
+ 10/111010  x0011  tl    Trap less ((N ^ V) == 1)                      
+ 10/111010  x0101  tcs   Trap carry set (C == 1)                       
+                   tlu   Trap less unsigned (C == 1)                   
+ 10/111010  x0110  tneg  Trap negative (N == 1)                        
+ 10/111010  x1001  tne   Trap not equal (Z == 0)                       
+ 10/111010  x1010  tg    Trap greater (Z == 0 && N ^ V == 0)           
+ 10/111010  x1100  tgu   Trap greater unsigned (Z == 0 && C == 0)      
+ 10/111010  x1011  tge   Trap greater or equal (N ^ V == 0)            
+ 10/111010  x1101  tccu  Trap carry clear (C == 0)                     
+                   tgeu  Trap greater or equal unsigned (C == 0)       
+ 10/111010  x1110  tpos  Trap positive (N == 0)                        
+ 10/111010  x0111  tvs   Trap signed overflow  (V == 1)                
+ 10/111010  x1111  tvc   Trap no signed overflow (V == 0)              
+
+ x = ignored
+
+
+Window Instructions (format 3)
+
+ Op/op3       Mnemonic     Name
+
+ 10/111100      save     Save
+ 10/111101      restore  Restore
+
+
+Control
+
+ Op/op3       Mnemonic     Name
+
+ 01           call       call (format 1)
+ 10/111000    jmpl       jump and link (format 2)
+ 10/111001    rett       return from trap (format 2)
+
+
+Miscellaneous
+
+ Op/op3       Mnemonic     Name
+
+ 00/            sethi    Set high (format 1)
+
+
+Others (not discussed)
+
+ floating point instructions
+ tagged integer subtraction
+ new instructions for the 64-bit SPARC
+
+-----------------------------------------------------------------
+  Synthetic Instruction   Real instruction              Function
+
+  btst  reg1/immed, reg2  andcc reg1, reg2/immed, %g0   bit test
+  bset  reg1/immed, reg2  or    reg1, reg2/immed, reg1  bit set
+  bclr  reg1/immed, reg2  andn  reg1, reg2/immed, reg1  bit clear
+  btog  reg1/immed, reg2  xor   reg1, reg2/immed, reg1  bit toggle
+  clr   reg               or    %g0, %g0, reg           clear
+  clr   [address]         st    %g0, [address]          clear
+  clrh  [address]         sth   %g0, [address]          clear half
+  clrb  [address]         stb   %g0, [address]          clear byte
+  cmp   reg1, reg2/immed  subcc reg1, reg2/immed, %g0   compare
+  dec   reg               sub   reg, 1, reg             decrement
+  dec   immed, reg        sub   reg, immed, reg         decrement
+  deccc reg               sub   reg, 1, reg             decrement
+  deccc immed, reg        subcc reg, immed, reg         decrement
+  inc   reg               add   reg, 1, reg             increment
+  inc   immed, reg        add   reg, immed, reg         increment
+  inccc reg               addcc reg, 1, reg             increment
+  inccc immed, reg        addcc reg, immed, reg         increment
+  mov   reg1/immed, reg2  or    %g0, reg1/immed, reg2   move
+  neg   reg               sub   %g0, reg, reg           negate
+  nop                     sethi 0, %g0                  no operation
+  ret                     jmpl  %i7 + 8, %g0            return
+  retl                    jmpl  %o7 + 8, %g0            ret from leaf
+  If 4096 <= value < 4096    
+     set value, reg       or    %g0, value, reg         set to value
+  If value & 0x3ff == 0       
+     set value, reg       sethi %hi(value), reg         set to value
+  If value neither
+     set value, reg       sethi %hi(value), reg         set to value
+                          or    reg, %lo(value), reg
+
+-----------------------------------------------------------------
+Integer Registers
+------------------------------
+%r0  %g0
+ .    .                          Global
+%r7  %g7
+------------------------------
+%r8  %o0 return-value register
+ .    .                          Out
+%r14 %o7 %sp
+%r15 %o7 link register
+------------------------------
+%r16 %l0
+ .    .                          Local
+%r23 %l7
+------------------------------
+%r24 %i0
+ .    .                          In
+%r30 %i6 %fp
+%r31 %i7
+------------------------------
+%y                               Multiply/divide register
+------------------------------
+-----------------------------------------------------------------
+ Floating Point Registers
+------------------------------
+%f0
+ .                               Single-precision
+%f31
+------------------------------
+%f0
+%f2
+.                                Double-precision
+%f62
+------------------------------
+%f0
+%f4
+.                                Quad-precision
+%f60
+------------------------------ 
+
+-----------------------------------------------------------------
+Directives                             Description
+
+ .align    n                        Forces alignment
+ .asciz    <double_quote_string>    Define null-terminated string
+ .byte                              Define byte
+ .global   <label>                  Declares label global
+ .half                              Define halfword
+ .section ".text"                   Start/continuation of code
+ .section ".data"                   Start/continuation of init data
+ .section ".bss"                    Start/continuation of uninit data
+ .skip     n                        Reserve n bytes
+ .word     <operand>                Define word
+
+  main:                             Marks starting point
+

@@ -1,0 +1,113 @@
+Machine-level Assembler Version 6.1    Sat May  2 13:43:44 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program that you did in exercise 9.5 to assembly
+               ;---------------------------------------------------------------
+               
+               ;---------------------------------------------------------------
+               ; void last(int count, ...)	
+               ;	Function that prints the last parameter and nothing if count i
+               ;---------------------------------------------------------------
+               
+               @last$ipi:
+0  *0    4001  	ldr	1	; if(count == 0)
+1  *1    C012  	jz	en
+               	
+2  *2    F501  	aloc	1	; int *p
+3  *3    F700  	swap		; get the address of count
+4  *4    1036  	st	sp_save	; int *p = &count + count;
+5  *5    F700  	swap
+6  *6    8002  	ldc	2
+7  *7    2036  	add	sp_save
+8  *8    6002  	addr	2	; &count + count;
+9  *9    5000  	str	0
+               
+A  *10   8037  	ldc	msg	; cout << "last -> " << *p << endl;
+B  *11   FFF7  	sout
+C  *12   4000  	ldr	0
+D  *13   F100  	ldi
+E  *14   FFFD  	dout
+F  *15   800A  	ldc	'\n'
+10 *16   FFFB  	aout
+               	
+11 *17   F601  	dloc	1	; release the memory of int *p
+12 *18   F000  en:	ret
+               
+               ;---------------------------------------------
+               ; int main()
+               ;---------------------------------------------
+               
+13 *19   8008  main:	ldc	8	; last(3, -3, 5, 8)
+14 *20   F300  	push
+15 *21   8005  	ldc	5
+16 *22   F300  	push
+17 *23   8FFD  	ldc	-3
+18 *24   F300  	push
+19 *25   8003  	ldc	3
+1A *26   F300  	push
+1B *27   E000  	call	@last$ipi
+1C *28   F604  	dloc	4
+               
+1D *29   8004  	ldc	4	; last(1, 4);
+1E *30   F300  	push
+1F *31   8001  	ldc	1
+20 *32   F300  	push
+21 *33   E000  	call	@last$ipi
+22 *34   F602  	dloc	2
+               
+23 *35   8032  	ldc	50	; last(5, 1, 2, 3, 4, 50);
+24 *36   F300  	push
+25 *37   8004  	ldc	4
+26 *38   F300  	push
+27 *39   8003  	ldc	3
+28 *40   F300  	push
+29 *41   8002  	ldc	2
+2A *42   F300  	push
+2B *43   8001  	ldc	1
+2C *44   F300  	push
+2D *45   8005  	ldc	5
+2E *46   F300  	push
+2F *47   E000  	call	@last$ipi
+30 *48   F606  	dloc	6
+               
+31 *49   8000  	ldc	0	; last(0);
+32 *50   F300  	push
+33 *51   E000  	call	@last$ipi
+34 *52   F601  	dloc	1
+               
+35 *53   FFFF  	halt
+               	end main
+               
+               ; Global variables
+36 *54   0000  sp_save:	dw	0
+37 *55   006C  msg:		dw	"last -> "
+38 *56   0061
+39 *57   0073
+3A *58   0074
+3B *59   0020
+3C *60   002D
+3D *61   003E
+3E *62   0020
+3F *63   0000
+40 *64   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @last$ipi                 0           1B  21  2F  33 
+ en                        12          1  
+ main                      13          36 
+ sp_save                   36          4   7  
+ msg                       37          A  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

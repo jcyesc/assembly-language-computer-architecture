@@ -1,0 +1,62 @@
+                                                 r.txt
+
+Really-simple Instruction Set (r.hor, r.cfg)
+
+Opcode  Assembly    Name            Description
+(hex)    Form
+
+ 0     ld   x    Load               ac = mem[x];
+ 1     st   x    Store              mem[x] = ac;
+
+ 2     add  x    Add                ac = ac + mem[x];
+ 3     sub  x    Subtract           ac = ac - mem[x];
+ 4     mult x    Multiply           ac = ac * mem[x];
+ 5     div  x    Divide             ac = ac / mem[x];
+
+ 6     ldc  x    load constant      ac = x;
+
+ 7     ja   x    Jump always        pc = x;
+ 8     jp   x    Jump positive      if (ac > 0) pc = x;
+ 9     jn   x    Jump negative      if (ac < 0) pc = x;
+ A     jz   x    Jump zero          if (ac == 0) pc = x;
+ B     jnz  x    Jump nonzero       if (ac != 0) pc = x;
+ C     jzon x    Jump zero or neg   if (ac <= 0) pc = x;
+ D     jzop x    Jump zero or pos   if (ac >= 0) pc = x;
+
+ E     scmp x    Signed compare     if (ac < mem[x]) ac = -1;
+                                    if (ac == mem[x]) ac = 0;
+                                    if (ac > mem[x]) ac = 1;
+
+ F0    neg       Negate             ac = -ac;
+
+ FFF5  uout      Unsigned out       Output number in ac reg as
+                                    unsigned decimal number
+
+ FFF6  sin       String input       Input string to address in ac
+ FFF7  sout      String output      Output string pointed to by ac
+
+ FFF8  hin       Hex input          Input hex number to ac register
+ FFF9  hout      Hex output         Output number in ac in hex
+
+ FFFA  ain       ASCII input        Input ASCII char to ac register
+ FFFB  aout      ASCII output       Output ASCII char in ac register
+
+ FFFC  din       Decimal input      Input decimal number (signed
+                                    or unsigned) to ac register
+ FFFD  dout      Decimal output     Output number in ac reg as
+                                    a signed decimal number
+
+ FFFE  bkpt      Breakpoint         Trigger breakpoint
+ FFFF  halt      Halt               Trigger halt
+
+!-directive: r
+-----------------------------------------------------------------
+Instruction Fields
+
+  x:   12 rightmost bits of instruction, 0 <= x <= 4095 (FFF hex)
+
+-----------------------------------------------------------------
+Registers
+
+pc:    program counter register
+ac:    accumulator register

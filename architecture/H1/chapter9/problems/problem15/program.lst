@@ -1,0 +1,60 @@
+Machine-level Assembler Version 6.1    Fri May  1 10:33:32 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the progarm 9.15 to assembly language.
+               ;---------------------------------------------------------------
+               
+0  *0    8010  main:	ldc	x	; p = &x;
+1  *1    1011  	st	p
+               	
+2  *2    8011  	ldc	p	; q = &p;
+3  *3    1012  	st	q
+               
+4  *4    0011  	ld	p	; cout << *p << " " << **q << endl;
+5  *5    F100  	ldi
+6  *6    FFFD  	dout
+               	
+7  *7    8013  	ldc	msg	; " "
+8  *8    FFF7  	sout
+               	
+9  *9    0012  	ld	q	; **q
+A  *10   F100  	ldi
+B  *11   F100  	ldi
+C  *12   FFFD  	dout
+               	
+D  *13   800A  	ldc	'\n'	; endl;
+E  *14   FFFB  	aout
+               	
+F  *15   FFFF  	halt
+               
+               ; Global variables
+               
+10 *16   0001  x:	dw	1
+11 *17   0000  p:	dw	0	; int **q;
+12 *18   0000  q:	dw	0	; int *p;
+               
+13 *19   0020  msg:	dw	" "
+14 *20   0000
+               
+15 *21   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ x                         10          0  
+ p                         11          1   2   4  
+ q                         12          3   9  
+ msg                       13          7  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

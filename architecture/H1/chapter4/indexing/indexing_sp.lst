@@ -1,0 +1,62 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 14:25:39 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    801B  	ldc    table
+1  *1    F700  	swap		; init sp with address of tables
+2  *2    001A  loop:	ld     sum
+3  *3    6000  	addr   0	; add number pointed to by sp
+4  *4    101A  	st     sum
+5  *5    F601  	dloc   1	; move sp to next number in table
+6  *6    0019  	ld     count
+7  *7    3018  	sub    @1	; decrement counter
+8  *8    1019  	st     count
+9  *9    D002  	jnz    loop	; jump if counter not zero
+A  *10   8011  	ldc    message	; display sum
+B  *11   FFF7  	sout
+C  *12   001A  	ld     sum
+D  *13   FFFD  	dout
+E  *14   800A  	ldc    '\n'
+F  *15   FFFB  	aout
+10 *16   FFFF  	halt
+11 *17   0073  message:dw     "sum = "
+12 *18   0075
+13 *19   006D
+14 *20   0020
+15 *21   003D
+16 *22   0020
+17 *23   0000
+18 *24   0001  @1:	dw     1
+19 *25   000A  count:	dw     10
+1A *26   0000  sum:    dw     0
+1B *27   0038  table:  dw     56
+1C *28   FFF8  	dw     -8
+1D *29   01BC  	dw     444
+1E *30   0017  	dw     23
+1F *31   FF17  	dw     -233
+20 *32   0010  	dw     16
+21 *33   002D  	dw     45
+22 *34   FFF5  	dw     -11
+23 *35   0005  	dw     5
+24 *36   0007  	dw     7	
+25 *37   ========= end of indexing_sp.mas ========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ loop                      2           9  
+ message                   11          A  
+ @1                        18          7  
+ count                     19          6   8  
+ sum                       1A          2   4   C  
+ table                     1B          0  
+
+Input file   = indexing_sp.mas
+Output file  = indexing_sp.mac
+List file    = indexing_sp.lst 
+Number base  = decimal
+Label status = case sensitive

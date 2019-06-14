@@ -1,0 +1,72 @@
+Machine-level Assembler Version 6.1    Thu Dec 25 16:58:20 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Program that displays the ASCII codes in decimal and hex for t
+               ; characters 'A' to 'Z'.
+               
+               for:
+               	; print ASCII
+0  *0    0015  	ld   letter		; load letter
+1  *1    FFFB  	aout			; ASCII output
+2  *2    E012  	call printBlank		; call printBlank
+               	
+               	; print deciml
+3  *3    0015  	ld   letter		; load letter
+4  *4    FFFD  	dout 			; decimal output
+5  *5    E012  	call printBlank		; call printBlank
+               	
+               	; print hexadecimal
+6  *6    0015  	ld   letter		; load letter
+7  *7    FFF9  	hout			; hexadecimal output
+8  *8    E012  	call printBlank		; call printBlank
+               	
+9  *9    800A  	ldc  '\n'		; load a line feed
+A  *10   FFFB  	aout			; ASCII output
+               	
+B  *11   0015  	ld   letter		; load letter
+C  *12   2019  	add  @1			; add one to ac, to continue with the nex letter
+D  *13   1015  	st   letter		; store letter
+               
+E  *14   0016  	ld   end		; load end
+F  *15   3015  	sub  letter		; subtract end - letter
+10 *16   A000  	jzop for		; if the result is zero or grater than zero, jump to 
+11 *17   FFFF  	halt			; End of the program
+               
+               ;--------------------------
+               ; printBlank()
+               ;
+               ; Function to print a blank space
+               printBlank:
+12 *18   8017  	ldc   blank		; load the address of blank
+13 *19   FFF7  	sout 			; print the string
+14 *20   F000  	ret			; return to the caller
+               
+15 *21   0041  letter:	dw  'A'
+16 *22   005A  end:    dw  'Z'
+17 *23   0020  blank:	dw  " "
+18 *24   0000
+19 *25   0001  @1:	dw  1
+               
+1A *26   ========= end of print_alphabet.mas =====================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ for                       0           10 
+ printBlank                12          2   5   8  
+ letter                    15          0   3   6   B   D  
+                                       F  
+ end                       16          E  
+ blank                     17          12 
+ @1                        19          C  
+
+Input file   = print_alphabet.mas
+Output file  = print_alphabet.mac
+List file    = print_alphabet.lst 
+Number base  = decimal
+Label status = case sensitive

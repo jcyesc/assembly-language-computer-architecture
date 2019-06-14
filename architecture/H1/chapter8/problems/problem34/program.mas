@@ -1,0 +1,44 @@
+;--------------------------------------------------------------------------
+; Program 8.34
+;
+; Write and run an assembly language program that displays "TRUE" or
+; "FALSE" depending of the value of x >= y, where x and y are signed integers.
+; Test your code with the following(x, y) hex pairs: (7FFF, FFFF), (8000, 0001),
+; (7FFF, 0001), and (8000, FFFF).
+;--------------------------------------------------------------------------
+
+main:	ldc	msg_x	; cout << "Give the value of x HEX: ";
+	sout
+
+	hin		; cin >> x;
+	st	x
+	
+	ldc	msg_y	; cout << "Give the value of y HEX: ";
+	sout
+	
+	hin		; cin >> y
+	st	y
+
+	ld	x	;(x >= y)
+	sub	y
+	jzop	true
+
+	ldc	msg_f
+	sout
+	ja	end_p	
+true:
+	ldc	msg_t
+	sout	
+
+end_p:	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+x: 	dw	0
+y:	dw	0
+
+msg_x:	dw	"Give the value of x in HEX: "
+msg_y:	dw	"Give the value of y in HEX: "
+
+msg_t:	dw	"x >= y is TRUE\n"
+msg_f:	dw	"x >= y is FALSE\n"

@@ -1,0 +1,30 @@
+Machine-level Assembler Version 6.1    Tue Dec 16 23:55:58 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0005  	ld    x
+1  *1    2006  	dw    2006h
+2  *2    2007  	dw    2007h
+3  *3    1008  	st    z
+4  *4    FFFF  	halt
+5  *5    000A  x:	dw    10
+6  *6    0014  	dw    20
+7  *7    001E  	dw    30
+8  *8    0000  z:	dw    0
+9  *9    ========= end of program6.mas ===========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         5           0  
+ z                         8           3  
+
+Input file   = program6.mas
+Output file  = program6.mac
+List file    = program6.lst 
+Number base  = decimal
+Label status = case sensitive

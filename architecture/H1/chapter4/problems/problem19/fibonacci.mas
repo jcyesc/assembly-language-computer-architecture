@@ -1,0 +1,118 @@
+;----------------------------------------------------------------------------
+; Version	: 1.0
+; Created	: 27-december-2008
+; Author	: Juan Carlos Yescas
+; Description	: Program that reads in a number and then displays all the
+; 		  Fibonacci numbers less than the input number.
+;
+;----------------------------------------------------------------------------
+
+main:
+	ldc	msg	; load the address of msg
+	sout		; string out
+	din		; decimal input
+	st	counter	; store the input in counter
+	
+	ldc	'\n'	; load the value of '\n'
+	aout		; ASCII output
+
+for_numbers:
+	ld	index		; load index
+    	push   			; push index in the stack
+    	call    fibonacci 	; call fibonacci 
+    	pop  			; pop the number we saved in the stack   
+	ld   	result		; load the result
+    	dout			; decimal out
+    	call	printBlank	; call printBlank 
+	
+	; index++
+	ld	index		; load index
+	add	@1		; add 1 to index
+	st	index		; store the new value of index
+
+	; counter--
+	ld	counter		; load counter
+	sub	@1		; subtract 1 to counter
+	st	counter		; store the new value of counter
+	jnz	for_numbers	; if it's no zero, jump to for_number
+
+	halt			; end of the program
+
+
+;----------------------------------------------------------------------------
+; printBlank()
+;
+; Function that prints a blank space
+;
+;----------------------------------------------------------------------------
+
+printBlank:
+	ldc	' '	; load ' '
+	aout		; ASCII output
+	ret		; return to the caller
+
+;----------------------------------------------------------------------------
+; fibonacci()
+; 
+; Function that gets the number fibonacci that is needed.
+;
+; int fibonacci(int number)
+; {
+;        if( number == 0 || number == 1)
+;          return number;
+;        else
+;          return fibonacci(number -1 ) + fibonacci(number -2);
+; }
+;
+; The parameter is store in the stack. The parameter is not the last data
+; in the stack, because when we do a call, the return address is store in 
+; the stack. 
+; The value is return in the "result" variable.
+;----------------------------------------------------------------------------
+
+fibonacci:
+	swap			; swap ac with sp
+    	st    	sp		; store the value of sp (stack pointer) in the variable sp
+    	swap           		; swap ac with sp for restablish the correct values
+    	ld    	sp		; load sp
+    	add	@1		; add 1 to sp to get the address where the parameter is
+    	ldi   			; load the value that is being pointed by sp + 1
+    	st   	number		; store the value in number
+	jz    	base		; if it's ZERO, jump to base
+    	sub   	@1		; subtract 1 to number
+    	jz    	base		; if it's ZERO, jump to base
+    	ja    	general		; jump to general
+
+base:				; BASE CASE
+    	ld    	number		; load the value of number
+    	st    	result		; the result is stored in result
+    	ret       		; return to the caller
+
+general:			; GENERAL CASE
+    	ld   	number		; load the number
+    	sub    	@1		; subtract 1 to number
+    	push			; push the number in the stack
+    	call    fibonacci	; call fibonacci
+    	pop            		; pop the number we passed as parameter
+    	sub    	@1		; subtract 1 to the number again
+    	st    	tmp   		; store the value in tmp
+    	ld    	result		; load result
+    	push			; push the value of result in the stack ( the result of fibonacci(number-1)
+    	ld    	tmp		; load tmp
+    	push			; push the value of tmp in the stack ( number -2 )
+    	call    fibonacci	; call fibonacci
+    	pop			; pop the parameter of the function
+    	pop			; pop the value of the result of fibonacci(number-1)
+    	add    	result        	; add the value of result ( fibonaccio(number-2) to fibonacci(number-1)
+    	st  	result		; store the result
+    	ret       		; resturn to the caller
+   
+@1:    	dw	1
+@2:   	dw    	2
+number:	dw    	0
+counter:dw    	0
+index:	dw    	0
+sp:    	dw    	0
+result:	dw    	0
+tmp:	dw    	0
+msg:	dw    	"How many FIBONACCI numbers do you want to print?"

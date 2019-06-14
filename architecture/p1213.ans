@@ -1,0 +1,28 @@
+; #9500
+;Display should look exactly like this (with data from test
+;cases replacing the numbers):
+;Enter 12 digit hex number with space between each 4 digits
+;0001 0001 0001
+;Enter 12 digit hex number with space between each 4 digits
+;0001 0001 0001
+;Differencein hex = 000000000000
+n
+o
+ln
+g
+0001 0001 0001
+0001 0001 0001
+o
+g
+0000 01ff ffff
+0000 ffff 7ff0
+o
+g
+0000 0001 ffff
+0000 0001 0001
+o
+g
+0000 0000 7fff
+0000 0000 7fff
+SD
+q

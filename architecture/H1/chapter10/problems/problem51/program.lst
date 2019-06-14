@@ -1,0 +1,87 @@
+Machine-level Assembler Version 6.1    Mon May 11 23:02:01 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;--------------------------------------------------------------
+               ; 10.51 Translate the next C program to assembly language
+               ; using start-up code.
+               ;
+               ;	#include <iostream>
+               ;	using namespace std;
+               ;
+               ;	int main(int argc, char *argv[])
+               ;	{
+               ;		cout << argc << endl;
+               ;		cout << argv[0]  << endl;
+               ;		cout << argv[argc - 1] << endl;
+               ;		return 0;
+               ;	}
+               ;--------------------------------------------------------------
+               
+               main:
+0  *0    4001  	ldr		1		; cout << argc << endl;
+1  *1    FFFD  	dout
+2  *2    800A  	ldc		'\n'
+3  *3    FFFB  	aout
+               	
+4  *4    4002  	ldr		2		; cout << argv[0] << endl;
+5  *5    F100  	ldi
+6  *6    FFF7  	sout
+7  *7    800A  	ldc		'\n'
+8  *8    FFFB  	aout
+               	
+9  *9    4002  	ldr		2		; cout << argv[argc - 1] << endl;
+A  *10   6001  	addr	1
+B  *11   3012  	sub		@1		; the index start in zero.
+C  *12   F100  	ldi
+D  *13   FFF7  	sout
+E  *14   800A  	ldc		'\n'
+F  *15   FFFB  	aout
+               	
+10 *16   8000  	ldc		0		; return 0
+11 *17   F000  	ret
+               	
+               ; Global variables	
+12 *18   0001  @1:	dw		1
+               public	main
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+13 *19   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           13 
+ @1                        12          B  
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,63 @@
+;----------------------------------------------------------------
+; Translate the program 7.53 to assembly languague.
+;----------------------------------------------------------------
+
+;--------------------------------------
+; int f(int x, int y, int z)
+;--------------------------------------
+
+f:	ldr	1	; cout << x << " " << y << " " << z << endl;
+	dout
+	ldc	msg
+	sout
+	ldr	2
+	dout
+	ldc	msg
+	sout
+	ldr	3
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	1 	; return 1
+	ret		; return to the calling function
+
+;---------------------------------------
+; int g(int a, int b, int c)
+;---------------------------------------
+
+g:	ldr	1	; return f(c, b, a) + 10;
+	push
+	ldr	3
+	push
+	ldr	5
+	push
+	call	f
+	dloc	3
+	add	@10
+
+	ret		; return to the calling function
+		
+;----------------------------------------
+; main()
+;----------------------------------------
+
+main:	ldc	3	; cout << g(1, 2, 3) << endl;
+	push
+	ldc	2
+	push
+	ldc	1
+	push
+	call	g
+	dloc	3
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+
+	end main
+
+; GLOBAL VARIABLES
+msg:	dw	" "
+@10:	dw	10

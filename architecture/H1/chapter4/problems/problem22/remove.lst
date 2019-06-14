@@ -1,0 +1,182 @@
+Machine-level Assembler Version 6.1    Wed Dec 31 13:48:54 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 31-december-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Program that reads in a string and outputs that 
+               ;		  with all letters removed. For example, if the input string 
+               ;		  "A&B*", the output string should be "&*".
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    80D1  	ldc	msg		; load the address of msg
+1  *1    FFF7  	sout			; string output
+               
+2  *2    8028  	ldc	string		; load the address of string
+3  *3    FFF6  	sin			; string input
+               		
+4  *4    E008  	call	removeLetters	; call removeLetter
+               	
+5  *5    8078  	ldc	onlysym		; load the address of onlysym
+6  *6    FFF7  	sout			; string output
+               
+7  *7    FFFF  	halt			; end of the program
+               
+               ;---------------------------------------------------------------
+               ; removeLetters()
+               ;
+               ; Function that removes the letters that are in the string named
+               ; the new string in 'onlysym'
+               ;
+               ; The char must acomplish the next condition
+               ;
+               ;	(char < 97 || char > 122) && (char < 65 || char > 90)
+               ;---------------------------------------------------------------
+               
+               removeLetters:
+               
+8  *8    8028  for:	ldc	string	; load the address of string
+9  *9    20C8  	add	index	; add index to the address
+A  *10   10C9  	st	address	; store the address in that we're processing
+               	
+B  *11   F100  	ldi		; load the value that is in the address pointed by ac
+C  *12   10CA  	st	char	; store	the value in char
+D  *13   C027  	jz	end	; if it's ZERO, jump to emp
+               	
+               firstOr:		; it executes the comparision (char < 97 || char > 122
+E  *14   30CF  	sub	@97	; subtract 97 to char
+F  *15   B014  	jn	nextOr	; if the result it's negative, jump to nextOr, it mea
+               	
+10 *16   00D0  	ld	@122	; load the value of @122
+11 *17   30CA  	sub	char	; subtract char to 122
+12 *18   B014  	jn	nextOr	; if the result it's negative, jump to nextOr, it mea
+               	
+13 *19   9023  	ja	inc	; The condition (char < 97 || char > 122) is false
+               
+               nextOr:			; it executes the next comparison (char < 65 || char >
+14 *20   00CA  	ld	char	; load the value of char
+15 *21   30CD  	sub	@65	; subtract 65 to char
+16 *22   B01B  	jn	copy	; if it's negative, jump to copy,
+               			; it means that the condition (char < 65) is true	
+               	
+17 *23   00CE  	ld	@90	; load the value of @90
+18 *24   30CA  	sub	char	; subtract char to 90
+19 *25   B01B  	jn	copy	; if it's negative, jump to copy
+               			; it means that the condition (char > 90) is true
+               
+1A *26   9023  	ja	inc	; The condtion (char < 65 || char > 0) is false
+               
+               copy:
+1B *27   00CA  	ld	char	; load the char
+1C *28   F300  	push		; push the value of ac in the stack
+1D *29   8078  	ldc	onlysym	; load the address of onlysym
+1E *30   20CB  	add	newInd	; add newInd to the address of onlysym
+1F *31   F200  	sti		; store indirect, store the value that is in the top of th
+               			; in the address pointed by ac
+               
+               	; ++newInd
+20 *32   00CB  	ld 	newInd	; load newInd
+21 *33   20CC  	add	@1	; add 1 to newInd
+22 *34   10CB  	st	newInd	; store newInd
+               
+               inc:	; ++index
+23 *35   00C8  	ld	index	; load index
+24 *36   20CC  	add	@1	; add 1 to index
+25 *37   10C8  	st	index	; st index
+               	
+26 *38   9008  	ja	for	; jump always to for
+               
+27 *39   F000  end:	ret		; return to the caller
+               
+               ;------------------
+               ; VARIABLES
+               ;------------------
+               
+28 *40   0000  string:	dw	80 dup 0	; store the original string
+78 *120  0000  onlysym:dw	80 dup 0	; store the string without letters
+C8 *200  0000  index:	dw	0
+C9 *201  0000  address:dw	0
+CA *202  0000  char:	dw	0
+CB *203  0000  newInd: dw	0		; index of the new string
+               
+CC *204  0001  @1:	dw	1
+CD *205  0041  @65:	dw	65		; 'A'
+CE *206  005A  @90:	dw	90		; 'Z'
+CF *207  0061  @97:	dw	97		; 'a'
+D0 *208  007A  @122:	dw	122		; 'z'
+D1 *209  0057  msg:	dw	"Write the string to be processed -> "
+D2 *210  0072
+D3 *211  0069
+D4 *212  0074
+D5 *213  0065
+D6 *214  0020
+D7 *215  0074
+D8 *216  0068
+D9 *217  0065
+DA *218  0020
+DB *219  0073
+DC *220  0074
+DD *221  0072
+DE *222  0069
+DF *223  006E
+E0 *224  0067
+E1 *225  0020
+E2 *226  0074
+E3 *227  006F
+E4 *228  0020
+E5 *229  0062
+E6 *230  0065
+E7 *231  0020
+E8 *232  0070
+E9 *233  0072
+EA *234  006F
+EB *235  0063
+EC *236  0065
+ED *237  0073
+EE *238  0073
+EF *239  0065
+F0 *240  0064
+F1 *241  0020
+F2 *242  002D
+F3 *243  003E
+F4 *244  0020
+F5 *245  0000
+               
+F6 *246  ========= end of remove.mas =============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ removeLetters             8           4  
+ for                       8           26 
+ firstOr                   E          
+ nextOr                    14          F   12 
+ copy                      1B          16  19 
+ inc                       23          13  1A 
+ end                       27          D  
+ string                    28          2   8  
+ onlysym                   78          5   1D 
+ index                     C8          9   23  25 
+ address                   C9          A  
+ char                      CA          C   11  14  18  1B 
+ newInd                    CB          1E  20  22 
+ @1                        CC          21  24 
+ @65                       CD          15 
+ @90                       CE          17 
+ @97                       CF          E  
+ @122                      D0          10 
+ msg                       D1          0  
+
+Input file   = remove.mas
+Output file  = remove.mac
+List file    = remove.lst 
+Number base  = decimal
+Label status = case sensitive

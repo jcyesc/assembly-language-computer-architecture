@@ -1,0 +1,13 @@
+; #154d 263 147 116 1197 52771
+; Use the file p68.has for your microcode.
+; Use the file p68.cfg for your cfg file.
+; Invoke sim with
+;     sim sprog /mp68 /ap68
+n 
+o
+ln
+g
+SD
+enable
+sd
+q

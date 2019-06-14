@@ -1,0 +1,23 @@
+; #93ff
+;Your program should generate the capitalized string 
+;CHARACTER COUNTS 
+;left justified on the first line.  The second line 
+;should be  empty.  The third line should be the prompt 
+;Enter string
+;left justified.  The fouth line should contain the inputed 
+;string.   The fifth line should be emplty.  Starting on the
+;sixth line should be the output as shown in the text book.
+;Separate each character from its count with five spaces.             
+n
+o
+ln
+g
+aAbazAA??
+o
+g
+a
+o
+g
+aaaaaaaaaaaaaaaaaaaaaaaaa
+SD
+q 

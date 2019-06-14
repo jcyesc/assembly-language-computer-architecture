@@ -1,0 +1,14 @@
+;------------------------------------------------
+; fmain.mas
+;------------------------------------------------
+
+main:	ldc	2	; pass poly 2
+	push
+	call	poly
+	dloc	1
+	dout		;output is 15 x 2 squared = 60
+	ldc	'\n'
+	aout
+	halt
+
+	extern	poly

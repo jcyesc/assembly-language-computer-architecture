@@ -1,0 +1,6 @@
+         ;                                       lmod8.mas
+         ; Test module for linv1
+         ; Link with lmod7.mas, lmod9.mas
+         ; Generates link error
+x:       dw     5
+         public x

@@ -1,0 +1,87 @@
+Machine-level Assembler Version 6.1    Thu Mar 26 23:28:41 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------
+               ; Translate the program 8.43
+               ;---------------------------------------------------------
+               
+               ;------------------------
+               ; S f()
+               ;------------------------
+               
+0  *0    F503  @f$v:	aloc	3	; S a;
+               	
+1  *1    8005  	ldc	5	; a.x = a.y = a.z = 5;
+2  *2    5000  	str	0	; x
+3  *3    5001  	str	1	; y
+4  *4    5002  	str	2	; z
+               	
+               
+5  *5    4002  	ldr	2	;  return a
+6  *6    F300  	push
+7  *7    4002  	ldr	2
+8  *8    F300  	push
+9  *9    4002  	ldr	2
+A  *10   F300  	push
+B  *11   4007  	ldr	7	; Get the address of the implicit parameter.
+C  *12   F200  	sti
+D  *13   2028  	add	@1
+E  *14   F200  	sti
+F  *15   2028  	add	@1
+10 *16   F200  	sti
+               	
+11 *17   F603  	dloc	3
+               
+12 *18   F000  	ret		; return to the caller	
+               
+               ;-------------------------
+               ; main()
+               ;-------------------------	
+               
+13 *19   8023  main:	ldc	b	; b = f();
+14 *20   F300  	push
+15 *21   E000  	call	@f$v
+16 *22   F601  	dloc	1
+               
+17 *23   8023  	ldc	b	; cout << b.x << " " << b.y << endl;
+18 *24   F100  	ldi
+19 *25   FFFD  	dout
+1A *26   8026  	ldc	msg
+1B *27   FFF7  	sout
+1C *28   8023  	ldc	b
+1D *29   2028  	add	@1
+1E *30   F100  	ldi
+1F *31   FFFD  	dout
+20 *32   800A  	ldc	'\n'
+21 *33   FFFB  	aout	
+               
+22 *34   FFFF  	halt		; end of the program 
+               	end main
+               
+               ; GLOBAL VARIABLS
+               		
+23 *35   0000  b:	dw	3 dup 0
+26 *38   0020  msg:	dw	" "	
+27 *39   0000
+28 *40   0001  @1:	dw	1
+29 *41   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$v                      0           15 
+ main                      13          23 
+ b                         23          13  17  1C 
+ msg                       26          1A 
+ @1                        28          D   F   1D 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

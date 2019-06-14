@@ -1,0 +1,95 @@
+Machine-level Assembler Version 6.1    Mon May 11 23:02:46 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; 10.52 Translate the next C program to assembly language. 
+               ;
+               ;	#include <iostream>
+               ;	using namespace std;
+               ;	// run with program with the following command line args:
+               ;	//  a1 a2 a3 a4
+               ;	int main(int argc, char *argv[])
+               ;	{
+               ;    	while(--argc)
+               ;			cout << argv[argc] << endl;
+               ;
+               ;    	return 0;
+               ;	}
+               ;---------------------------------------------------------------
+               
+               main:
+               _while:			; while(--argc)
+0  *0    4001  	ldr		1	
+1  *1    300D  	sub		@1
+2  *2    5001  	str		1
+3  *3    C00B  	jz		_end
+               	
+4  *4    4002  	ldr		2	; cout << argv[argc] << endl;
+5  *5    6001  	addr	1
+6  *6    F100  	ldi
+7  *7    FFF7  	sout
+8  *8    800A  	ldc		'\n'
+9  *9    FFFB  	aout
+               	
+A  *10   9000  	ja		_while
+               	
+               _end:	
+B  *11   8000  	ldc		0	; return 0
+C  *12   F000  	ret
+               	
+               ; Global variables
+D  *13   0001  @1:		dw		1	
+               
+               public	main
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+E  *14   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           E  
+ _while                    0           A  
+ _end                      B           3  
+ @1                        D           1  
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,32 @@
+                         ;                       ak.mas
+                         ; Computes n + n-1 + ... + 1
+                         ; Displays sum in decimal
+         !k              ; use stack instruction set
+main:
+public   main
+         esba
+loop:    pc     sum      ; get address of sum
+         p      sum      ; get current sum
+         p      n        ; get n
+         add             ; add sum and n
+         stav            ; store new sum back in sum
+         p      n        ; get n
+         subc   1        ; get n - 1
+         dupe            ; make extra copy
+         jz     done     ; when n is zero, go to done
+         pc     n        ; get address of n
+         stva            ; put new value in n
+         ja     loop     ; jump always to loop to repeat
+
+done:    pc     msg      ; get address of msg
+         sout            ; display string at msg
+         p      sum      ; get final sum
+         dout            ; display in decimal
+         pc     '\n'     ; get newline character
+         aout            ; display it--that is, go to next line
+         reba
+         ret
+
+n:       dw     20
+msg:     dw     "Sum = "
+sum:     dw     0

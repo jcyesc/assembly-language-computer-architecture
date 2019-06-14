@@ -1,0 +1,40 @@
+Machine-level Assembler Version 6.1    Mon May  4 23:10:02 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;--------------------------------------------------------
+               ; fpoly.mas
+               ;
+               ; The poly subroutine computes 15 x (n x n).
+               ;--------------------------------------------------------
+               
+0  *0    4001  poly:	ldr	1	; get parameter to poly
+1  *1    F300  	push		; create parameter to square
+2  *2    E000  	call	square
+3  *3    F601  	dloc	1	; remove parameter
+4  *4    F300  	push		; create parameter to mult15
+5  *5    E000  	call	mult15
+6  *6    F601  	dloc	1	; remove parameter
+7  *7    F000  	ret		; return result
+               	
+               	public	poly
+               	extern	square	
+               	extern	mult15
+8  *8    ========= end of fpoly.mas ==============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ poly                      0           8  
+ square                    ext         8   2  
+ mult15                    ext         8   5  
+
+Input file   = fpoly.mas
+Output file  = fpoly.mob
+List file    = fpoly.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,46 @@
+;----------------------------------------------------------------------
+; Translate the program 7.47 to assembly language.
+;----------------------------------------------------------------------
+
+;--------------------------
+; void f(int x, int *p)
+;--------------------------
+
+f:	ldc	44	; x = 44;
+	str	1
+	
+	ldc	55	; *p = 55
+	push
+	ldr	3
+	sti		; mem[ac] = mem[sp++];
+
+	ret		; return to the calling function
+
+;----------------------------
+; main()
+;----------------------------
+
+main:	ldc	b	; f(a, &b);
+	push
+	ld	a
+	push
+	call	f
+	dloc	2
+	
+	ld	a	; cout << a << " " << b << endl;
+	dout
+	ldc	msg
+	sout
+	ld	b
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program	
+
+	end	main
+; GLOBAL VARIABLES
+
+a:	dw	0
+b:	dw	0
+msg:	dw	" "

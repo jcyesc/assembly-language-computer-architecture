@@ -1,0 +1,148 @@
+Machine-level Assembler Version 6.1    Wed Dec 31 21:33:36 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1
+               ; Created	: 31-december-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Observe that the sum of the first n positive odd
+               ;		  integers equals n2. For example, 1 + 3 + 5 = 3 x 3.
+               ;		  The program uses this relationship to compute the 
+               ;		  square of a number.		
+               ;
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    801D  	ldc	msg	; load the address of msg
+1  *1    FFF7  	sout		; string output
+               
+2  *2    FFFC  	din		; decimal input
+3  *3    1019  	st	number	; store the value of ac in number
+4  *4    E00A  	call	square	; call square
+               	
+5  *5    800A  	ldc	'\n'	; load the ASCII code of  '\n'
+6  *6    FFFB  	aout		; ASCII output
+               	
+7  *7    0050  	ld	result	; load result
+8  *8    FFFD  	dout		; decimal output
+               
+9  *9    FFFF  	halt		; end of the program
+               
+               ;---------------------------------------------------------------
+               ; square()
+               ;
+               ; Function that calculates the square of 'number'.
+               ;	
+               ;	3 X 3 = 1 + 3 + 5
+               ;---------------------------------------------------------------
+               
+               square:
+A  *10   0019  	ld 	number		; load number
+B  *11   101C  	st	counter		; store the value of number in counter
+               for:	
+C  *12   0018  	ld	odd		; load the value of odd
+D  *13   2050  	add	result		; add result to odd
+E  *14   1050  	st	result		; store the value of ac in result
+               	
+               	; --counter
+F  *15   001C  	ld	counter		; load counter
+10 *16   301A  	sub	@1		; subtract 1 to counter
+11 *17   101C  	st	counter		; store the value of ac in counter
+12 *18   C017  	jz	return		; if it's ZERO, jump to return, the for has finished
+               
+13 *19   0018  	ld	odd		; load the value of odd
+14 *20   201B  	add	@2		; add 2 to the value of odd
+15 *21   1018  	st	odd		; store the value of ac in odd
+16 *22   900C  	ja	for		; jump always to for
+               	
+17 *23   F000  return:	ret			; return to the caller
+               
+               ;----------------------
+               ; VARIABLES
+               ;----------------------
+               
+18 *24   0001  odd:	dw	1
+19 *25   0000  number:	dw	0
+1A *26   0001  @1:	dw	1
+1B *27   0002  @2:	dw	2
+1C *28   0000  counter:dw	0
+1D *29   0057  msg:	dw	"Write the number that you want to know its square "
+1E *30   0072
+1F *31   0069
+20 *32   0074
+21 *33   0065
+22 *34   0020
+23 *35   0074
+24 *36   0068
+25 *37   0065
+26 *38   0020
+27 *39   006E
+28 *40   0075
+29 *41   006D
+2A *42   0062
+2B *43   0065
+2C *44   0072
+2D *45   0020
+2E *46   0074
+2F *47   0068
+30 *48   0061
+31 *49   0074
+32 *50   0020
+33 *51   0079
+34 *52   006F
+35 *53   0075
+36 *54   0020
+37 *55   0077
+38 *56   0061
+39 *57   006E
+3A *58   0074
+3B *59   0020
+3C *60   0074
+3D *61   006F
+3E *62   0020
+3F *63   006B
+40 *64   006E
+41 *65   006F
+42 *66   0077
+43 *67   0020
+44 *68   0069
+45 *69   0074
+46 *70   0073
+47 *71   0020
+48 *72   0073
+49 *73   0071
+4A *74   0075
+4B *75   0061
+4C *76   0072
+4D *77   0065
+4E *78   0020
+4F *79   0000
+50 *80   0000  result: dw	0
+               
+51 *81   ========= end of square.mas =============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ square                    A           4  
+ for                       C           16 
+ return                    17          12 
+ odd                       18          C   13  15 
+ number                    19          3   A  
+ @1                        1A          10 
+ @2                        1B          14 
+ counter                   1C          B   F   11 
+ msg                       1D          0  
+ result                    50          7   D   E  
+
+Input file   = square.mas
+Output file  = square.mac
+List file    = square.lst 
+Number base  = decimal
+Label status = case sensitive

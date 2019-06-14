@@ -1,0 +1,15 @@
+; #1068
+;Display should exactly like this:
+;Odd numbers from 1 to 99
+;1
+;3
+;.
+;.
+;.
+;99
+n
+o
+ln
+g
+SD
+q

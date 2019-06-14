@@ -1,0 +1,47 @@
+Machine-level Assembler Version 6.1    Sat Mar  7 21:37:31 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; For the following problems, translate the given program to ass
+               ; language, assemble, and run on sim.
+               ;---------------------------------------------------------------
+               
+               ; Program 7.33
+               
+0  *0    F501  f:	aloc	1	; allocate sp = sp -1
+1  *1    8001  	ldc	1	; load constant 1
+2  *2    5000  	str	0	; store relative mem{sp + 0]= ac
+3  *3    FFFD  	dout		; decimal output
+4  *4    F601  	dloc	1	; deallocate  sp = sp + 1
+5  *5    F000  	ret		; return to the calling function
+               
+               
+6  *6    E000  g:	call f		; call f
+7  *7    F000  	ret		; return to the calling function
+               
+               main:
+8  *8    E000  	call f		; call f
+9  *9    E006  	call g		; call f
+               
+A  *10   FFFF  	halt		; end of the program
+               	end main
+               
+B  *11   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           6   8  
+ g                         6           9  
+ main                      8           B  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

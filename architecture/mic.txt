@@ -1,0 +1,136 @@
+                                                 mic.txt
+
+Microlevel Summary
+
+Microlevel Registers
+
+Number  Name  Contents  Usage
+                                          ---+        ---+
+ 0      0      0000   constant 0             |           |
+ 1      1      0001   constant 1             |           |
+ 2      xmask  0FFF   x-field mask           | read      | not
+ 3      ymask  00FF   y-field mask           | only      | renameable
+ 4      zmask  000F   z-field mask           |           |
+                                             |           |
+                                          ---+           |
+                                             |           |
+ 5      mdr           memory data register   |           |
+                                             |           |
+                                             |        ---+
+                                             |           |
+ 6      pc            program counter        |           |
+ 7      sp            stack pointer          |           | 
+ 8      ac            accumulator            |           |
+ 9      ir            instruction register   | read/     | renameable
+ A      dc            decoding register      | write     | 
+ B      ct            count register         |           | 
+ C      cy            carry register         |           | 
+ D      bp            base pointer           |           | 
+ E      e                                    |           | 
+ F      f                                    |           | 
+ .      .                                    |           | 
+ .      .                                    |           | 
+ .      .                                    |           | 
+ 1F     1f                                   |           |
+                                          ---+        ---+
+
+Note: usage of registers 6 to 1F depends on the microcode.
+-----------------------------------------------------------------
+H1: Horizontal Micro
+
+Microinstruction format:
+
+C   A   B   ALU   MAR   RD    WR    COND    ADDR
+5   5   5    3     1     1     1      2       9   width (bits)
+                                 
+   A: Register number of register driving the A bus
+   B: Register number of register driving the B bus
+   C: Register number of register loaded from the C bus
+
+   ALU
+   0: A (left input straight through)
+   1: ~A (bitwise complement)
+   2: A & B (bitwise AND)
+   3: A * B
+   4: A + B
+   5: A - B
+   6: Shift left  one position
+   7: Shift right one position
+
+   MAR
+   0: Do not load mar
+   1: Load mar from B bus
+
+   RD
+   0: Do not read
+   1: Read from mem[mar]
+
+   WR
+   0: Do not write
+   1: Write mdr to mem[mar]
+
+   COND
+   0: No branch
+   1: Branch if S = 1
+   2: Branch if Z = 1
+   3: Always branch
+
+   ADDR: Branch-to address
+
+-----------------------------------------------------------------
+V1:  Vertical Micro
+
+Instruction formats:
+
+     OPCODE  C   A   B       
+       4     5   5   5    width (bits)
+
+     OPCODE  C   A  FILL       
+       4     5   5   5    width (bits)
+
+     OPCODE  FILL   B       
+       4      10    5     width (bits)
+
+     OPCODE  FILL A  FILL       
+       4      5   5   5   width (bits)
+
+     OPCCODE FILL ADDR
+       4      6    9      width (bits)
+
+     OPCCODE FILL
+       4      15          width (bits)
+
+OPCODE: see table below
+
+A:      Register number of register driving the A bus
+B:      Register number of register driving the B bus
+C:      Register number of register loaded from the C bus
+ADDR:   Branch-to address
+FILL:   Don't care
+
+
+Assembly format:
+
+Opcode  Assembly         Name               Description
+(hex)   form
+
+   0    add    rc ra rb  Add                rc  =  ra + rb; set sz;           
+   1    sub    rc ra rb  Subtract           rc  =  ra - rb; set sz;
+   2    mult   rc ra rb  Multiply           rc  =  ra * rb; set sz;
+   3    and    rc ra rb  Bitwise and        rc  =  ra & rb; set sz;
+   4    flip   rc ra     Flip bits          rc  =  ~ra; set sz;
+   5    move   rc ra     Move register      rc  =  ra; set sz;
+   6    left   rc ra     Left shift         rc  =  left(ra); set sz;
+   7    right  rc ra     Right shift        rc  =  right(ra); set sz;
+   8    mar    rb        Load mar           mar =  rb;
+   9    sz     ra        Set sz             set sz (with ra);
+   A    ba     addr      Branch always      mpc = addr;            
+   B    bn     addr      Branch if neg      if (s) mpc = addr;
+   C    bz     addr      Branch if zero     if (z) mpc = addr;
+   D    rd               Read               mdr = mem[mar];
+   E    wr               Write              mem[mar] = mdr;
+
+ra:     Register number in A field
+rb:     Register number in B field
+rc:     Register number in C field
+addr:   Address in ADDR field

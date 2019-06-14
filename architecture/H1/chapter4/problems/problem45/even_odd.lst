@@ -1,0 +1,103 @@
+Machine-level Assembler Version 6.1    Sun Jan  4 13:05:50 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1
+               ; Created	: 4-december-2009
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Program that:
+               ;		   - Prompts for and reads in a decimal number
+               ;		   - Determines if the number of 1 bits in the binary equival
+               ;		     of the decimal number is even or odd.
+               ;
+               ;		  How is the problem going to be solve?
+               ;		     We're going to subtract 2 to the input number until 
+               ;		     we reach ZERO or a NEGATIVE NUMBER. If we reach ZERO,it 
+               ;		     if we reach a NEGATIVE NUMBER, it's ODD.
+               ;
+               ; Restrictions:	 The program only accept positive numbers.
+               ;---------------------------------------------------------------
+               
+0  *0    8014  	ldc	msg	; load the address of msg
+1  *1    FFF7  	sout		; string output
+               	
+2  *2    FFFC  	din		; decimal input	
+3  *3    1011  	st	number	; store the decimal number in the variable number.
+               	
+4  *4    0011  for:	ld	number	; load the number	
+5  *5    3013  	sub	@2	; subtract 2 to the number
+6  *6    1011  	st	number	; store the number
+7  *7    C00A  	jz	even	; if ZERO, jump even
+8  *8    B00D  	jn	odd	; if NEGATIVE, jump odd
+9  *9    9004  	ja	for	; jump always to for
+               
+A  *10   8028  even: 	ldc	msg_even ; load the address of msg_even
+B  *11   FFF7  	sout		; string output
+C  *12   9010  	ja	end	; jump always to end
+               
+D  *13   8024  odd:	ldc	msg_odd	; load the address of msg_odd
+E  *14   FFF7  	sout		; string output
+F  *15   9010  	ja	end	; jump always to end
+               
+10 *16   FFFF  end:	halt		; end of the program
+               
+               ;---------------------
+               ; VARIABLES
+               ;---------------------
+               
+11 *17   0000  number:	dw	0	; input number
+12 *18   FFFF  @_1:	dw	-1
+13 *19   0002  @2:	dw	2
+14 *20   0049  msg:	dw	"Input a number "
+15 *21   006E
+16 *22   0070
+17 *23   0075
+18 *24   0074
+19 *25   0020
+1A *26   0061
+1B *27   0020
+1C *28   006E
+1D *29   0075
+1E *30   006D
+1F *31   0062
+20 *32   0065
+21 *33   0072
+22 *34   0020
+23 *35   0000
+24 *36   004F  msg_odd:dw	"ODD" 
+25 *37   0044
+26 *38   0044
+27 *39   0000
+28 *40   0045  msg_even:dw	"EVEN"
+29 *41   0056
+2A *42   0045
+2B *43   004E
+2C *44   0000
+               
+               
+2D *45   ========= end of even_odd.mas ===========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ for                       4           9  
+ even                      A           7  
+ odd                       D           8  
+ end                       10          C   F  
+ number                    11          3   4   6  
+ @_1                       12         
+ @2                        13          5  
+ msg                       14          0  
+ msg_odd                   24          D  
+ msg_even                  28          A  
+
+Input file   = even_odd.mas
+Output file  = even_odd.mac
+List file    = even_odd.lst 
+Number base  = decimal
+Label status = case sensitive

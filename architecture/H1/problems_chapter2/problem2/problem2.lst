@@ -1,0 +1,33 @@
+Machine-level Assembler Version 6.1    Mon Dec  8 20:46:39 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; SIM PROGRAM
+               ; Program that subtracts 15 decimal from 20 decimal using the ad
+0  *0    0003  	ld  n1 	; load n1
+1  *1    2004  	add n2	; add n2
+2  *2    FFFF  	halt	; Stop the programº
+               
+               ; Data area
+3  *3    0014  n1:  dw 20 	; first number
+4  *4    FFF1  n2:  dw FFF1h	; second number 15 in two complements
+               
+               
+               
+5  *5    ========= end of problem2.mas ===========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ n1                        3           0  
+ n2                        4           1  
+
+Input file   = problem2.mas
+Output file  = problem2.mac
+List file    = problem2.lst 
+Number base  = decimal
+Label status = case sensitive

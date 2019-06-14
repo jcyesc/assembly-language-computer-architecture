@@ -1,0 +1,94 @@
+Vertical Microcode Assembler Version 6.1      Fri Jun 15 14:09:44 2007
+
+  LOC    OBJ    SOURCE
+hex*dec
+
+                /  Basic Instruction Set Vertical Microcode      b.vas
+                
+                / The label indicates the opcode decoded up to that point.
+                / For example, control reaches the label L011 when opcode 
+                / bits 011 have been decoded.   
+                
+                /********************************************************/
+                /     Fetch instruction and increment pc register        /
+                /********************************************************/
+0  *0    40006  fetch:      mar  pc               
+1  *1    68000              rd                           / fetch mach inst
+2  *2    2A4A0              move ir mdr                  / move inst to ir
+3  *3    018C1              add  pc pc 1                 / increment pc
+                /********************************************************/
+                /           Decode opcode                                /
+                /********************************************************/
+4  *4    2A920              move  dc ir                  
+5  *5    5800B              bn    L1                     / test 1st bit
+6  *6    32940  L0:         left  dc dc
+7  *7    58010              bn    L01                    / test 2nd bit
+8  *8    32940  L00:        left  dc dc
+9  *9    5801A              bn    L001                   / test 3rd bit
+A  *10   50016              ba    L000
+B  *11   32940  L1:         left  dc dc
+C  *12   58013              bn    L11                    / test 2nd bit
+D  *13   32940  L10:        left  dc dc
+E  *14   5802D              bn    L101                   / test 3rd bit
+F  *15   5002A              ba    L100
+10 *16   32940  L01:        left  dc dc
+11 *17   58024              bn    L011                   / test 3rd bit
+12 *18   5001E              ba    L010
+13 *19   32940  L11:        left  dc dc
+14 *20   58033              bn    L111                   / test 3rd bit
+15 *21   5002F              ba    L110 
+                /********************************************************/
+                /           Microcode for each instruction               /
+                /********************************************************/
+                L000:       /-------------------------- LD ---------------
+16 *22   40009              mar    ir                    / get address
+17 *23   68000              rd                           / fetch operand
+18 *24   2A0A0              move   ac mdr                / move operand to ac
+19 *25   50000              ba     fetch
+                L001:       /---------------------------ST ---------------
+1A *26   29500              move   mdr ac                / prepare for write
+1B *27   40009              mar    ir
+1C *28   70000              wr                           / write
+1D *29   50000              ba     fetch                 / branch 
+                L010:       /-------------------------- SHLL -------------
+1E *30   1BD24              and    f ir zmask            / get z field
+1F *31   60000              bz     fetch                 / branch if 0
+20 *32   32100  lloop:      left   ac ac                 / shift ac left
+21 *33   0BDE1              sub    f f 1                 / decrement count
+22 *34   60000              bz     fetch                 / branch if 0
+23 *35   50020              ba     lloop                 / branch
+                L011:       /-------------------------- SHRL -------------
+24 *36   1BD24              and    f ir zmask            / get z field
+25 *37   60000              bz     fetch                 / branch if 0
+26 *38   3A100  rloop:      right  ac ac                 / shift ac right
+27 *39   0BDE1              sub    f f 1                 / decrement count
+28 *40   60000              bz     fetch                 / branch if 0
+29 *41   50026              ba     rloop                 / branch
+                L100:       /-------------------------- ADDC -------------
+2A *42   1BD22              and    f ir xmask            / get x field
+2B *43   0210F              add    ac ac f               / add to ac
+2C *44   50000              ba     fetch                 / branch
+                L101:       /-------------------------- FLIP -------------
+2D *45   22100              flip   ac ac                 / bitwise compl ac
+2E *46   50000              ba     fetch                 / branch
+                L110:       /-------------------------- MULT -------------
+2F *47   40009              mar    ir                    / get address
+30 *48   68000              rd                           / fetch operand
+31 *49   12105              mult   ac ac mdr             / multiply ac by opera
+32 *50   50000              ba     fetch                 / branch
+                L111:       /-------------------------- JN ---------------
+33 *51   28100              move   0 ac                  / get ac
+34 *52   58036              bn     dojn                  / branch is negative
+35 *53   50000              ba     fetch                 / branch
+36 *54   19922  dojn:       and    pc ir xmask           / put x field in pc
+37 *55   50000              ba     fetch                 / branch
+                
+38 *56   ========== end of b.vas =================================
+
+Input file   = b.vas
+Output file  = dist/b.ver
+List file    = dist/b.vst 
+Config file  = b.cfg 
+Number base  = decimal
+Label status = case sensitive
+Shifter      = one-position

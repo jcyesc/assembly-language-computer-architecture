@@ -1,0 +1,25 @@
+; #0280
+;Your program should look exactly like this (with the test case 
+;data replacing the strings):
+;Enter string 
+;abba
+;Yes
+n
+o
+ln
+g
+abba
+o
+g
+aba
+o
+g
+a
+o
+g
+ab
+o
+g
+abbaa
+SD
+q

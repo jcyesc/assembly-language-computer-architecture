@@ -1,0 +1,56 @@
+Machine-level Assembler Version 6.1    Wed May  6 23:52:31 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; 10.22 Show the ".mob" file that corresponds to the following p
+               ; Use the same format that pic uses.
+               ;---------------------------------------------------------------
+               
+               	extern	sub
+0  *0    8000  	ldc	0
+1  *1    F300  	push
+2  *2    8006  	ldc	msg
+3  *3    E000  	call	sub
+4  *4    E000  	call	sub
+5  *5    FFFF  	halt
+               
+6  *6    0050  	msg:	dw	"Programming is fun"
+7  *7    0072
+8  *8    006F
+9  *9    0067
+A  *10   0072
+B  *11   0061
+C  *12   006D
+D  *13   006D
+E  *14   0069
+F  *15   006E
+10 *16   0067
+11 *17   0020
+12 *18   0069
+13 *19   0073
+14 *20   0020
+15 *21   0066
+16 *22   0075
+17 *23   006E
+18 *24   0000
+               	end	0
+               
+               
+19 *25   ========= end of problem.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ msg                       6           2  
+ sub                       ext         0   3   4  
+
+Input file   = problem.mas
+Output file  = problem.mob
+List file    = problem.lst 
+Number base  = decimal
+Label status = case sensitive

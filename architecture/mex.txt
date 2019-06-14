@@ -1,0 +1,139 @@
+                                                 mex.txt
+
+                 How to Use mex Version 6.1
+
+Quick Start 
+
+     mex (Module EXaminer) displays the contents of an object 
+(".mob"), executable (".mac"), or library (".lib") file in hex 
+and ASCII.  To use mex, enter 
+
+     mex
+
+mex then prompts the user for an input file name.  Enter this 
+file name and/or any other desired command line arguments (any 
+number of items per input line).  Once the input file name is 
+entered, mex displays the contents of the file one screenful at a 
+time.  After each screen is displayed, mex pauses for user input, 
+which can be: 
+
+    q or Q         Quit mex.  
+    n or N         Nonstop--continue without pauses.
+    Hit ENTER      Display the next group of lines.
+                              
+mex does not assume any default file name extension.  
+
+
+Command Line Arguments
+
+     All command line arguments are optional, can be specified in 
+any order, must have no embedded spaces, and must be separated by 
+at least one space. 
+
+     All command line arguments, except <infilename>, must have a 
+leading "/" or "-". 
+
+     All command line arguments are case insensitive, except for 
+filenames on systems with case-sensitive filenames. 
+
+     The format of the command line is
+
+   mex   <infilename>  /h   /l<lstfilename>
+                       /?   /n
+
+If <infilename> is specified on the command line, then mex will 
+not prompt the user for additional input.  In response to a 
+prompt, the user can enter <infilename> and/or other command line 
+arguments.  Prompting ends whenever the user enters <infilename>.  
+If <infilename> is omitted, mex prompts the user for it. 
+If <infilename> starts with a pathname that starts with "/", then 
+substitute "//" for the leading "/" in the pathname when entering 
+<infilename>.  
+
+/h or /? displays a help screen. 
+
+If the /l argument is specified, screen output is written to a 
+list file.  If <lstfilename> is specified with no extension, 
+".mex" is appended to it.  If /l is specified without 
+<lstfilename>, then <lstfilename> defaults to 
+
+     <infilename_less_extension>.mex 
+
+If /n is specified, a list file is not generated.  If neither the 
+/l nor the /n arguments are specified, then the default setting 
+is used (see the section "Default Settings" below). 
+
+
+Problem with a Leading "/" in Command Line Arguments on Non-
+Microsoft Systems
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with EITHER "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems can cause a 
+problem.  For example, suppose you want to specify an input file 
+on the command line.  Recall that an input file argument is not 
+preceded by an argument marker.  For example in, 
+
+    sim a /ms
+
+the argument "a" (which specifies the input file a.mac) does NOT 
+have a preceding "/" or "-".  "/ms", on the other hand, has the 
+argument marker "/".  "/ms" is interpreted as the "/m" argument 
+followed by the secondary argument "s".  Now suppose the input 
+file you want to specify on the command line is 
+
+     /abc.x
+
+This denotes the abc.x file in the root directory "/".  
+Unfortunately, all the programs in the H1 Software Package will 
+interpret a leading "/" as an argument marker rather than as the 
+root directory.  Thus, 
+
+     /abc.x
+
+on the command line is incorrectly interpreted as the argument 
+
+     /a 
+
+followed by the secondary argument
+
+     bc.x
+
+This problem does not occur on Microsoft systems because they use 
+"\" rather than "/" as the filename separator, and, thus, there 
+is never any confusion with the argument marker "/". 
+
+You will probably rarely run into this problem because full 
+pathnames are rarely needed when using the programs in the H1 
+Software Package.  However, if the problem does occur, it can 
+easily be circumvented: simply use "//" to represent the root.  
+For example, if 
+
+     //abc.x
+
+appears on a command line, it is interpreted as the input file
+
+     /abc.x
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 
+
+
+Default Settings
+
+     mex is shipped with the following default setting:
+
+          list file status: list on
+          message status:   messages on
+
+This setting, however, can be changed with the mod program.  For 
+information on the mod program, see mod.txt. 

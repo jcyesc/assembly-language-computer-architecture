@@ -1,0 +1,19 @@
+; #8199
+;Your display should look exactly like this (with the data from 
+;the test cases replacing the numbers):
+;Enter decimal number
+;3
+;EVEN
+n
+o
+ln
+g
+3
+o
+g
+50
+o
+g
+32766
+SD
+q

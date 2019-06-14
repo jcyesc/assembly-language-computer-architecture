@@ -1,0 +1,90 @@
+;--------------------------------------------------------
+; Translate the program 8.49 to assembly language.
+;--------------------------------------------------------
+
+;--------------------------
+; void f()
+;--------------------------
+
+@f$v:	aloc	10	; int c[10];
+
+	ldc	1	; a[x] = 1;
+	push
+	ldc	a
+	add	x
+	sti
+	
+	ldc	2	; b[x + 1] = 2;
+	push
+	ldc	b
+	add	x
+	add	@1
+	sti
+
+	swap		; c[x + 2] = 3;
+	st	@spsave
+	swap
+	ldc	3
+	push
+	ld	@spsave
+	add	x
+	add	@2
+	sti
+
+	ld	@spsave	; cout << c[2] << endl;
+	add	@2
+	ldi
+	dout
+	ldc	'\n'
+	aout
+
+	dloc	10
+	
+	ret		; return to the calling function
+
+main:	ldc	4	; b[10] = { 2, 3, 4};
+	push
+	ldc	3
+	push
+	ldc	2
+	push
+	ldc	b
+	sti
+	add	@1
+	sti
+	add	@1
+	sti	
+	
+	call	@f$v	; f();
+
+	ld	a	; cout << a[0] << " " << b[1] << " " << b[2] << endl;
+	dout
+	ldc	msg
+	sout
+	ldc	b
+	add	@1
+	ldi
+	dout
+	ldc	msg
+	sout
+	ldc	b
+	add	@2
+	ldi
+	dout
+	ldc	'\n'
+	aout	
+
+	halt		; end of the program
+	end main
+
+
+
+; GLOBAL VARIABLES
+
+x:	dw	0
+a:	dw	10 dup 0
+b:	dw	10 dup 0
+msg:	dw	" "
+@1:	dw	1
+@2:	dw	2
+@spsave:dw	0

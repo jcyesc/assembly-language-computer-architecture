@@ -1,0 +1,32 @@
+Machine-level Assembler Version 6.1    Sun Dec  7 09:38:31 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0004  	ld  n1	   ; get first number
+1  *1    2005  	add n2	   ; add second number
+2  *2    1006  	st  result ; store sum in memory
+3  *3    FFFF  	halt       ; return to operating system
+               
+               	; Data area
+4  *4    000F  n1:	dw 15	   ; first number
+5  *5    0001  n2:	dw 1	   ; second number
+6  *6    0000  result: dw 0	   ; store sum here
+                
+7  *7    ========= end of firstasm.mas ===========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ n1                        4           0  
+ n2                        5           1  
+ result                    6           2  
+
+Input file   = firstasm.mas
+Output file  = firstasm.mac
+List file    = firstasm.lst 
+Number base  = decimal
+Label status = case sensitive

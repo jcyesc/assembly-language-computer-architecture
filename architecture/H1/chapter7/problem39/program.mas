@@ -1,0 +1,53 @@
+;----------------------------------------------------------
+; Translate the program 7.39 to assembly language
+;----------------------------------------------------------
+
+;---------------
+; void f(int x, int y, int z)
+;---------------
+
+f:	ldr 	1	; q = x + y + y + z + z + z;
+	addr	2	
+	addr	2
+	addr	3
+	addr	3
+	addr	3
+	st	s0_q
+	
+	ldc	msg_q	; cout << "q = " << q << endl;
+	sout	
+	ld	s0_q
+	dout
+	ldc	'\n'
+	aout
+
+	ret
+
+;---------------
+; main()
+;---------------
+
+main:
+	ldc 	3	; f(1, 2, 3);
+	push
+	ldc	2
+	push
+	ldc	1
+	push
+	call	f
+	dloc	3
+
+	halt
+	end main;
+
+
+; GLOBAL VARIABLES
+s0_q:	dw	0
+
+msg_q:	dw	"q = "
+
+
+
+
+
+

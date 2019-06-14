@@ -1,0 +1,21 @@
+; Write and run  an assembly language program that reads in a decimal number
+; and then displays its value times 7 in decimal.
+
+	ldc   msg	; load the address of msg
+	sout 		; print the string
+	din		; input for a decimal
+	st    number	; store the number
+for:	ld    number	; load the number, the loop starts
+	dout		; print the decimal number
+	ldc   '\n'	; load a line feed
+	aout		; output the character
+	ld    counter	; load the counter
+	sub   @1	; add 1 to the ac
+	st    counter	; store the value of ac in counter
+	jnz   for	; if it's not zero, jump to for
+	halt		; end of the program
+
+msg:	dw    "Write a number "
+number: dw    0
+counter:dw    7
+@1:	dw    1

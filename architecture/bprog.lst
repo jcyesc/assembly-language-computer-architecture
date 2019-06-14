@@ -1,0 +1,38 @@
+Machine-level Assembler Version 6.1    Fri Jun 15 14:09:44 2007
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+                        !b                                      bprog.mas
+0  *0    000A  start:   ld     x        ; load from x
+1  *1    A000           flip            ; flip bits in ac
+2  *2    8003           addc   3        ; add the constant 3
+3  *3    C00B           mult   y        ; multiply ac by y
+4  *4    200C           st     z        ; store product in z
+5  *5    4002           shll   2        ; shift left logical 2
+6  *6    6002           shrl   2        ; shift right logical 2
+7  *7    E000           jn     start    ; jump if ac is negative
+8  *8    FFFD           dout            ; output ac in decimal
+9  *9    FFFF           halt
+A  *10   FFFF  x:       dw     -1
+B  *11   0002  y:       dw     2
+C  *12   0000  z:       dw     0
+D  *13   ========= end of bprog.mas ==============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ start                     0           7  
+ x                         A           0  
+ y                         B           3  
+ z                         C           4  
+
+Input file   = bprog.mas
+Output file  = dist/bprog.mac
+List file    = dist/bprog.lst 
+Config file  = b.cfg 
+Number base  = decimal
+Label status = case sensitive

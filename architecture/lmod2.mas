@@ -1,0 +1,24 @@
+         ;                                       lmod2.mas
+         ; Test module for linv1
+         ; Link with lmod1.mas
+         ; Links ok
+         extern sub
+         extern total
+         public x
+main:    call sub     
+         st   total   
+         dout
+         ldc  '\n'
+         aout
+         ld    x
+         dout
+         ld    x
+         dout
+         ld    x
+         dout
+         ld    x
+         dout
+         halt         
+x:       dw   17      
+         end  main  
+

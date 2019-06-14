@@ -1,0 +1,71 @@
+;---------------------------------------------------
+; Translate the program of the figure 7.37
+;---------------------------------------------------
+
+;--------------------------------
+; void f(int a, int b, int c)
+;---------------------------------
+
+f:	ld   s0_j;	b = c = h = i = ++j
+	add  @1
+	st   s0_j
+	st   s0_i
+	st   s0_h
+	str  3
+	str  2
+
+	ldr  1		; cout << a << " " << b << endl;
+	dout
+	ldc  msg
+	sout
+	ldr  2
+	dout
+	ldc  '\n'
+	aout
+
+	ret		; return to the calling function
+
+;--------------------------------
+; main()
+;--------------------------------
+
+main:	ld   @1		; x = 1;
+	st   x
+	
+	ld   @2		; y = 2;
+	st   y
+
+	ld   z		; f(x, y, z);
+	push
+	ld   y
+	push
+	ld   x
+	push
+	call f
+	dloc 3
+
+	ld   z		; f(z, y, z);
+	push
+	ld   y
+	push
+	ld   z
+	push
+	call f
+	dloc 3
+	
+	halt		; end of the program
+	end main;
+
+; GLOBAL VARIABLES
+x:	dw	0
+y:	dw	0
+z:	dw	6
+s0_h:	dw	0
+s0_i:	dw	0
+s0_j:	dw	0
+
+@1:	dw	1
+@2:	dw	2
+msg:	dw	" "
+
+

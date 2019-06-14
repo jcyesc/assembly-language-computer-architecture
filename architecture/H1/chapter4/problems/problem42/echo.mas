@@ -1,0 +1,39 @@
+;----------------------------------------------------------------------
+; Version	: 1
+; Created	: 4-december-2009
+; Author	: Juan Carlos Yescas
+; Description	: Write and run an assembly language program
+;		  that reads in a string and echos it to the monitor 
+;		  using memory-mapped I/O.
+;----------------------------------------------------------------------
+
+	&	; USE MEMORY-MAPPEND I/O configure H1 for memory-mapped I/O
+echo:	ld	3000	; get keyboard status
+	jz	* - 1 	; if 0 (not ready), try again
+	ld	3001	; get character from keyboard
+	
+	st	char	; store the value in char
+	
+	sub	flag_exit	; subtract the flag to the character to verify
+				; if it's going to continue the loop.
+	jz	end	; if it's ZERO, the loop end.
+
+	ld	3002	; get status word from display monitor
+	jz	* - 1	; if 0 ( not ready), try again
+	ld	char
+	st	3003	; store in data word for display monitor
+
+	ja	echo
+
+end:	halt
+
+
+;---------------
+; VARIABLES
+;---------------
+flag_exit:	dw	'@'	; Flag that means that the string has finish
+char:		dw	0
+
+
+
+

@@ -1,0 +1,126 @@
+Machine-level Assembler Version 6.1    Mon May 11 22:59:04 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ;10.42 Write and run an assembly language program that determine
+               ;of a string(not including the null character) given on the comm
+               ;---------------------------------------------------------------
+               
+               ;---------------------------------------------------------
+               ; int length(char *s)
+               ;	Function that calculates the length of the string.
+               ;		int length(char *s) {
+               ;			int tmp =0;
+               ;		while(*s != null) {
+               ;				s++;
+               ;				tmp++;					
+               ;			}
+               ;		}
+               ;---------------------------------------------------------
+               
+               @length$pc:
+0  *0    F501  		aloc	1	;	int tmp = 0;
+1  *1    8000  		ldc		0
+2  *2    5000  		str		0
+               		
+               _while:
+3  *3    4002  		ldr		2	;	while(*s != null)	
+4  *4    F100  		ldi
+5  *5    C00D  		jz		_end_length
+               		
+6  *6    4002  		ldr		2	;	s++;
+7  *7    2030  		add		@1
+8  *8    5002  		str		2
+               
+9  *9    4000  		ldr		0	; tmp++;
+A  *10   2030  		add		@1
+B  *11   5000  		str		0
+               		
+C  *12   9003  		ja		_while
+               
+               _end_length:	
+D  *13   4000  		ldr		0
+E  *14   F601  		dloc	1
+F  *15   F000  		ret
+               
+               ;-----------------------------------------
+               ; int main(int argc, char **argv)
+               ;-----------------------------------------
+               main:
+10 *16   4001  		ldr		1	; count = argc;
+11 *17   1036  		st		@count
+               _whi2:
+12 *18   0036  		ld		@count
+13 *19   C02F  		jz		_end_m
+               		
+14 *20   4002  		ldr		2	; cout << argv[i] << " - " << length(argv[i];
+15 *21   F100  		ldi
+16 *22   FFF7  		sout
+17 *23   8031  		ldc		@msg
+18 *24   FFF7  		sout
+19 *25   4002  		ldr		2
+1A *26   F100  		ldi
+1B *27   F300  		push
+1C *28   E000  		call	@length$pc
+1D *29   F601  		dloc	1
+1E *30   FFFD  		dout
+1F *31   800A  		ldc		'\n'
+20 *32   FFFB  		aout
+               		
+21 *33   4002  		ldr		2		; argv++
+22 *34   2030  		add		@1
+23 *35   5002  		str		2
+               		
+24 *36   0036  		ld		@count	; count++
+25 *37   3030  		sub		@1
+26 *38   1036  		st		@count
+               		
+27 *39   9012  		ja		_whi2
+               		
+28 *40   8031  		ldc		@msg
+29 *41   F300  		push
+2A *42   E000  		call	@length$pc
+2B *43   F601  		dloc	1
+2C *44   FFFD  		dout
+2D *45   800A  		ldc		'\n'
+2E *46   FFFB  		aout
+               	
+               _end_m:
+2F *47   F000  		ret
+               
+               ; Global Variables
+30 *48   0001  @1:		dw		1
+31 *49   0020  @msg:	dw		" -> "
+32 *50   002D
+33 *51   003E
+34 *52   0020
+35 *53   0000
+36 *54   0000  @count:	dw		0
+               
+               public 	main
+               public	@length$pc
+37 *55   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @length$pc                0           37  1C  2A 
+ _while                    3           C  
+ _end_length               D           5  
+ main                      10          37 
+ _whi2                     12          27 
+ _end_m                    2F          13 
+ @1                        30          7   A   22  25 
+ @msg                      31          17  28 
+ @count                    36          11  12  24  26 
+
+Input file   = program.mas
+Output file  = program.mob
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

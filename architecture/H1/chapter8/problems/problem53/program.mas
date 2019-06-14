@@ -1,0 +1,51 @@
+;----------------------------------------------------------------
+; Translate the program 8.53 to assembly language.
+;----------------------------------------------------------------
+
+;--------------------
+; void f()
+;--------------------
+
+@f$v:	aloc	1	; A *p;
+	
+	ldc	s	; p = &s;
+	str	0
+
+	ldc	1	; p->x = 1;
+	push
+	ldr	1
+	sti
+
+	ldc	2	; p->y = 2;
+	push
+	ldc	1	; calcule the address of p->y
+	addr	1
+	sti	
+
+	ld	s	; cout << s.x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ld	s + 1	; cout << s.y << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	dloc	1	; release the memory
+
+	ret		; return to the calling function
+
+;--------------------
+; main()
+;--------------------
+
+main:	call @f$v	; f();	
+
+	halt		; end of the function
+	end main
+
+
+; GLOBAL VARIABLES
+
+s:	dw	2 dup 0	; A s

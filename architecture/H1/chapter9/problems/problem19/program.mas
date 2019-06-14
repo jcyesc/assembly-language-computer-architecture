@@ -1,0 +1,37 @@
+;------------------------------------------------------------------------------------
+; Translate the program 9.19 to assembly language.
+;------------------------------------------------------------------------------------
+
+;------------------------------------------------------------------------------
+; void f(int *p)
+;	Function that uses value-result implemented like a call by reference.
+;------------------------------------------------------------------------------
+
+@f$pi:	aloc	1	;  *p = 5;
+	ldr	2
+	ldi	
+	str	0	
+	
+	ldc	5
+	str	0
+
+	ldr	2
+	sti
+
+	ret
+
+main:	ldc	x	; f(&x);
+	push
+	call	@f$pi
+	dloc	1
+
+	ld	x	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt
+	end main
+
+; Global variables
+x:	dw	0

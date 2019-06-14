@@ -1,0 +1,12 @@
+                                                 myfc.txt
+
+Quick Start
+
+     myfc performs a binary compare of the two files specified on 
+the command line.  If the two files match, myfc returns 0; 
+otherwise it returns 1.  It is used by the atest and ltest 
+batch/script files.
+
+     The command line format is
+
+     myfc <filename1> <filename2>

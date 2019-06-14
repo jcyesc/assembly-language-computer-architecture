@@ -1,0 +1,64 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 20:39:24 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Point the sp register to the first number in the table. On eac
+               ; iteration of the loop, pop the number to be added into the ac 
+               
+0  *0    801A  	ldc    table
+1  *1    F700  	swap		; swap is the equal to :  temp = ac; ac = sp; sp = temp;
+2  *2    F400  loop:	pop
+3  *3    2019  	add    sum
+4  *4    1019  	st     sum
+5  *5    0018  	ld     count
+6  *6    3017  	sub    @1	; decrement counter
+7  *7    1018  	st     count
+8  *8    D002  	jnz    loop	; jump if counter not zero
+9  *9    8010  	ldc    message	; display sum
+A  *10   FFF7  	sout
+B  *11   0019  	ld     sum
+C  *12   FFFD  	dout
+D  *13   800A  	ldc    '\n'
+E  *14   FFFB  	aout
+F  *15   FFFF  	halt
+10 *16   0073  message:dw     "sum = "
+11 *17   0075
+12 *18   006D
+13 *19   0020
+14 *20   003D
+15 *21   0020
+16 *22   0000
+17 *23   0001  @1:	dw     1
+18 *24   000A  count:	dw     10
+19 *25   0000  sum:    dw     0
+1A *26   0038  table:  dw     56
+1B *27   FFF8  	dw     -8
+1C *28   01BC  	dw     444
+1D *29   0017  	dw     23
+1E *30   FF17  	dw     -233
+1F *31   0010  	dw     16
+20 *32   002D  	dw     45
+21 *33   FFF5  	dw     -11
+22 *34   0005  	dw     5
+23 *35   0007  	dw     7	
+24 *36   ========= end of indexing_sp.mas ========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ loop                      2           8  
+ message                   10          9  
+ @1                        17          6  
+ count                     18          5   7  
+ sum                       19          3   4   B  
+ table                     1A          0  
+
+Input file   = indexing_sp.mas
+Output file  = indexing_sp.mac
+List file    = indexing_sp.lst 
+Number base  = decimal
+Label status = case sensitive

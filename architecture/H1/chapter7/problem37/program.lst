@@ -1,0 +1,102 @@
+Machine-level Assembler Version 6.1    Mon Mar  9 23:50:06 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------
+               ; Translate the program of the figure 7.37
+               ;---------------------------------------------------
+               
+               ;--------------------------------
+               ; void f(int a, int b, int c)
+               ;---------------------------------
+               
+0  *0    002A  f:	ld   s0_j;	b = c = h = i = ++j
+1  *1    202B  	add  @1
+2  *2    102A  	st   s0_j
+3  *3    1029  	st   s0_i
+4  *4    1028  	st   s0_h
+5  *5    5003  	str  3
+6  *6    5002  	str  2
+               
+7  *7    4001  	ldr  1		; cout << a << " " << b << endl;
+8  *8    FFFD  	dout
+9  *9    802D  	ldc  msg
+A  *10   FFF7  	sout
+B  *11   4002  	ldr  2
+C  *12   FFFD  	dout
+D  *13   800A  	ldc  '\n'
+E  *14   FFFB  	aout
+               
+F  *15   F000  	ret		; return to the calling function
+               
+               ;--------------------------------
+               ; main()
+               ;--------------------------------
+               
+10 *16   002B  main:	ld   @1		; x = 1;
+11 *17   1025  	st   x
+               	
+12 *18   002C  	ld   @2		; y = 2;
+13 *19   1026  	st   y
+               
+14 *20   0027  	ld   z		; f(x, y, z);
+15 *21   F300  	push
+16 *22   0026  	ld   y
+17 *23   F300  	push
+18 *24   0025  	ld   x
+19 *25   F300  	push
+1A *26   E000  	call f
+1B *27   F603  	dloc 3
+               
+1C *28   0027  	ld   z		; f(z, y, z);
+1D *29   F300  	push
+1E *30   0026  	ld   y
+1F *31   F300  	push
+20 *32   0027  	ld   z
+21 *33   F300  	push
+22 *34   E000  	call f
+23 *35   F603  	dloc 3
+               	
+24 *36   FFFF  	halt		; end of the program
+               	end main;
+               
+               ; GLOBAL VARIABLES
+25 *37   0000  x:	dw	0
+26 *38   0000  y:	dw	0
+27 *39   0006  z:	dw	6
+28 *40   0000  s0_h:	dw	0
+29 *41   0000  s0_i:	dw	0
+2A *42   0000  s0_j:	dw	0
+               
+2B *43   0001  @1:	dw	1
+2C *44   0002  @2:	dw	2
+2D *45   0020  msg:	dw	" "
+2E *46   0000
+               
+               
+2F *47   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           1A  22 
+ main                      10          25 
+ x                         25          11  18 
+ y                         26          13  16  1E 
+ z                         27          14  1C  20 
+ s0_h                      28          4  
+ s0_i                      29          3  
+ s0_j                      2A          0   2  
+ @1                        2B          1   10 
+ @2                        2C          12 
+ msg                       2D          9  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

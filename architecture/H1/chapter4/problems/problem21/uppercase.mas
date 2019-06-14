@@ -1,0 +1,88 @@
+;------------------------------------------------------------------------
+; Version	: 1.0
+; Created	: 31-december-2008
+; Author	: Juan Carlos Yescas
+; Description	: Prgram that reads in a string and outputs that string
+;		  in all uppercase characters.
+;
+;		The problem is going to be solved in the next way:
+;			Identify if the ASCII code is between 97 (a) and 122 (z)
+;			we subtract 32.
+;			Remember that the ASCII code for the A is 65 and the ASCII
+;			code for Z is 90.
+;
+;------------------------------------------------------------------------
+
+main:
+	ldc	msg		; load the address of msg
+	sout			; string output
+	
+	ldc	string		; load the address of string
+	sin			; string input
+	call	toUpperCase	; call toUppercase, remeber that labels are replace by addresses
+	ldc	'\n'		; load the value of '\n'
+	aout			; ASCII output
+	ldc	string		; load the address of string
+	sout			; string output
+
+	halt			; end of the program
+
+
+;------------------------------------------------------------------------
+;  toUppercase()
+;
+;  Functions that replace lower case characters to upper case. The string
+;  that is going to be converted is 'string'.
+;
+;	if( char >= 97 && char <= 122)
+;		convert to uppercase
+;------------------------------------------------------------------------
+
+toUpperCase:
+	
+for:	ldc	string		; load the address of string
+	add	index		; add index to the address
+	st	address		; store the new address
+		
+	ldi			; load the value that is in the address pointed by ac
+	st	char		; store the value in char
+	jz	fin		; if it's ZERO, we arrive at the end, so we jump to fin
+	sub	@97		; subtract 97 to look at if it's greater or equal to 97
+	jzop	and		; if ZERO or POSITIVE, jump to and
+	ja	incre		; jump always to incre
+
+and:	ld	@122		; load the value of @122
+	sub	char		; subtract char
+	jzop	convert		; if it's ZERO or POSITIVE jump to convert
+	ja	incre		; jump always to incre
+
+convert:
+	ld	char		; load the char
+	sub	@32		; subtract 32
+	push			; push the value in the stack
+	ld	address		; load the value of addres
+	sti			; store indirect, store the value that is in the top of the stack
+				; in the address pointed by ac
+	
+incre:	; ++index
+	ld	index		; load the value of index
+	add	@1		; add 1 to index
+	st	index		; store the new value of index
+	ja	for		; jump always to for
+	
+fin:	ret		; return to the caller
+
+;---------------------
+; VARIABLES
+;---------------------
+
+address:dw	0
+string:	dw	80 dup 0
+index:	dw	0
+char:	dw	0
+@1:	dw	1
+@32:	dw	32		; If the ASCII code is between 97 and 122 
+				; subtract 32 to conver to uppercase
+@97:	dw	97		; ASCII code for 'a'
+@122:	dw	122		; ASCII code fo 'z'	
+msg:	dw	"Write the string you want to be converted to uppercase : "

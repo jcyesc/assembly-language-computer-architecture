@@ -1,0 +1,12 @@
+; 4.27  What happens if the machine language corresponding to the next program
+; is loaded into memory starting at location 400 hex.
+; The command is the next:	sim program.mac /p400
+	ld	x
+	add	y
+	st	z
+	halt	
+x:	dw	2
+y:	dw	3
+z:	dw	0
+
+; If the program is loaded in the 400 address, the program is executed correctly

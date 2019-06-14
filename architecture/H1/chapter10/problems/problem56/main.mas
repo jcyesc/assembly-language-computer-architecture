@@ -1,0 +1,103 @@
+;----------------------------------------------------------
+;10.56 Translate the next C program to assembly language. 
+;Assume that the program is in two files
+;
+;	// first file;
+;
+;	#include <iostream>
+;	using namespace std;
+;	static void f(int x)
+;	{
+;		cout << "x = " << x << endl;
+;	}
+;
+;	int main()
+;	{
+;		int a;
+;		int b = 1;
+;		f(b);
+;		g(&a);
+;		cout << "a = " << a << endl;
+;		return 0;
+;	}
+;
+;	// Second file:
+;	void g(int *p)
+;	{
+;		*p = 100;
+;		f();
+;	}
+;
+;	void f()
+;	{
+;   	cout << "hello\n";
+;	}
+;----------------------------------------------------------
+
+;-------------------------------------
+; static void f(int x)
+;-------------------------------------
+@f$i:
+	ldc		@msg	; cout << "x = " << x << endl;
+	sout
+	ldr		1
+	dout
+	ldc		'\n'
+	aout
+	
+	ret
+
+@msg:	dw		"x = "
+
+;-------------------------------------
+; int main()
+;-------------------------------------
+
+main:
+	aloc	1	; int a;
+
+	aloc	1	; int b = 1;
+	swap
+	st		@swap
+	swap
+	ldc		1
+	push
+	ld		@swap
+	sti
+	
+	ldr		0	; f(b);
+	push
+	call	@f$i
+	dloc	1
+	
+	swap		; g(&a);
+	st		@swap
+	swap
+	ld		@swap
+	add		@1
+	push
+	call	@g$pi
+	dloc	1
+	
+	ldc		@msg_a	; cout << "a = " << a << endl;
+	sout
+	ldr		1
+	dout
+	ldc		'\n'
+	aout
+	
+	dloc	2
+	ldc		0		; return 0;
+	
+	ret
+
+@swap:	dw		0
+@1:		dw		1
+@msg_a:	dw		"a = "
+
+
+public main
+extern @g$pi
+
+
+

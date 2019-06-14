@@ -1,0 +1,233 @@
+Machine-level Assembler Version 6.1    Mon May 11 23:04:10 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; standard start-up code                         sup.mas
+               ;===========================================================
+0  *0    005A  loc0:      dw   'Z'       ; to test for null pointer assignment
+               
+               ;          initialize sp register
+1  *1    8000  start_up:  ldc  0  
+2  *2    F700             swap
+               
+               ;          test if clptr has reached the end of the command line
+3  *3    003E  getarg:    ld   clptr     ; get next char in command line
+4  *4    F100             ldi 
+5  *5    C02A             jz   alldone   ; if null char, all done
+               
+               ;          check if too many args--max = 20
+6  *6    0041             ld   argc      ; get current count
+7  *7    303D             sub  @20
+8  *8    D00C             jnz  * + 4    
+9  *9    8058             ldc  errmsg1   ; display error message
+A  *10   FFF7             sout
+B  *11   903A             ja   done      ; terminate execution if count at 20 
+               
+               ;          move contents of clptr into next avail slot in vector
+C  *12   003E             ld   clptr     ; get address of next arg
+D  *13   F300             push           
+E  *14   003F             ld   vectorptr
+F  *15   F200             sti            ; put address into vector
+               
+               ;          move clptr to end of current argument
+10 *16   003E             ld   clptr
+11 *17   F100  getchar:   ldi            ; get next char in command line
+12 *18   C019             jz   endarg    ; ja   if null char
+13 *19   3040             sub  blank  
+14 *20   C019             jz   endarg    ; ja   if space
+15 *21   003E             ld   clptr     ; move command line ptr to next char
+16 *22   203C             add  @1
+17 *23   103E             st   clptr
+18 *24   9011             ja   getchar
+               
+               ;          terminate argument with null character
+19 *25   8000  endarg:    ldc  0        
+1A *26   F300             push
+1B *27   003E             ld   clptr     ; clptr points to where null char goes
+1C *28   F200             sti 
+               
+               ;          increment count in argc
+1D *29   0041             ld   argc  
+1E *30   203C             add  @1
+1F *31   1041             st   argc
+               
+               ;          prepare for next argument
+               
+               ;          move vectorptr to next slot in vector
+20 *32   003F             ld   vectorptr
+21 *33   203C             add  @1  
+22 *34   103F             st   vectorptr
+               
+               ;          move clptr to beginning of next arg
+23 *35   003E  nextarg:   ld   clptr 
+24 *36   203C             add  @1
+25 *37   103E             st   clptr
+26 *38   F100             ldi 
+27 *39   3040             sub  blank
+28 *40   C023             jz   nextarg   ; move over blanks
+29 *41   9003             ja   getarg    ; now process next arg
+               
+               ;===========================================================
+               ;          pass argv (the address of vector) and argc args to ma
+2A *42   8042  alldone:   ldc  vector    ; push address of vector
+2B *43   F300             push
+2C *44   0041             ld   argc      ; push number of args
+2D *45   F300             push
+2E *46   E000             call main
+2F *47   F602             dloc 2         ; deallocate parameters
+30 *48   1057             st   retcode   ; save return code from main
+               ;===========================================================
+               ;          final housekeeping code
+               
+               ;          check if word at loc0 still has 'Z'
+31 *49   0000  testloc0:  ld    loc0    
+32 *50   3056             sub   z
+33 *51   C03A             jz    done     ; if still there, ja   to done
+34 *52   0031             ld   testloc0  ; start-up code at loc 0?
+35 *53   C038             jz   atloc0    ; if yes, display null ptr message
+36 *54   807A             ldc  errmsg2   ; if not, display other message
+37 *55   9039             ja   outmsg
+38 *56   8094  atloc0:    ldc  errmsg3
+39 *57   FFF7  outmsg:    sout
+               
+3A *58   0057  done:      ld   retcode   ; restore ret code from main
+3B *59   FFFF             halt           ; return to op sys (sim)
+               ;===========================================================
+               ;          constants and variables
+3C *60   0001  @1:        dw   1
+3D *61   0014  @20:       dw   20
+3E *62   0F3C  clptr:     dw   3900      ; address of command line
+3F *63   0042  vectorptr: dw   vector    ; array of char ptrs to the arguments
+40 *64   0020  blank:     dw   ' '
+41 *65   0000  argc:      dw   0         ; count of the number of arguments
+42 *66   0000  vector:    dw   20 dup 0  ; space for 20 arg pointers
+56 *86   005A  z:         dw   'Z'
+57 *87   0000  retcode:   dw   0
+58 *88   000A  errmsg1:   dw   "\nToo many command line arguments\n"
+59 *89   0054
+5A *90   006F
+5B *91   006F
+5C *92   0020
+5D *93   006D
+5E *94   0061
+5F *95   006E
+60 *96   0079
+61 *97   0020
+62 *98   0063
+63 *99   006F
+64 *100  006D
+65 *101  006D
+66 *102  0061
+67 *103  006E
+68 *104  0064
+69 *105  0020
+6A *106  006C
+6B *107  0069
+6C *108  006E
+6D *109  0065
+6E *110  0020
+6F *111  0061
+70 *112  0072
+71 *113  0067
+72 *114  0075
+73 *115  006D
+74 *116  0065
+75 *117  006E
+76 *118  0074
+77 *119  0073
+78 *120  000A
+79 *121  0000
+7A *122  000A  errmsg2:   dw   "\nStart-up code corrupted\n"
+7B *123  0053
+7C *124  0074
+7D *125  0061
+7E *126  0072
+7F *127  0074
+80 *128  002D
+81 *129  0075
+82 *130  0070
+83 *131  0020
+84 *132  0063
+85 *133  006F
+86 *134  0064
+87 *135  0065
+88 *136  0020
+89 *137  0063
+8A *138  006F
+8B *139  0072
+8C *140  0072
+8D *141  0075
+8E *142  0070
+8F *143  0074
+90 *144  0065
+91 *145  0064
+92 *146  000A
+93 *147  0000
+94 *148  000A  errmsg3:   dw   "\nNull pointer assignment\n"
+95 *149  004E
+96 *150  0075
+97 *151  006C
+98 *152  006C
+99 *153  0020
+9A *154  0070
+9B *155  006F
+9C *156  0069
+9D *157  006E
+9E *158  0074
+9F *159  0065
+A0 *160  0072
+A1 *161  0020
+A2 *162  0061
+A3 *163  0073
+A4 *164  0073
+A5 *165  0069
+A6 *166  0067
+A7 *167  006E
+A8 *168  006D
+A9 *169  0065
+AA *170  006E
+AB *171  0074
+AC *172  000A
+AD *173  0000
+                          extern main
+                          end start_up
+AE *174  ========= end of sup.mas ================================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ loc0                      0           31 
+ start_up                  1           AE 
+ getarg                    3           29 
+ getchar                   11          18 
+ endarg                    19          12  14 
+ nextarg                   23          28 
+ alldone                   2A          5  
+ testloc0                  31          34 
+ atloc0                    38          35 
+ outmsg                    39          37 
+ done                      3A          B   33 
+ @1                        3C          16  1E  21  24 
+ @20                       3D          7  
+ clptr                     3E          3   C   10  15  17 
+                                       1B  23  25 
+ vectorptr                 3F          E   20  22 
+ blank                     40          13  27 
+ argc                      41          6   1D  1F  2C 
+ vector                    42          2A  3F 
+ z                         56          32 
+ retcode                   57          30  3A 
+ errmsg1                   58          9  
+ errmsg2                   7A          36 
+ errmsg3                   94          38 
+ main                      ext         AE  2E 
+
+Input file   = sup.mas
+Output file  = sup.mob
+List file    = sup.lst 
+Number base  = decimal
+Label status = case sensitive

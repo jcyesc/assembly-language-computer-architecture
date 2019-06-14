@@ -1,0 +1,6 @@
+        s:  ld   x
+            sub  y
+            st   x
+        x:  ld   y
+            ja   s
+        y:  dw   1

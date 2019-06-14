@@ -1,0 +1,40 @@
+Machine-level Assembler Version 6.1    Mon May  4 23:09:59 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------
+               ; Function that multiply by 15
+               ;---------------------------------------------------
+               
+0  *0    F501  mult15:	aloc	1	; allocate local variable temp
+1  *1    4002  	ldr	2	; get parameter (n)
+2  *2    6002  	addr	2	; get 2n
+3  *3    5000  	str	0	; save 2n in temp
+4  *4    6000  	addr	0	; get 4n
+5  *5    5000  	str	0	; save 4n in temp
+6  *6    6000  	addr	0	; get 8n
+7  *7    5000  	str	0	; save 8n in temp
+8  *8    6000  	addr	0	; get 16n
+9  *9    7002  	subr	2	; ge 16n - n = 15n
+A  *10   F601  	dloc	1	; deallocate local variable temp
+B  *11   F000  	ret		; product returned in ac reg
+               
+               	public mult15
+               
+               
+C  *12   ========= end of fmult15.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ mult15                    0           C  
+
+Input file   = fmult15.mas
+Output file  = fmult15.mob
+List file    = fmult15.lst 
+Number base  = decimal
+Label status = case sensitive

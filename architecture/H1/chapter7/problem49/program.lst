@@ -1,0 +1,68 @@
+Machine-level Assembler Version 6.1    Sun Mar 15 16:53:42 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 7.49 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;--------------------------
+               ; void f(int *p)
+               ;--------------------------
+               
+0  *0    4001  f:	ldr	1	; cout << *p << endl;
+1  *1    F100  	ldi
+2  *2    FFFD  	dout
+3  *3    800A  	ldc	'\n'
+4  *4    FFFB  	aout
+               	
+5  *5    F000  	ret		; return to the calling function
+               
+               ;-------------------------
+               ; void g(int *p)
+               ;-------------------------
+               
+6  *6    4001  g:	ldr	1	; f(p);
+7  *7    F300  	push
+8  *8    E000  	call	f
+9  *9    F601  	dloc	1
+               
+A  *10   F000  	ret		; return to the calling function
+               
+               ;--------------------------
+               ; main()
+               ;--------------------------
+               
+B  *11   8010  main:	ldc	x	; g(&x);
+C  *12   F300  	push
+D  *13   E006  	call	g
+E  *14   F601  	dloc	1
+               
+F  *15   FFFF  	halt		; end of the program
+               
+               	end main
+               
+               
+               ; GLOBAL VARIABLES
+               
+10 *16   0003  x:	dw	3
+               
+11 *17   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           8  
+ g                         6           D  
+ main                      B           10 
+ x                         10          B  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

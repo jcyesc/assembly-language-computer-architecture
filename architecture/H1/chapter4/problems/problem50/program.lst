@@ -1,0 +1,130 @@
+Machine-level Assembler Version 6.1    Tue Jan  6 21:37:35 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 5-january-2009
+               ; Author	: Juan Carlos Yescas
+               ; Description	: The latter portion of a program is given below. 
+               ;		  (the new code you add should occupy addresses less than 100
+               ;		  has the efect of executing the code starting at location 10
+               ;		  starting at location 2000 concurrently (i.e., in an interle
+               ;
+               ;		  How is the problem going to be solved??
+               ;
+               ;		  We are going to push the instructions in an interleaved fas
+               ;		  After that we're going to pop the instructions to be stored
+               ;
+               ;---------------------------------------------------------------
+               
+0  *0    83E8  part1:  ldc	1000		; load the value 1000 in ac
+1  *1    201D  	add	counter1	; add the counter to 1000
+2  *2    F100  	ldi			; load the value that is in the address pointed by ac
+3  *3    C008  	jz	part2		; if ZERO, jump to part2
+4  *4    F300  	push			; push the value in the stack
+5  *5    001D  	ld	counter1	; load counter1 to be incremented
+6  *6    2020  	add	@1		; add 1 to counter
+7  *7    101D  	st	counter1	; store the new value in counter1
+                       
+8  *8    87D0  part2:	ldc	2000		; load the value 2000 in ac
+9  *9    201E  	add	counter2	; add counter2 to 2000
+A  *10   F100          ldi			; load the value that is in the address pointed by
+B  *11   C011          jz	copyInverse	; if ZERO, jump to copyInverse
+C  *12   F300          push			; push the value in the stack
+D  *13   001E          ld	counter2	; load counter2 to be incremented
+E  *14   2020          add 	@1		; add 1 to counter
+F  *15   101E          st 	counter2	; store the new value in counter2
+10 *16   9000          ja	part1		; jump always to part1
+                      
+               copyInverse:
+11 *17   001D  	ld	counter1	; load the value of counter1
+12 *18   201E  	add	counter2	; add the value of counter2 to counter1
+13 *19   3020  	sub    	@1		; subtract 1 to the sum because we're going to stor
+               				; starting in 2000 + (total -1) and ending in 2000.
+14 *20   101F          st   	total		; store the value in total
+               
+                        ; The copy is going to be made from 2000 to up
+15 *21   87D0  copy:	ldc  	2000		; load the value of 2000
+16 *22   201F  	add   	total		; add total to 2000
+17 *23   F200  	sti			; store the top value in the stack in the address pointed
+18 *24   001F      	ld    	total		; load the value of total
+19 *25   3020        	sub   	@1		; subtract 1 to the ac
+1A *26   101F         	st    	total		; store the new value in total
+1B *27   A015         	jzop  	copy		; if ZERO or POSITIVE, jump to copy
+1C *28   97D0         	ja     	2000		; jump always to 2000
+                  
+1D *29   0000  counter1:	dw	0
+1E *30   0000  counter2:    	dw  	0
+1F *31   0000  total:        	dw    	0
+20 *32   0001  @1:             dw    	1
+               
+               ; LATTER PORTION OF THE PROGRAM
+               
+               org	1000
+3E8*1000 8001  	ldc	1
+3E9*1001 FFFD  	dout
+3EA*1002 23F1  	add	x
+3EB*1003 FFFD  	dout
+3EC*1004 23F1  	add	x
+3ED*1005 FFFD  	dout	
+3EE*1006 23F1  	add	x
+3EF*1007 FFFD  	dout	
+3F0*1008 FFFF  	halt
+3F1*1009 0001  x:	dw	1
+               
+               org	2000
+7D0*2000 8041  	ldc	'A'
+7D1*2001 FFFB  	aout
+7D2*2002 27E5  	add	y
+7D3*2003 FFFB  	aout
+7D4*2004 27E5  	add	y
+7D5*2005 FFFB  	aout
+7D6*2006 27E5  	add	y
+7D7*2007 FFFB  	aout
+7D8*2008 27E5  	add	y
+7D9*2009 FFFB  	aout
+7DA*2010 27E5  	add	y
+7DB*2011 FFFB  	aout
+7DC*2012 27E5  	add	y
+7DD*2013 FFFB  	aout
+7DE*2014 27E5  	add	y
+7DF*2015 FFFB  	aout
+7E0*2016 27E5  	add	y
+7E1*2017 FFFB  	aout
+7E2*2018 27E5  	add	y
+7E3*2019 FFFB  	aout
+7E4*2020 FFFF  	halt
+7E5*2021 0002  y:	dw	2
+               
+               
+               
+               
+               
+               
+7E6*2022 ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ part1                     0           10 
+ part2                     8           3  
+ copyInverse               11          B  
+ copy                      15          1B 
+ counter1                  1D          1   5   7   11 
+ counter2                  1E          9   D   F   12 
+ total                     1F          14  16  18  1A 
+ @1                        20          6   E   13  19 
+ x                         3F1         3EA 3EC 3EE
+ y                         7E5         7D2 7D4 7D6 7D8 7DA
+                                       7DC 7DE 7E0 7E2
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

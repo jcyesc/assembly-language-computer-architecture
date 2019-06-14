@@ -1,0 +1,160 @@
+                                                 lib.txt
+
+                    How to Use lib Version 6.1
+
+Quick Start 
+
+     lib (LIBrary creator) creates a library of modules that can 
+be used with lin.  To use lib, enter 
+
+     lib
+
+lib then prompts the user for the names of the files that are to 
+be combined into a library.  Enter these names and/or any other 
+desired command line arguments (any number of items per input 
+line).  lib will continue to prompt until the user hits ENTER 
+without first entering an argument.  lib then combines all the 
+files specified, and creates a ".lib" file whose basename is the 
+basename of the first input file processed. 
+     If a module name entered has no extension, ".mob" is 
+appended to it.  An input file can be 
+
+     - a previously created library,
+     - a ".mac" file, or 
+     - a ".mob" file. 
+
+
+Command Line Arguments
+
+     All command line arguments are optional, can be specified in 
+any order, must have no embedded spaces, and must be separated by 
+at least one space. 
+
+     All command line arguments, except <infilename>, must have a 
+leading "/" or "-". 
+
+     All command line arguments are case insensitive, except for 
+filenames on systems with case-sensitive filenames. 
+
+     The format of the command line is
+
+lib  <argument> <argument> . . .
+
+where <argument> can be
+
+<infilename>  
+/h or /?
+/a<ansfilename>  
+/o<outfilename>  
+
+If one or more input file names or answer files are specified on 
+the command line, then lib will not prompt the user for 
+additional input.  If an input file name starts with a pathname 
+that starts with "/", then substitute "//" for the leading "/" in 
+the pathname when entering the input file name. 
+
+If lib detects an error in an argument ON THE COMMAND LINE, it 
+generates an error message and terminates execution.  If, on the 
+other hand, lib detects an error in an argument entered IN 
+RESPONSE TO A PROMPT, lib does not terminate.  It, instead, 
+allows the user to reenter. 
+
+More than one <infilename> may be specified.  If an <infilename> 
+has no extension, ".mob" is appended to it. 
+
+/h or /? displays a help screen.
+
+<ansfilename> is the name of an answer file.  An answer file 
+contains a list of files names.  Each file specified is included 
+in the library to be created.  More than one /a<ansfilename> may 
+be specified.  If /a is specified but not followed by a file 
+name, then the answer file name defaults to "lib.ans". 
+                       
+<outfilename> is the name of the library file to be created.
+If <outfilename> has no extension, ".lib" is appended to it.       
+If /o<outfilename> is omitted, then the output file name defaults 
+to the basename of the first input file to which the extension 
+".lib" is appended.
+
+
+Search Path for Answer Files
+
+     If a directory is specified by an /a argument, lib searches 
+for the answer file in that directory.  Otherwise, lib searches 
+for the answer file in the current directory and in the directory 
+specified by the H1DIR environment variable, if any. 
+
+
+Problem with a Leading "/" in Command Line Arguments on Non-
+Microsoft Systems
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with EITHER "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems can cause a 
+problem.  For example, suppose you want to specify an input file 
+on the command line.  Recall that an input file argument is not 
+preceded by an argument marker.  For example in, 
+
+    sim a /ms
+
+the argument "a" (which specifies the input file a.mac) does NOT 
+have a preceding "/" or "-".  "/ms", on the other hand, has the 
+argument marker "/".  "/ms" is interpreted as the "/m" argument 
+followed by the secondary argument "s".  Now suppose the input 
+file you want to specify on the command line is 
+
+     /abc.x
+
+This denotes the abc.x file in the root directory "/".  
+Unfortunately, all the programs in the H1 Software Package will 
+interpret a leading "/" as an argument marker rather than as the 
+root directory.  Thus, 
+
+     /abc.x
+
+on the command line is incorrectly interpreted as the argument 
+
+     /a 
+
+followed by the secondary argument
+
+     bc.x
+
+This problem does not occur on Microsoft systems because they use 
+"\" rather than "/" as the filename separator, and, thus, there 
+is never any confusion with the argument marker "/". 
+
+You will probably rarely run into this problem because full 
+pathnames are rarely needed when using the programs in the H1 
+Software Package.  However, if the problem does occur, it can 
+easily be circumvented: simply use "//" to represent the root.  
+For example, if 
+
+     //abc.x
+
+appears on a command line, it is interpreted as the input file
+
+     /abc.x
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 
+
+
+Default Settings
+
+     lib is shipped with the following default settings:
+
+          message status: messages on (i.e., non-error/non-warning 
+                          console messages are displayed) 
+
+This setting, however, can be changed with the mod program.  For
+information on the mod program, see mod.txt.

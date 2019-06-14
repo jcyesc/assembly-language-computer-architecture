@@ -1,0 +1,11 @@
+Module Examiner Version 6.1             Sun May  3 12:35:16 2009
+
+Header:
+       0:  0045 0000 0073 0075 0062 0000 0045 0001   E.sub.E.
+       8:  0074 006F 0074 0061 006C 0000 0050 0003   total.P.
+      10:  0078 0000 0073 0000 0054                  x.s.T   
+Text:
+       0:  E000 1000 FFFF 0011                       ....    
+
+Input file = m1.mob
+List file  = m1.mex

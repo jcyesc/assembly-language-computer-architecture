@@ -1,0 +1,118 @@
+Machine-level Assembler Version 6.1    Fri Apr  3 23:35:42 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.69 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;---------------------------------
+               ; int tough(int x, int *p)
+               ;---------------------------------
+               
+               @tough$ipi:	
+0  *0    F502  	aloc	2	; int a, b;
+               	
+1  *1    4003  	ldr	3	; a = x;
+2  *2    5000  	str	0
+               
+3  *3    4004  	ldr	4	; b = *p;
+4  *4    F100  	ldi
+5  *5    5001  	str	1
+               
+6  *6    4000  	ldr	0	; if(a == 0)
+7  *7    D00B  	jnz	next	
+               	
+8  *8    4004  	ldr	4	; return *p;
+9  *9    F100  	ldi
+               
+A  *10   9016  	ja	end_f
+               next:
+B  *11   F700  	swap		; tough(x - 1, &b)
+C  *12   103B  	st	sp_save
+D  *13   F700  	swap	
+E  *14   003B  	ld	sp_save
+F  *15   203A  	add	@1
+10 *16   F300  	push
+11 *17   4004  	ldr	4
+12 *18   303A  	sub	@1
+13 *19   F300  	push
+14 *20   E000  	call	@tough$ipi
+15 *21   F602  	dloc	2
+               		
+16 *22   F602  end_f:	dloc	2	;release memory
+17 *23   F000  	ret		; return to the calling function
+               
+               ;----------------------------
+               ; int main()
+               ;----------------------------
+               
+18 *24   8005  main:	ldc	5	; s = 5;
+19 *25   102E  	st	s
+               
+1A *26   802E  	ldc	s	; t = tough(3, &s);
+1B *27   F300  	push
+1C *28   8003  	ldc	3
+1D *29   F300  	push
+1E *30   E000  	call	@tough$ipi
+1F *31   F602  	dloc	2
+20 *32   102F  	st	t
+               
+21 *33   8030  	ldc	msg_s	; cout << "s = " << s << endl;
+22 *34   FFF7  	sout
+23 *35   002E  	ld	s
+24 *36   FFFD  	dout
+25 *37   800A  	ldc	'\n'
+26 *38   FFFB  	aout
+               
+27 *39   8035  	ldc	msg_t	; cout << "t = " << t << endl;
+28 *40   FFF7  	sout
+29 *41   002F  	ld	t
+2A *42   FFFD  	dout
+2B *43   800A  	ldc	'\n'
+2C *44   FFFB  	aout
+               
+2D *45   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+2E *46   0000  s:	dw	0	; int s;
+2F *47   0000  t:	dw	0	; int t;
+30 *48   0073  msg_s:	dw	"s = "
+31 *49   0020
+32 *50   003D
+33 *51   0020
+34 *52   0000
+35 *53   0074  msg_t:	dw	"t = "
+36 *54   0020
+37 *55   003D
+38 *56   0020
+39 *57   0000
+3A *58   0001  @1:	dw	1
+3B *59   0000  sp_save:dw	0
+3C *60   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @tough$ipi                0           14  1E 
+ next                      B           7  
+ end_f                     16          A  
+ main                      18          2E 
+ s                         2E          19  1A  23 
+ t                         2F          20  29 
+ msg_s                     30          21 
+ msg_t                     35          27 
+ @1                        3A          F   12 
+ sp_save                   3B          C   E  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

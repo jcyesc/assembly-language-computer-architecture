@@ -1,0 +1,66 @@
+; Program 8.16 translate to assembly language.
+
+;-------------------
+; S ret_struct()
+;-------------------
+
+@ret_struct$v:
+	aloc	2	; S s
+	
+	ldc	1	; s.x = 1;
+	str	0
+
+	ldc	2	; s.y = 2;
+	str	1
+
+			; return s
+	ldr	1	; get s.y
+	push		; push s.y
+	ldr	1	; get s.x
+	push		; push s.x
+	ldr	5	; get address of return area
+	sti		; pop value of s.x into return area
+	add	@1	; get address of next word in return area
+	sti		; pop value of s.y into return area
+	dloc	2	; deallocate s
+	ret
+
+;----------------------
+; main
+;----------------------
+
+main:			; t = ret_struct();
+	ldc	t	; get address of t
+	push		; craete implicit parameter
+	call	@ret_struct$v
+	dloc	1	; deallocate parameter
+
+	ld	t	; cout << x << " - " << y << endl;
+	dout	
+	ldc	@msg
+	sout
+	ld	t + 1
+	dout
+	ldc	'\n'
+	aout
+
+	halt
+	
+	end main
+	
+t:	dw	2 dup 0
+@1:	dw	1
+@spsave:dw	0
+@msg:	dw	" - "
+	
+
+
+
+
+
+
+
+
+
+
+

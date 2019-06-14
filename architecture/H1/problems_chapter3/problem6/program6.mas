@@ -1,0 +1,9 @@
+	ld    x
+	dw    2006h
+	dw    2007h
+	st    z
+	halt
+x:	dw    10
+	dw    20
+	dw    30
+z:	dw    0

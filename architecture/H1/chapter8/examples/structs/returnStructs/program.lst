@@ -1,0 +1,94 @@
+Machine-level Assembler Version 6.1    Sun Mar 22 08:36:56 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Program 8.16 translate to assembly language.
+               
+               ;-------------------
+               ; S ret_struct()
+               ;-------------------
+               
+               @ret_struct$v:
+0  *0    F502  	aloc	2	; S s
+               	
+1  *1    8001  	ldc	1	; s.x = 1;
+2  *2    5000  	str	0
+               
+3  *3    8002  	ldc	2	; s.y = 2;
+4  *4    5001  	str	1
+               
+               			; return s
+5  *5    4001  	ldr	1	; get s.y
+6  *6    F300  	push		; push s.y
+7  *7    4001  	ldr	1	; get s.x
+8  *8    F300  	push		; push s.x
+9  *9    4005  	ldr	5	; get address of return area
+A  *10   F200  	sti		; pop value of s.x into return area
+B  *11   201E  	add	@1	; get address of next word in return area
+C  *12   F200  	sti		; pop value of s.y into return area
+D  *13   F602  	dloc	2	; deallocate s
+E  *14   F000  	ret
+               
+               ;----------------------
+               ; main
+               ;----------------------
+               
+               main:			; t = ret_struct();
+F  *15   801C  	ldc	t	; get address of t
+10 *16   F300  	push		; craete implicit parameter
+11 *17   E000  	call	@ret_struct$v
+12 *18   F601  	dloc	1	; deallocate parameter
+               
+13 *19   001C  	ld	t	; cout << x << " - " << y << endl;
+14 *20   FFFD  	dout	
+15 *21   8020  	ldc	@msg
+16 *22   FFF7  	sout
+17 *23   001D  	ld	t + 1
+18 *24   FFFD  	dout
+19 *25   800A  	ldc	'\n'
+1A *26   FFFB  	aout
+               
+1B *27   FFFF  	halt
+               	
+               	end main
+               	
+1C *28   0000  t:	dw	2 dup 0
+1E *30   0001  @1:	dw	1
+1F *31   0000  @spsave:dw	0
+20 *32   0020  @msg:	dw	" - "
+21 *33   002D
+22 *34   0020
+23 *35   0000
+               	
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+24 *36   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @ret_struct$v             0           11 
+ main                      F           1C 
+ t                         1C          F   13  17 
+ @1                        1E          B  
+ @spsave                   1F         
+ @msg                      20          15 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,62 @@
+;---------------------------------------------------------
+; Translate the program 8.50 to assembly language
+;---------------------------------------------------------
+
+;----------------------------------
+; void f()
+;----------------------------------
+
+@f$v:	aloc	5	; int b[5];
+	
+	ldc	1	; a[0] = 1;
+	st	a
+	
+	swap		; b[1] = 3;
+	st	spsave
+	swap
+	ldc	3
+	push
+	ldc	1
+	add	spsave
+	sti
+
+	ldc	22	; c[3] = 22;
+	st	s0_c + 3		
+		
+	ldc	12	; c[b[a[0]]] = 12;
+	push
+	ld	spsave
+	add	a
+	ldi
+	st	value	
+	ldc	s0_c
+	add	value
+	sti
+	
+	ld	s0_c + 3	; cout << c[3] << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	dloc	5	; release the memory
+
+	ret		; return to the calling function
+
+;--------------------------
+; main()
+;--------------------------
+
+main:	call	@f$v	; f();
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+a:	dw	5 dup 0	; int a[5];
+s0_c:	dw	5 dup 0 ; static int c[5];
+spsave: dw	0
+value:	dw	0
+
+@3:	dw	3
+

@@ -1,0 +1,15 @@
+         ;                                       lmod4.mas
+         ; Test module for linv1
+         ; Link with lmod3.mas
+         ; Links ok
+v:       dw     1
+w:       dw     3
+x:       dw     4
+y:       dw     5
+z:       dw     6
+         end    0
+         public v
+         public w
+         public x
+         public y
+         public z

@@ -1,0 +1,7 @@
+c:	ldc	msg
+	sout
+	ret
+
+msg:	dw	"in c\n"
+
+	public	c	; c is a public symbol

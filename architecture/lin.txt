@@ -1,0 +1,216 @@
+                                                 lin.txt
+
+                    How to Use lin Version 6.1
+
+Quick Start
+
+     lin (LINker) links together a collection of ".mob"
+and/or ".mac" modules, producing a ready-to-run ".mac" file.  To
+use lin, enter
+
+     lin
+
+lin then prompts the user for the names of the files that are to 
+be linked.  Enter these names and/or any other desired command line 
+arguments (any number of items per input line).  lin will 
+continue to prompt until the user hits ENTER without first 
+entering an argument.  lin then links all the files specified, 
+and creates a ".mac" file whose basename is the basename of the 
+first input file processed. 
+     If a module name entered has no extension, ".mob" is 
+appended to it.  An input file can be a ".mac" or a ".mob" file.
+
+
+Command Line Arguments
+
+     All command line arguments are optional, can be specified in
+any order, must have no embedded spaces, and must be separated by
+at least one space.
+
+     All command line arguments, except <infilename>, must have a
+leading "/" or "-".
+
+     All command line arguments are case insensitive, except for
+filenames on systems with case-sensitive filenames.
+
+     The format of the command line is
+
+lin  <argument> <argument> . . .
+
+where <argument> can be
+
+<infilename>
+/h or /?
+/i or /s
+/a<ansfilename>
+/l<libfilename>
+/t<tabfilename> or /n
+/cat or /ncat
+/o<outfilename>
+
+If one or more input file names or answer files are specified on 
+the command line, then lin will not prompt the user for 
+additional input.  If an input file name on the command line 
+starts with a pathname that starts with "/", then substitute "//" 
+for the leading "/" in the pathname when entering the input file 
+name.
+
+If lin detects an error in an argument ON THE COMMAND LINE, it 
+generates an error message and terminates execution.  If, on the 
+other hand, lin detects an error in an argument entered IN 
+RESPONSE TO A PROMPT, lin does not terminate.  It, instead, 
+allows the user to reenter. 
+
+More than one <infilename> may be specified.  If an <infilename>
+has no extension, ".mob" is appended to it.
+
+/h or /? displays a help screen.
+
+If /i is specified, the processing of PUBLIC and EXTERN symbols 
+is case insensitive.  If /s is specified, the processing of 
+PUBLIC and EXTERN symbols is case sensitive.  If neither /i nor 
+/s is specified, then the default setting is used (see the 
+section "Default Settings" below). 
+
+More than one /a<ansfilename> may be specified.  An answer file
+contains a list of files names, one name per line.  Each file
+specified is included in the link process.  If /a is specified
+but not followed by a file name, then the answer file name
+defaults to "lin.ans".
+
+If /l<libfilename> is specified and unresolved external 
+references remain after all the input files have been linked, 
+then the library specified by <libfilename> is searched.  If a 
+module is found in this library that can resolve one or more of 
+the external references, that module is linked.  lin repeatedly 
+searches and links modules from the library (or libraries, if 
+more than one is specified) until either all external references 
+have been resolved, or no modules can be found that resolve those 
+that do exist.  In the latter case, lin generates an error 
+message and terminates.  More than one /l<libfilename> may be 
+specified.  
+
+If /t is specified, a table file is created showing the P, E, R, 
+and S tables and the machine text that lin builds.  If /t is 
+specified but not followed by a file name, then <tabfilename> 
+defaults to <outfilename_less_extension>.tab.  If <tabfilename> 
+has no extension, ".tab" is appended to it.  If /n is specified, 
+a table file is not created.  If neither /t nor /n is specified, 
+then the default setting is used (see the section "Default 
+Settings" below). 
+
+<outfilename> is the name of the executable (".mac") file to be 
+created. If <outfilename> has no extension, ".mac" is appended to 
+it.  If /o<outfilename> is omitted, then the output file name 
+defaults to the basename of the first input file to which ".mac" 
+is appended. 
+
+
+Cat File
+
+     lin can create a "cat file" which is the concatenation of 
+the ".lst" files, suitably filtered, corresponding to all the 
+input files.  Its base name is the same as the output file.  Its 
+extension is ".cat".  If some input files have missing ".lst" 
+files, lin will still build a cat file using those ".lst" files 
+that are available.  
+
+     The addresses given in the cat file at the start of each 
+line of code are relocated--that is, they correspond to locations 
+in the ".mac" file created by lin.  However, the hex machine code 
+shown for each instruction is not relocated. 
+
+     The cat file is needed by sim for source-level debugging.  
+
+     If the command line argument /cat is specified, lin creates 
+a cat file.  If /ncat is specified, lin does not create a cat 
+file.  If neither /cat nor /ncat is specified, then the default 
+setting is used (see the section "Default Settings" below). 
+ 
+
+Search Path for Library, Answer Files, sup.mob, and ksup.mob
+
+     If a directory is specified by the /l argument, lin searches 
+for the library file in that directory.  Otherwise, lin searches 
+for the library file in the current directory and in the 
+directory specified by the H1DIR environment variable, if any, in 
+that order.  lin follows the same search pattern for answer 
+files, sup.mob, and ksup.mob. 
+
+
+Problem with a Leading "/" in Command Line Arguments on Non-
+Microsoft Systems
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with EITHER "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems can cause a 
+problem.  For example, suppose you want to specify an input file 
+on the command line.  Recall that an input file argument is not 
+preceded by an argument marker.  For example in, 
+
+    sim a /ms
+
+the argument "a" (which specifies the input file a.mac) does NOT 
+have a preceding "/" or "-".  "/ms", on the other hand, has the 
+argument marker "/".  "/ms" is interpreted as the "/m" argument 
+followed by the secondary argument "s".  Now suppose the input 
+file you want to specify on the command line is 
+
+     /abc.x
+
+This denotes the abc.x file in the root directory "/".  
+Unfortunately, all the programs in the H1 Software Package will 
+interpret a leading "/" as an argument marker rather than as the 
+root directory.  Thus, 
+
+     /abc.x
+
+on the command line is incorrectly interpreted as the argument 
+
+     /a 
+
+followed by the secondary argument
+
+     bc.x
+
+This problem does not occur on Microsoft systems because they use 
+"\" rather than "/" as the filename separator, and, thus, there 
+is never any confusion with the argument marker "/". 
+
+You will probably rarely run into this problem because full 
+pathnames are rarely needed when using the programs in the H1 
+Software Package.  However, if the problem does occur, it can 
+easily be circumvented: simply use "//" to represent the root.  
+For example, if 
+
+     //abc.x
+
+appears on a command line, it is interpreted as the input file
+
+     /abc.x
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 
+
+
+Default Settings
+
+     lin is shipped with the following default settings:
+
+          label status:     case sensitive
+          table status:     table on
+          cat file status:  cat file on
+          message status:   messages on (i.e., non-error/non-warning
+                            console messages are displayed) 
+
+These settings, however, can be changed with the mod program.  For
+information on the mod program, see mod.txt.

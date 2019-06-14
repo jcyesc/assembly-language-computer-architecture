@@ -1,0 +1,12 @@
+; What happens when the following program is run:
+
+	ld	0
+z:	ld	1
+	ld	z
+s:	st	x
+x:	halt
+	sub	z
+	ja	s
+
+;  After two jumps the program finishes because we override the
+;  address 004 two times.

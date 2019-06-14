@@ -1,0 +1,16 @@
+; #0bec
+;Use p644.has for your microcode
+;Create config file p644.cfg
+;Invoke sim with
+;  sim sprog /mp644 /ap644
+n
+o
+ln
+g
+sb
+o
+g
+SD
+enable
+sd
+q

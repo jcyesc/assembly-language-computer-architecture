@@ -1,0 +1,39 @@
+Machine-level Assembler Version 6.1    Sun Jan  4 12:12:47 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1
+               ; Created	: 4-december-2009
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Program that reads in a decimal number using mem
+               ;		  and displays its value in decimal using dout.
+               ;---------------------------------------------------------------
+               
+               	&		; Configure H1 for memory-mapped I/0
+0  *0    0BB8  	ld	3000	; get keyboard status
+1  *1    C000  	jz	* - 1	; if 0 (not ready), try again
+2  *2    0BB9  	ld	3001	; get character from keyboard
+               
+3  *3    FFFD  	dout		; show the number using decimal output
+               			; the number printed is the ASCII code of the number.
+               
+4  *4    FFFF  	halt		; end of the program
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+5  *5    ========= end of reads_memory_mappend.mas ===============
+
+Input file   = reads_memory_mappend.mas
+Output file  = reads_memory_mappend.mac
+List file    = reads_memory_mappend.lst 
+Number base  = decimal
+Label status = case sensitive

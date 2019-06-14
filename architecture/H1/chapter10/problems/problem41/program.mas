@@ -1,0 +1,175 @@
+;----------------------------------------------------------------------------
+; 10.41 Same as Problem 10.40, but assume multiple-digit positive numbers.
+;----------------------------------------------------------------------------
+
+
+;----------------------------------------------------
+;int atoi(char c)
+;	Function that converts a char to integer
+;	(Alpha numeric to integer)
+;
+;	DECIMAL ASCII
+;	0	48
+;	1	49
+;	2	50
+;	  .....
+;	9	57
+;----------------------------------------------------
+
+@atoi$c:	ldr	1
+		sub	@48
+		ret
+		
+;--------------------------------------------------------
+; int mult(int x, int y)
+;	Function that multiplies x by y
+;	To perform the multiplication we sum y, x times.
+;--------------------------------------------------------
+
+@mult$ii:	ldc	0	; int temp = 0;
+		aloc	1	; variable to store the result
+		str	0
+	
+_for:		ldr	2	; verify if x is not zero
+		jz	_end	; if zero jump to .en
+		ldr	3	; load y
+		addr	0	; sum temp to y (tmp += y;)
+		str	0
+		
+		ldr	2	; x--;
+		sub	@1
+		str	2	
+		ja	_for
+		
+_end:		ldr	0	; variable that stores the result
+		dloc	1	; release the memory of temp
+		ret
+
+;--------------------------------------------------------------
+; int toInt(char *p)
+;	Function that converts a String to and int using
+;	the HORNER's METHOD (Use 10 base).
+;
+;	int toInt(char *p)
+;	{
+;	    int tmp = atoi(p[0]);  // only the first character
+;	    p++;
+;	    while(*p != null)
+;	    {
+;		tmp = 10 * tmp;
+;	   	tmp += atoi(p[0]);
+;		p++;
+;	       
+;	    }
+;	    return tmp;
+;	}
+;--------------------------------------------------------------
+
+@toInt$cp:	aloc	1	; int tmp = atoi(p[0]);
+		ldr	2
+		ldi		
+		push	
+		call	@atoi$c
+		dloc	1
+		str	0	
+		
+		ldr	2	; p++
+		add	@1
+		str	2
+
+_while:		ldr	2	; while(*p != null)
+		ldi
+		jz	_end2
+		
+		ldr	0	; tmp = mult(10, tmp);
+		push
+		ldc	10
+		push
+		call	@mult$ii
+		dloc	2		
+		str	0
+
+		ldr	2	; tmp += atoi(p[0]);	
+		ldi
+		push
+		call	@atoi$c
+		dloc	1
+		addr	0	
+		str	0
+		
+		ldr	2	; p++;
+		add	@1
+		str	2
+
+		ja	_while
+
+_end2:		ldr	0	; return tmp
+		dloc	1
+
+		ret
+
+;------------------------------------------------
+; int main(int argc, char **argv)
+; 	argv[0] is the name of the program.
+;------------------------------------------------
+
+main:
+	ldr	1		; if(argc != 3)
+	sub	@3		;	cout << "Three parameters are required.\n";
+	jnz	_error_main
+
+	ldr	2		; n1 = toInt(argv[1]);
+	add	@1		
+	ldi
+	push
+	call	@toInt$cp
+	dloc	1
+	st	@n1
+	
+	dout			; cout << n1 << endl;
+	ldc	'\n'
+	aout
+
+	ldr	2		; n2 = toInt(argv[2]);
+	add	@2
+	ldi
+	push
+	call	@toInt$cp
+	dloc	1
+	st	@n2
+
+	dout			; cout << n2 << endl;
+	ldc	'\n'
+	aout
+
+	ldc	@msg2		; cout << "The result is " << (n1 + n2) << endl;
+	sout
+	ld	@n1
+	add	@n2
+	dout
+	ldc	'\n'
+	aout	
+
+	ja	_end_main
+
+_error_main:
+	ldc	@msg1
+	sout	
+
+_end_main:
+
+	ret			; return to the caller
+
+; Global variables
+
+@msg1:	dw	"Three parameters are required.\n"
+@msg2:	dw	"The result is ";
+@1:	dw	1
+@2:	dw	2
+@3:	dw	3
+@48:	dw	48	; use to subtract ASCII - 48 to get the number
+@n1:	dw	0
+@n2:	dw	0
+
+	public main
+

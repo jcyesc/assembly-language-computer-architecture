@@ -1,0 +1,12 @@
+d        ; Number base (d or h)                  mas.rsp
+s        ; Label status (s or i)   
+L        ; List status (L or n)     
+m        ; Message status (m or n) 
+e        ; Sym tab display (e or d)
+c        ; Car file on
+e        ; Reverse comments (e or d)
+//       ; Reverse comments delimiter
+r        ; Reverse file on
+25       ; C++ start column
+none     ; Config file name
+y        ; Okay to change? (y or n)

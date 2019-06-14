@@ -1,0 +1,49 @@
+                                                 b.txt
+
+Basic Instruction Set (b.has, b.hor, b.vas, b.ver, b.cfg)
+
+Opcode  Assembly    Name            Description
+(hex)     Form
+
+ 0     ld   x    Load               ac = mem[x];
+ 2     st   x    Store              mem[x] = ac;
+ 4     shll z    Shift left log     ac << z;
+ 6     shrl z    Shift right log    ac >> z;
+ 8     addc x    Add constant       ac = ac + x;
+ A     flip      Flip ac            ac = ~ac;
+ C     mult x    Multiply           ac = ac * mem[x];
+ E     jn   x    Jump on negative   if (ac < 0) pc = x;
+
+ FFF5  uout      Unsigned out       Output number in ac reg as
+                                    unsigned decimal number
+
+ FFF6  sin       String input       Input string to address in ac
+ FFF7  sout      String output      Output string pointed to by ac
+
+ FFF8  hin       Hex input          Input hex number to ac register
+ FFF9  hout      Hex output         Output number in ac in hex
+
+ FFFA  ain       ASCII input        Input ASCII char to ac register
+ FFFB  aout      ASCII output       Output ASCII char in ac register
+
+ FFFC  din       Decimal input      Input decimal number (signed
+                                    or unsigned) to ac register
+ FFFD  dout      Decimal output     Output number in ac reg as
+                                    a signed decimal number
+
+ FFFE  bkpt      Breakpoint         Trigger breakpoint
+ FFFF  halt      Halt               Trigger halt
+
+!-directive: b
+
+-----------------------------------------------------------------
+Instruction Fields
+
+  x:   12 rightmost bits of instruction, 0 <= x <= 4095 (FFF hex)
+  z:   4  rightmost bits of instruction, 0 <= z <= 15   (F dec)
+
+-----------------------------------------------------------------
+Registers
+
+pc:    program counter register
+ac:    accumulator register

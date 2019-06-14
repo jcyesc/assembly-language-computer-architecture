@@ -1,0 +1,24 @@
+                         ;                       a.mas
+                         ; Computes n + n-1 + ... + 1
+                         ; Displays sum in decimal
+loop:    ld     sum      ; get current sum
+         add    n        ; add n to it
+         st     sum      ; store new sum back in sum
+         ld     n        ; decrement n
+         sub    @1 
+         jz     done     ; when n is zero, go to done
+         st     n        ; put new value in n
+         ja     loop     ; jump always to loop to repeat
+done:                    ; come here when n is zero
+         ldc    msg      ; get address of msg
+         sout            ; display string at msg
+         ld     sum      ; get final sum
+         dout            ; display in decimal
+         ldc    '\n'     ; get newline character
+         aout            ; display it--that is, go to next line
+         halt            ; stop
+
+@1:      dw     1
+n:       dw     20
+msg:     dw     "Sum = "
+sum:     dw     0

@@ -1,0 +1,71 @@
+Machine-level Assembler Version 6.1    Sun Mar 15 11:27:51 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 7.47 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;--------------------------
+               ; void f(int x, int *p)
+               ;--------------------------
+               
+0  *0    802C  f:	ldc	44	; x = 44;
+1  *1    5001  	str	1
+               	
+2  *2    8037  	ldc	55	; *p = 55
+3  *3    F300  	push
+4  *4    4003  	ldr	3
+5  *5    F200  	sti		; mem[ac] = mem[sp++];
+               
+6  *6    F000  	ret		; return to the calling function
+               
+               ;----------------------------
+               ; main()
+               ;----------------------------
+               
+7  *7    8017  main:	ldc	b	; f(a, &b);
+8  *8    F300  	push
+9  *9    0016  	ld	a
+A  *10   F300  	push
+B  *11   E000  	call	f
+C  *12   F602  	dloc	2
+               	
+D  *13   0016  	ld	a	; cout << a << " " << b << endl;
+E  *14   FFFD  	dout
+F  *15   8018  	ldc	msg
+10 *16   FFF7  	sout
+11 *17   0017  	ld	b
+12 *18   FFFD  	dout
+13 *19   800A  	ldc	'\n'
+14 *20   FFFB  	aout
+               
+15 *21   FFFF  	halt		; end of the program	
+               
+               	end	main
+               ; GLOBAL VARIABLES
+               
+16 *22   0000  a:	dw	0
+17 *23   0000  b:	dw	0
+18 *24   0020  msg:	dw	" "
+19 *25   0000
+1A *26   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           B  
+ main                      7           16 
+ a                         16          9   D  
+ b                         17          7   11 
+ msg                       18          F  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

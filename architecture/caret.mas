@@ -1,0 +1,9 @@
+;                                                caret.___
+; Program that illustrates ^-lines.
+; Examine the caret.lst and caret.car files mas produces.
+
+         ldc prompt
+^prompt: dw  "Enter decimal number\n"
+         sout
+         din
+         halt

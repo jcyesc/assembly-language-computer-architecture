@@ -1,0 +1,95 @@
+Horizontal Microcode Assembler Version 6.1      Tue Feb 17 23:26:28 2009
+
+  LOC    OBJECT    SOURCE
+hex*dec
+
+                   / Basic Instruction Set Horizontal Microcode 	b.has
+                   
+                   / The label indicates the opcode decoded up to that point.
+                   / For example, control reaches the label L011 when opcode
+                   / bits 011 have been decoded.
+                   
+                   /***********************************************************
+                   /	Fetch instruction and increment pc register		  /
+                   /***********************************************************
+0  *0    304D2000  fetch:	mar = pc; pc = pc + 1;		/ increment pc
+1  *1    00001000  	rd;				/ fetch mach inst
+2  *2    49400000  	ir = mdr;			/ put mach inst in ir
+                   /***********************************************************
+                   / 	Decode opcode						  /
+                   /***********************************************************
+3  *3    52400207  	dc = ir; if(s) goto L1			/ test 1st bit
+4  *4    5281820A  L0:	dc = left(dc); if (s) goto L01;		/ test 2n bit
+5  *5    52818211  L00:	dc = left(dc); if (s) goto L001;	/ test 3rd bit
+6  *6    0000060E  		goto L000;
+7  *7    5281820C  L1:	dc = left(dc); if (s) goto L11;		/ test 2nd bit
+8  *8    5281821D  L10:	dc = left(dc); if (s) goto L101;	/ test 3rd bit
+9  *9    0000061B  		goto L100;
+A  *10   52818217  L01:	dc = left(dc); if (s) goto L011;	/ test 3rd bit
+B  *11   00000613  		goto L010;
+C  *12   52818221  L11:	dc = left(dc); if (s) goto L111;	/ test 3rd bit
+D  *13   0000061E  		goto L110;
+                   /***********************************************************
+                   /	Microde for each instruction				 /
+                   /***********************************************************
+                   L000:	/--------------------------- LD ----------------------
+E  *14   00122000  	mar = ir;			/ get add from inst
+F  *15   00001000  	rd;				/ read operand
+10 *16   41400600  	ac = mdr; goto fetch;		/ load ac with operand
+                   L001:   /--------------------------- ST --------------------
+11 *17   2A122000  	mar = ir; mdr = ac;		/ prepare for write
+12 *18   00000E00  	wr; goto fetch;			/ write
+                   L010:	/--------------------------- SHLL --------------------
+13 *19   7A488400  	f = ir & zmask; if (z) goto fetch;	/ get z-field
+14 *20   42018000  lloop:	ac = left(ac);				/ shift ac left
+15 *21   7BC34400  	f = f - 1; if(z) goto fetch;		/ dec ac and test
+16 *22   00000614  	goto lloop;				/ branch to lloop
+                   L011:	/--------------------------- SHRL --------------------
+17 *23   7A488400  	f = ir & zmask; if (z) goto fetch;	/ get z-field
+18 *24   4201C000  rloop:	ac = right(ac);				/ shift ac right
+19 *25   7BC34400  	f = f - 1; if (z) goto fetch;		/ dec ac and test
+1A *26   00000618  	goto rloop;				/ branch to rloop
+                   L100:  	/--------------------------- ADDC ------------------
+1B *27   7A448000  	f = ir & xmask;			/ get const from x-field
+1C *28   421F0600  	ac = ac + f; goto fetch;	/ add const to ac
+                   L101:   /--------------------------- FLIP ------------------
+1D *29   42004600  	ac = ~ac; goto fetch;		/ bitwise compl ac
+                   L110:	/--------------------------- MULT --------------------
+1E *30   00122000  	mar = ir;			/ get add from inst
+1F *31   00001000  	rd;				/ read operand
+20 *32   420AC600  	ac = ac * mdr; goto fetch;	/ mult ac by operand
+                   L111:	/--------------------------- JN ----------------------
+21 *33   02000223  	0 = ac; if (s) goto dojn;	/ branch if ac neg
+22 *34   00000600  	goto fetch;			/ branch
+23 *35   32448600  dojn:	pc = ir & xmask; goto fetch;	/ put new add in pc
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+                   
+24 *36   ============= end of b.has ==============================
+
+Input file   = b.has
+Output file  = b.hor
+List file    = b.hst 
+Config file  = b.cfg 
+Number base  = decimal
+Label status = case sensitive
+Shifter      = one-position

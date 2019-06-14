@@ -1,0 +1,456 @@
+                                                 require.txt
+
+           REQUIREMENTS FOR ALL PROGRAMMING ASSIGNMENTS
+
+General Requirements        
+
+
+1)  Use the mod program to incorporate your name into the sim 
+    executable file.  Your name will then appear in all log files 
+    you create with sim.  To do this, at the command line enter 
+
+         mod sim /r
+
+    At the prompt, enter your name (family name first, then your 
+    given name and middle initial, if any, each separated by at 
+    least one space).  IMMEDIATEDLY PRECEDE YOUR FAMILY NAME WITH 
+    A PERIOD.  The period causes the log files sim creates to 
+    have an extension that includes your family name in lower 
+    case (this feature is not supported on DOS).  For example, if 
+    you enter 
+    
+         .DosReis Anthony J
+    
+    then the log files sim creates will have the extension 
+    ".dosreis.log".  Do NOT include in your family name any 
+    embedded spaces or characters that cannot be part of a file 
+    name.  If you share your last name with someone else in your 
+    class, omit the spaces separating the parts of your name. 
+    That way your log file names will contain your entire name.  
+    For example, enter 
+
+         .DosReisAnthonyJ 
+    
+    in which case your log files will have the extension 
+    ".dosreisanthonyj.log".   
+    
+    By incorporating your name into log file names, your 
+    instructor can keep the log files for an entire class in a 
+    single directory without any file name conflicts.  
+    
+    If you do not submit your homework electronically (i.e., you 
+    hand in hardcopy printouts), then there is no need to 
+    incorporate your name into log file names.  In this case, you 
+    should STILL enter your name using the mod command, but 
+    WITHOUT the leading period.  Your name will then appear 
+    within your log files but will not be incorporated into log 
+    file names. 
+
+2)  Place a comment containing your name at the beginning of
+    all your programs.
+
+3)  The name of the files containing your programs should have 
+    the base name of the form 
+
+         p<chapternumberproblemnumber>
+   
+    For example, use the file name "p412.mas" for your program 
+    for Problem 4.12.  The file name should start with a lower 
+    case 'p'.  Do NOT insert any separating characters within the 
+    file's basename.  For example, do NOT use the name 
+    "p4_12.mas".  Do NOT add leading zeros to the problem number.  
+    For example, do NOT use the name "p0412.mas".  This naming 
+    convention requirement DOES NOT APPLY to the problems from 
+    Chapter 2.  For these problems, you enter your program 
+    directly into memory using the e command, so there is no file 
+    to name. 
+
+4)  If your program does not work, use the debugger to determine 
+    the error.  With the debugger, you should always be able to 
+    find any errors in your program.  Take advantage of the LD 
+    command (log display) debugger command to examine your log 
+    file during a session, or print out the log file and then 
+    carefully examine the printout off line until you find the 
+    error. 
+
+5)  If your program accepts input, you should test it with a 
+    variety of inputs to ensure that it is working correctly.  
+    Use a set of test cases that provides a reasonably 
+    comprehensive test of your program.  Whenever possible, use 
+    test cases for which you know or can easily determine the 
+    correct output.
+
+6)  To get the required log file to hand in, enter 
+
+         /a 
+
+    from within the debugger when running your finished program 
+    (you can also specify /a on the command line when invoking 
+    sim).  For this command to work correctly, you MUST follow 
+    the naming convention given in requirement 3 above.  When the 
+    /a command is entered, sim executes the debugger commands in 
+    the answer file corresponding the to ".mac" file it is 
+    running.  These commands create a log file containing 
+    everything required for your homework assignment (program 
+    statistics, test runs, and source code).  For example, for 
+    Problem 4.12, you should create an assembly language file 
+    p412.mas which assembles to p412.mac.  When you run p412.mac 
+    on sim and enter /a, sim uses the answer file p412.ans to 
+    create the log file p412.log (or p412.<yourfamilyname>.log, 
+    depending on your response to requirement 1 above). 
+
+    Answer files for most of the programming problems from the 
+    textbook are in the H1 Software Package. 
+
+    For the programming assignments in Chapter 2, you enter 
+    "none" for the machine code file name.  You then enter your 
+    program directly into memory using the e command.  Because 
+    sim is not running a ".mac" file (i.e., a machine code file) 
+    from which it can determine the answer file, you must 
+    explicitly specify the answer file in the /a command.  For 
+    example, to create the log file (whose name will be p21.log 
+    or p21.<yourfamilyname>.log) for Problem 2.1, you should enter 
+    
+         /ap21
+    
+    For most of the programming assignments in Chapter 4 and 
+    later, the /a command will also verify the correctness of 
+    your program.  You will see on your screen and in the log 
+    file created an evaluation, such as "Program output: correct" 
+    or "Program output: NOT correct", indicating the results of 
+    the verification test.  Programming assignments in Chapters 2 
+    and 3 do not generate output (because the output instructions 
+    not introduced until Chapter 4).  Thus, sim cannot verify the 
+    programs for Chapters 2 and 3. 
+
+7)  Check to see if the ".ans" file corresponding to each 
+    programming assignment has additional instructions on how to 
+    do the assignment.  These additional instructions, if any, 
+    appear in the ".ans" file as comments and do not affect the 
+    operation of the ".ans" file.  You must follow these 
+    instructions precisely or else your program will not pass the 
+    verification test performed by sim.  In addition to the 
+    correct results, your program's output must have the 
+    specified capitalization and layout, except for empty lines 
+    Too few or too many empty lines do not affect program 
+    verification.  
+
+8)  Submit your log files to your instructor. Consult with your 
+    instructor for directions on how to do this. 
+
+9)  Report any suspected bugs in the software package to your 
+    instructor and to the author of the textbook 
+    (email address: dosreist@newpaltz.edu). 
+
+===============================================================
+
+Requirements for assembly language programs NOT translated 
+from C++ programs
+
+
+10) All programs should contain plenty of comments.  Comments are 
+    particularly important in assembly language programs.  Use 
+    blank lines or comment lines containing all equal signs to 
+    divide your program into its component parts. For example: 
+
+    ; Your name
+
+       First part of a program
+
+    ;=================================================
+
+       Second part of a program
+
+    ;=================================================
+
+       Third part of a program
+
+    
+11) Use the naming conventions for constants presented in the 
+    textbook.  For example, for the constants +2 and -2, use the 
+    labels @2 and @_2, respectively. 
+    
+12) All programs should be properly formatted.  For example, 
+    see Figure 3.10b on page 73 of the textbook and Figure 7.1 
+    on page 269. 
+
+13) Use meaningful identifiers.  For example, use "sum" rather 
+    than "x" for a variable that holds a sum.
+
+14) Precede any input statement with a prompt message that 
+    clearly specifies what input is needed.  Prompt messages 
+    should have a professional look and layout.  Pay particular 
+    attention to spacing and spelling.  For example, do NOT do 
+    this: 
+
+       enter   nonnegtve int:55
+
+    Do this:
+
+       Enter non-negative integer: 55
+
+    Or do this:
+
+       Enter non-negative integer
+       55
+
+15) Label all output meaningfully.  Labels should have a 
+    professional look and layout.  Pay particular attention to 
+    spacing and spelling.  Always output a newline at the end of 
+    the last output.  For example, do NOT do this: 
+
+       summ =15
+
+    Do this:
+
+       Sum = 15
+
+16) Structure your program in a sensible way.  Do NOT write 
+    "spaghetti code" (code whose execution pattern is like a bowl 
+    of spaghetti because of an excessive and inappropriate use of 
+    jump instructions).  Your programs should not be 
+    unnecessarily complex or inefficient. 
+
+===============================================================
+    
+Requirements for assembly language programs translated from 
+C++ programs
+
+17) Translate C++ programs EXACTLY as a dumb compiler would.  DO 
+    NOT CHANGE IN ANY WAY the C++ program you are translating, 
+    even if the C++ program does not conform to good programming 
+    practices.  For example, if a C++ program generates unlabeled 
+    output, the translated assembly language program should 
+    correspondingly generate unlabeled output.  The output your 
+    assembly language program generates should match EXACTLY the 
+    output the C++ program generates (including identical spacing 
+    and capitalization). 
+
+18) Add your assembly code to the C++ program in the form of "//" 
+    comments.  You do not have to type in the C++ programs--they 
+    are all in the H1 Software Package under the names 
+
+          p<chapternumberproblemnumber>.cpp
+
+    For example, the source code for the C++ program in Problem 
+    7.32 is in p732.cpp.  To create a solution for Problem 7.32, 
+    you  should first run the iss (insert slash slash) program on 
+    P732.cpp.  This program adds lines to p732.cpp that start 
+    with "//".  Next, you add your assembly code on these "//" 
+    lines.   To assemble your code, enter 
+
+         mas p732.cpp
+
+    to create p732.mac.  Note: you MUST specify the ".cpp" 
+    extension in the command above.  Otherwise, mas assumes the 
+    ".mas" extension.  To create the log file to hand in, enter 
+    /a when you run p732.mac on sim. 
+
+    For example, suppose the following C++ program is in the file 
+    example.cpp: 
+
+         #include <iostream>
+         using namespace std;
+         int x;
+         int main() 
+         {
+            x = 5;
+            cout << x << endl;
+            return 0;
+         }
+    
+
+    To add the "//" lines, enter
+
+         iss example.cpp
+
+    which converts example.cpp to the following (iss adds 5 "//"
+    lines at every likely insertion point):
+
+         //; iss of example.cpp  Your name: 
+         //
+         //
+         //
+         //
+         //
+         #include <iostream>
+         using namespace std;
+         int x;
+         //
+         //
+         //
+         //
+         //
+         int main() 
+         //
+         //
+         //
+         //
+         //
+         {
+           x = 5;
+         //
+         //
+         //
+         //
+         //
+           cout << x << endl;
+         //
+         //
+         //
+         //
+         //
+           return 0;
+         //
+         //
+         //
+         //
+         //
+         }    
+         //
+         //
+         //
+         //
+         //
+
+
+    Next, using the proper format for assembly code (see 
+    requirement 12 above), add your assembly code on the "//" 
+    lines to get: 
+
+
+         //; iss of example.cpp  Your name: Anthony J. Dos Reis
+         //
+         //
+         //
+         //
+         //
+         #include <iostream>
+         using namespace std;
+         int x;
+         //x:       dw    0
+         //
+         //
+         //
+         //
+         int main() 
+         //main:
+         //         end   main
+         //
+         //
+         //
+         {
+           x = 5;
+         //         ldc   5
+         //         st    x
+         //
+         //
+         //
+           cout << x << endl;
+         //         ld    x
+         //         dout
+         //         ldc   '\n'
+         //         aout
+         //
+           return 0;
+         //         ldc   0
+         //         halt
+         //
+         //
+         //
+         }    
+         //
+         //
+         //
+         //
+         //
+
+
+    To remove the unused "//" lines, enter
+
+         iss /-5 example.cpp
+
+    The negative sign on "-5" tells iss to remove lines (up
+    to 5 consecutive unused lines at every insertion point).  
+    example.cpp becomes the following:
+
+
+         //; iss of  example.cpp  Your name: Anthony J. Dos Reis
+         #include <iostream>
+         using namespace std;
+         int x;
+         //x:       dw    0
+         int main() 
+         //main:
+         //         end   main
+         {
+           x = 5;
+         //         ldc   5
+         //         st    x
+           cout << x << endl;
+         //         ld    x
+         //         dout
+         //         ldc   '\n'
+         //         aout
+           return 0;
+         //         ldc   0
+         //         halt
+         }    
+
+
+    Now assemble example.cpp with
+
+         mas example.cpp
+
+    Note that in the command above, you MUST specify the ".cpp" 
+    extension for the example.cpp file (otherwise, mas assumes 
+    the extension ".mas").  mas then produces example.mac (the 
+    executable file translated from the assembler code on the 
+    "//" lines), example.lst  (the list file), and 
+    example.mas (the "reverse" file in which the C++ code appears 
+    as comments).   Here is the reverse file, example.mas, 
+    produced by mas (note the  C++ code now appears as comments): 
+
+         ; iss of  example.cpp  Your name: Anthony J. Dos Reis
+                                 ; #include <iostream>
+                                 ; using namespace std;
+                                 ; int x;
+         x:       dw    0
+                                 ; int main() 
+         main:
+                  end   main
+                                 ; {
+                                 ;   x = 5;
+                  ldc   5
+                  st    x
+                                 ;   cout << x << endl;
+                  ld    x
+                  dout
+                  ldc   '\n'
+                  aout
+                                 ;   return 0;
+                  ldc   0
+                  halt
+                                 ; }    
+
+
+    To run example.mac, enter
+
+         sim example 
+
+    To generate a log file (assuming the answer file example.ans 
+    is available), enter 
+
+         /a
+
+    Alternatively, specify /a on the command line when you invoke 
+    sim (in which case the debugger in sim is not activated): 
+
+         sim example /a
+
+    For more information on the iss program, see iss.txt in the
+    H1 Software Package.
+
+19) Do NOT add any comments to your assembly language programs
+    except for your name at the beginning.  The C++ code itself
+    is adequate commenting.

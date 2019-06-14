@@ -1,0 +1,52 @@
+Machine-level Assembler Version 6.1    Thu Dec 25 10:45:46 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0018  loop:	ld    sum    ; get sum
+1  *1    2010  	add   count  ; add count to sum
+2  *2    1018  	st    sum    ; store new sum
+3  *3    0010  	ld    count  ; load count
+4  *4    200F  	add   @1     ; add 1 to count
+5  *5    1010  	st    count  ; put new value in count
+6  *6    3019  	sub   @21    ; subtract 21 to count
+7  *7    B000  	jn    loop   ; repeat if count - 21 was negative
+8  *8    8011  done:   ldc   msg    ; output "Sum = "
+9  *9    FFF7  	sout
+A  *10   0018  	ld    sum    ; output sum
+B  *11   FFFD  	dout
+C  *12   800A  	ldc   '\n'   ; output newline
+D  *13   FFFB  	aout
+E  *14   FFFF  	halt
+F  *15   0001  @1:	dw    1
+10 *16   0001  count:  dw    1
+11 *17   0053  msg:    dw    "Sum = "
+12 *18   0075
+13 *19   006D
+14 *20   0020
+15 *21   003D
+16 *22   0020
+17 *23   0000
+18 *24   0000  sum:    dw    0
+19 *25   0015  @21:	dw    21
+1A *26   ========= end of suma20to1.mas ==========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ loop                      0           7  
+ done                      8          
+ @1                        F           4  
+ count                     10          1   3   5  
+ msg                       11          8  
+ sum                       18          0   2   A  
+ @21                       19          6  
+
+Input file   = suma20to1.mas
+Output file  = suma20to1.mac
+List file    = suma20to1.lst 
+Number base  = decimal
+Label status = case sensitive

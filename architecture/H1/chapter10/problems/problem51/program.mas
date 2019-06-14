@@ -1,0 +1,66 @@
+;--------------------------------------------------------------
+; 10.51 Translate the next C program to assembly language
+; using start-up code.
+;
+;	#include <iostream>
+;	using namespace std;
+;
+;	int main(int argc, char *argv[])
+;	{
+;		cout << argc << endl;
+;		cout << argv[0]  << endl;
+;		cout << argv[argc - 1] << endl;
+;		return 0;
+;	}
+;--------------------------------------------------------------
+
+main:
+	ldr		1		; cout << argc << endl;
+	dout
+	ldc		'\n'
+	aout
+	
+	ldr		2		; cout << argv[0] << endl;
+	ldi
+	sout
+	ldc		'\n'
+	aout
+	
+	ldr		2		; cout << argv[argc - 1] << endl;
+	addr	1
+	sub		@1		; the index start in zero.
+	ldi
+	sout
+	ldc		'\n'
+	aout
+	
+	ldc		0		; return 0
+	ret
+	
+; Global variables	
+@1:	dw		1
+public	main
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

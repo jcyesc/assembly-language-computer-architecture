@@ -1,0 +1,53 @@
+Machine-level Assembler Version 6.1    Sun Mar 15 18:33:42 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;-------------------------------------------------------------
+               ; Translate the program 7.51 to assembly language
+               ;-------------------------------------------------------------
+               
+               ;--------------------
+               ; int f()
+               ;--------------------
+               
+0  *0    800A  f:	ldc	10	; x + 10;
+1  *1    200A  	add	x	; The result is stored in ac
+               	
+2  *2    F000  	ret		; return to the caller
+               
+               ;--------------------
+               ; main()
+               ;--------------------
+               
+3  *3    E000  main:	call	f	; x = f();
+4  *4    100A  	st	x
+               
+5  *5    000A  	ld	x	; cout << x << endl;
+6  *6    FFFD  	dout
+7  *7    800A  	ldc	'\n'
+8  *8    FFFB  	aout
+               
+9  *9    FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+A  *10   0014  x:	dw	20
+B  *11   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           3  
+ main                      3           A  
+ x                         A           1   4   5  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

@@ -1,0 +1,119 @@
+Machine-level Assembler Version 6.1    Tue Mar 31 21:39:00 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.60 to assembly language
+               ;---------------------------------------------------------------
+               
+               ;---------------------
+               ; main()
+               ;---------------------
+               
+0  *0    8019  main:	ldc	enter	; cout << "enter\n";
+1  *1    FFF7  	sout
+               
+2  *2    FFFC  	din		; cin >> x;
+3  *3    1018  	st	x
+               
+4  *4    8005  	ldc	5	; if(x + 5)
+5  *5    2018  	add	x
+6  *6    C009  	jz	end_if
+7  *7    8020  	ldc	hello	; cout << "hello\n";	
+8  *8    FFF7  	sout
+               
+               end_if:
+9  *9    802C  	ldc	44	; if(x > 44)
+A  *10   3018  	sub	x
+B  *11   A00F  	jzop	else_2_if
+               	
+C  *12   8027  	ldc	big	; cout << "big\n";
+D  *13   FFF7  	sout
+               
+E  *14   9017  	ja	end_p
+               
+               else_2_if:
+F  *15   802C  	ldc	small	; cout << "small\n";
+10 *16   FFF7  	sout
+               	
+11 *17   801E  	ldc	30	; if( x < 30)
+12 *18   3018  	sub	x
+13 *19   B017  	jn	end_p
+14 *20   C017  	jz	end_p
+               	
+15 *21   8033  	ldc	re_small	; cout << "really small\n";
+16 *22   FFF7  	sout
+               
+               end_p:
+17 *23   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+18 *24   0000  x:	dw	0	; int x = 0;
+19 *25   0065  enter:	dw	"enter\n"
+1A *26   006E
+1B *27   0074
+1C *28   0065
+1D *29   0072
+1E *30   000A
+1F *31   0000
+20 *32   0068  hello:	dw	"hello\n"
+21 *33   0065
+22 *34   006C
+23 *35   006C
+24 *36   006F
+25 *37   000A
+26 *38   0000
+27 *39   0062  big:	dw	"big\n"
+28 *40   0069
+29 *41   0067
+2A *42   000A
+2B *43   0000
+2C *44   0073  small:	dw	"small\n"
+2D *45   006D
+2E *46   0061
+2F *47   006C
+30 *48   006C
+31 *49   000A
+32 *50   0000
+33 *51   0072  re_small:	dw	"really small\n"
+34 *52   0065
+35 *53   0061
+36 *54   006C
+37 *55   006C
+38 *56   0079
+39 *57   0020
+3A *58   0073
+3B *59   006D
+3C *60   0061
+3D *61   006C
+3E *62   006C
+3F *63   000A
+40 *64   0000
+               
+41 *65   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0           18 
+ end_if                    9           6  
+ else_2_if                 F           B  
+ end_p                     17          E   13  14 
+ x                         18          3   5   A   12 
+ enter                     19          0  
+ hello                     20          7  
+ big                       27          C  
+ small                     2C          F  
+ re_small                  33          15 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

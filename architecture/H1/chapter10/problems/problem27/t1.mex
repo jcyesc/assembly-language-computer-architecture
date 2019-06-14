@@ -1,0 +1,22 @@
+Module Examiner Version 6.1             Sat May  9 21:39:29 2009
+
+004C (L for Library)
+===================== Module Number 1 =======================
+Length = 000E (hex) 14 (decimal)
+
+Header:
+       0:  0052 0001 0045 0002 0078 0000 0050 0000   R.E.x.P.
+       8:  0061 0000 0054                            a.T     
+Text:
+       0:  0005 0001 0005                            ...     
+===================== Module Number 2 =======================
+Length = 0010 (hex) 16 (decimal)
+
+Header:
+       0:  0045 0001 0061 0000 0052 0002 0050 0002   E.a.R.P.
+       8:  0078 0000 0073 0000 0054                  x.s.T   
+Text:
+       0:  0006 000A 0000                            ...     
+
+Input file = t1.lib
+List file  = t1.mex

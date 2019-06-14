@@ -1,0 +1,14 @@
+;--------------------------------------------------------------------------------------
+; 10.15 What happends when the following program, which consists of three separate
+; modules, is asseble, linked, and run?
+;--------------------------------------------------------------------------------------
+
+	extern	x
+	extern	y
+ok:	ld	x + 1
+	add	y - 1
+	dout
+	ldc	'\n'
+	aout
+	halt
+	end	ok

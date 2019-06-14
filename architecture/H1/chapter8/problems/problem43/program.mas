@@ -1,0 +1,62 @@
+;---------------------------------------------------------
+; Translate the program 8.43
+;---------------------------------------------------------
+
+;------------------------
+; S f()
+;------------------------
+
+@f$v:	aloc	3	; S a;
+	
+	ldc	5	; a.x = a.y = a.z = 5;
+	str	0	; x
+	str	1	; y
+	str	2	; z
+	
+
+	ldr	2	;  return a
+	push
+	ldr	2
+	push
+	ldr	2
+	push
+	ldr	7	; Get the address of the implicit parameter.
+	sti
+	add	@1
+	sti
+	add	@1
+	sti
+	
+	dloc	3
+
+	ret		; return to the caller	
+
+;-------------------------
+; main()
+;-------------------------	
+
+main:	ldc	b	; b = f();
+	push
+	call	@f$v
+	dloc	1
+
+	ldc	b	; cout << b.x << " " << b.y << endl;
+	ldi
+	dout
+	ldc	msg
+	sout
+	ldc	b
+	add	@1
+	ldi
+	dout
+	ldc	'\n'
+	aout	
+
+	halt		; end of the program 
+	end main
+
+; GLOBAL VARIABLS
+		
+b:	dw	3 dup 0
+msg:	dw	" "	
+@1:	dw	1

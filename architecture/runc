@@ -1,0 +1,10 @@
+if test "$1" = "" 
+then 
+echo Error: File name not specified
+echo Format: runc machinefilename_with_or_without_extension
+elif sim $1 $2 $3 $4 $5 $6 $7 $8 $9 -z
+then
+echo Zero return code
+else
+echo Non-zero return code
+fi

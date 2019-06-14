@@ -1,0 +1,105 @@
+Machine-level Assembler Version 6.1    Mon Mar  9 23:08:38 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;-------------------------------------------------------------
+               ; Translate the program 7.35 to assembly language
+               ;-------------------------------------------------------------
+               
+               ;------------------
+               ; void f(int x)
+               ;------------------
+               
+0  *0    F501  f: 	aloc	1	; int y = 7;
+1  *1    8007  	ldc	7
+2  *2    5000  	str	0
+               	
+3  *3    4000  	ldr	0	; x = y;
+4  *4    5002  	str	2
+               	
+5  *5    4002  	ldr	2	; cout << x << " " << y << endl;
+6  *6    FFFD  	dout
+7  *7    8030  	ldc	msg
+8  *8    FFF7  	sout
+9  *9    4000  	ldr	0
+A  *10   FFFD  	dout
+B  *11   800A  	ldc	'\n'
+C  *12   FFFB  	aout
+               
+D  *13   F501  	aloc	1	; int z = 8;
+E  *14   8008  	ldc	8
+F  *15   5000  	str	0
+               	
+10 *16   4000  	ldr	0	; x = z;
+11 *17   5003  	str	3
+               	
+12 *18   4003  	ldr	3	; cout << x << " " << y << endl;
+13 *19   FFFD  	dout
+14 *20   8030  	ldc	msg
+15 *21   FFF7  	sout
+16 *22   4000  	ldr	0
+17 *23   FFFD  	dout
+18 *24   800A  	ldc	'\n'
+19 *25   FFFB  	aout
+               
+               
+1A *26   F602  	dloc	2	; release the memory
+               	
+1B *27   F000  	ret		; return to the calling function
+               
+               ;---------------------
+               ; main()
+               ;---------------------
+               
+1C *28   002D  main:	ld	x	; f(x);
+1D *29   F300  	push
+1E *30   E000  	call	f
+1F *31   F601  	dloc	1
+               
+20 *32   002D  	ld	x	; cout << x << " " << y << " " << z << endl;
+21 *33   FFFD  	dout
+22 *34   8030  	ldc	msg
+23 *35   FFF7  	sout
+24 *36   002E  	ld	y
+25 *37   FFFD  	dout
+26 *38   8030  	ldc	msg
+27 *39   FFF7  	sout
+28 *40   002F  	ld	z
+29 *41   FFFD  	dout
+2A *42   800A  	ldc	'\n'
+2B *43   FFFB  	aout	
+               
+2C *44   FFFF  	halt
+               
+               	end main;
+               
+               ;----------------------
+               ; GLOBAL VARIABLES
+               ;----------------------
+               
+2D *45   0001  x:	dw 	1
+2E *46   0002  y:	dw	2
+2F *47   0003  z:	dw	3
+30 *48   0020  msg:	dw	" "
+31 *49   0000
+32 *50   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           1E 
+ main                      1C          2D 
+ x                         2D          1C  20 
+ y                         2E          24 
+ z                         2F          28 
+ msg                       30          7   14  22  26 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

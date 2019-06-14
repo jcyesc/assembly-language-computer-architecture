@@ -1,0 +1,7 @@
+6.17 Extend the microde in b.has so that it also supports
+
+	add x		ac = ac + mem[x]
+	sub x		ac = ac - mem[x]
+	div x		ac = ac / mem[x]
+
+

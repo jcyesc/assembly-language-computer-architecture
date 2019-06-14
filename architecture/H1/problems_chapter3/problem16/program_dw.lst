@@ -1,0 +1,24 @@
+Machine-level Assembler Version 6.1    Wed Dec 17 23:09:39 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0000  	ld 0
+1  *1    0000  	dw 0
+2  *2    0000  	dw 0
+3  *3    0000  	dw 0
+4  *4    0000  	dw 0
+5  *5    0000  	dw 0
+6  *6    0000  	dw 0
+7  *7    0000  	dw 0
+8  *8    0000  	dw 0
+9  *9    0000  	dw 0
+A  *10   0000  	dw 0
+B  *11   FFFF  	halt
+C  *12   ========= end of program_dw.mas =========================
+
+Input file   = program_dw.mas
+Output file  = program_dw.mac
+List file    = program_dw.lst 
+Number base  = decimal
+Label status = case sensitive

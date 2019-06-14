@@ -1,0 +1,141 @@
+Machine-level Assembler Version 6.1    Fri Mar 13 22:49:05 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 7.42 to assembly language
+               ;---------------------------------------------------------------
+               
+               ;--------------------------
+               ; void f1(int x)
+               ;--------------------------
+               
+0  *0    4001  f1:	ldr	1	; x = x + 5
+1  *1    203C  	add	@5
+2  *2    5001  	str	1
+               	
+3  *3    803D  	ldc	msg_x	; cout << "x = " << x << endl;
+4  *4    FFF7  	sout
+5  *5    4001  	ldr	1
+6  *6    FFFD  	dout
+7  *7    800A  	ldc	'\n'
+8  *8    FFFB  	aout
+               	
+9  *9    F000  	ret		; return to the calling function
+               
+               ;--------------------------
+               ; void f2(int *p)
+               ;--------------------------
+               
+A  *10   8003  f2:	ldc	3	; *p = 3
+B  *11   F300  	push
+C  *12   4002  	ldr	2
+D  *13   F200  	sti
+               	
+E  *14   F000  	ret		; return to the calling function
+               
+               ;--------------------------
+               ; void f3(int *p, int x)
+               ;--------------------------
+               
+F  *15   4002  f3:	ldr	2	; *p = x;
+10 *16   F300  	push
+11 *17   4002  	ldr	2
+12 *18   F200  	sti
+               
+13 *19   F000  	ret		; return to the calling function
+               
+               ;--------------------------
+               ; main()
+               ;--------------------------
+               
+14 *20   8042  main:	ldc	msg_g	; cout << "g = " << g << endl;	
+15 *21   FFF7  	sout
+16 *22   003B  	ld	g
+17 *23   FFFD  	dout
+18 *24   800A  	ldc	'\n'
+19 *25   FFFB  	aout
+               
+1A *26   003B  	ld	g	; f1(g);
+1B *27   F300  	push
+1C *28   E000  	call	f1
+1D *29   F601  	dloc	1
+               
+1E *30   8042  	ldc	msg_g	; cout << "g = " << g << endl;
+1F *31   FFF7  	sout
+20 *32   003B  	ld	g
+21 *33   FFFD  	dout	
+22 *34   800A  	ldc	'\n'
+23 *35   FFFB  	aout
+               
+24 *36   803B  	ldc	g	; f2(&g);
+25 *37   F300  	push
+26 *38   E00A  	call	f2
+27 *39   F601  	dloc	1
+               
+28 *40   8042  	ldc	msg_g	; cout << "g = " << g << endl;
+29 *41   FFF7  	sout
+2A *42   003B  	ld	g
+2B *43   FFFD  	dout
+2C *44   800A  	ldc	'\n'
+2D *45   FFFB  	aout
+               
+2E *46   8014  	ldc	20	; f3(&g, 20);
+2F *47   F300  	push
+30 *48   803B  	ldc	g
+31 *49   F300  	push
+32 *50   E00F  	call	f3
+33 *51   F602  	dloc	2
+               
+34 *52   8042  	ldc	msg_g	; cout << "g = " << g << endl;
+35 *53   FFF7  	sout
+36 *54   003B  	ld	g
+37 *55   FFFD  	dout
+38 *56   800A  	ldc	'\n'
+39 *57   FFFB  	aout
+               
+3A *58   FFFF  	halt		; end of the program
+               	end main
+               
+               
+               ; GLOBAL VARIABLES
+               
+3B *59   0014  g:	dw	20
+3C *60   0005  @5:	dw	5
+               
+3D *61   0078  msg_x:	dw	"x = "
+3E *62   0020
+3F *63   003D
+40 *64   0020
+41 *65   0000
+42 *66   0067  msg_g:	dw	"g = "
+43 *67   0020
+44 *68   003D
+45 *69   0020
+46 *70   0000
+               
+               
+47 *71   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f1                        0           1C 
+ f2                        A           26 
+ f3                        F           32 
+ main                      14          3B 
+ g                         3B          16  1A  20  24  2A 
+                                       30  36 
+ @5                        3C          1  
+ msg_x                     3D          3  
+ msg_g                     42          14  1E  28  34 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

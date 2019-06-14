@@ -1,0 +1,180 @@
+Machine-level Assembler Version 6.1    Wed Dec 31 12:42:26 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 31-december-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Prgram that reads in a string and outputs that s
+               ;		  in all uppercase characters.
+               ;
+               ;		The problem is going to be solved in the next way:
+               ;			Identify if the ASCII code is between 97 (a) and 122 (z)
+               ;			we subtract 32.
+               ;			Remember that the ASCII code for the A is 65 and the ASCII
+               ;			code for Z is 90.
+               ;
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    8078  	ldc	msg		; load the address of msg
+1  *1    FFF7  	sout			; string output
+               	
+2  *2    8022  	ldc	string		; load the address of string
+3  *3    FFF6  	sin			; string input
+4  *4    E00A  	call	toUpperCase	; call toUppercase, remeber that labels are re
+5  *5    800A  	ldc	'\n'		; load the value of '\n'
+6  *6    FFFB  	aout			; ASCII output
+7  *7    8022  	ldc	string		; load the address of string
+8  *8    FFF7  	sout			; string output
+               
+9  *9    FFFF  	halt			; end of the program
+               
+               
+               ;---------------------------------------------------------------
+               ;  toUppercase()
+               ;
+               ;  Functions that replace lower case characters to upper case. T
+               ;  that is going to be converted is 'string'.
+               ;
+               ;	if( char >= 97 && char <= 122)
+               ;		convert to uppercase
+               ;---------------------------------------------------------------
+               
+               toUpperCase:
+               	
+A  *10   8022  for:	ldc	string		; load the address of string
+B  *11   2072  	add	index		; add index to the address
+C  *12   1021  	st	address		; store the new address
+               		
+D  *13   F100  	ldi			; load the value that is in the address pointed by ac
+E  *14   1073  	st	char		; store the value in char
+F  *15   C020  	jz	fin		; if it's ZERO, we arrive at the end, so we jump to fin
+10 *16   3076  	sub	@97		; subtract 97 to look at if it's greater or equal to 9
+11 *17   A013  	jzop	and		; if ZERO or POSITIVE, jump to and
+12 *18   901C  	ja	incre		; jump always to incre
+               
+13 *19   0077  and:	ld	@122		; load the value of @122
+14 *20   3073  	sub	char		; subtract char
+15 *21   A017  	jzop	convert		; if it's ZERO or POSITIVE jump to convert
+16 *22   901C  	ja	incre		; jump always to incre
+               
+               convert:
+17 *23   0073  	ld	char		; load the char
+18 *24   3075  	sub	@32		; subtract 32
+19 *25   F300  	push			; push the value in the stack
+1A *26   0021  	ld	address		; load the value of addres
+1B *27   F200  	sti			; store indirect, store the value that is in the top of t
+               				; in the address pointed by ac
+               	
+               incre:	; ++index
+1C *28   0072  	ld	index		; load the value of index
+1D *29   2074  	add	@1		; add 1 to index
+1E *30   1072  	st	index		; store the new value of index
+1F *31   900A  	ja	for		; jump always to for
+               	
+20 *32   F000  fin:	ret		; return to the caller
+               
+               ;---------------------
+               ; VARIABLES
+               ;---------------------
+               
+21 *33   0000  address:dw	0
+22 *34   0000  string:	dw	80 dup 0
+72 *114  0000  index:	dw	0
+73 *115  0000  char:	dw	0
+74 *116  0001  @1:	dw	1
+75 *117  0020  @32:	dw	32		; If the ASCII code is between 97 and 122 
+               				; subtract 32 to conver to uppercase
+76 *118  0061  @97:	dw	97		; ASCII code for 'a'
+77 *119  007A  @122:	dw	122		; ASCII code fo 'z'	
+78 *120  0057  msg:	dw	"Write the string you want to be converted to uppercase 
+79 *121  0072
+7A *122  0069
+7B *123  0074
+7C *124  0065
+7D *125  0020
+7E *126  0074
+7F *127  0068
+80 *128  0065
+81 *129  0020
+82 *130  0073
+83 *131  0074
+84 *132  0072
+85 *133  0069
+86 *134  006E
+87 *135  0067
+88 *136  0020
+89 *137  0079
+8A *138  006F
+8B *139  0075
+8C *140  0020
+8D *141  0077
+8E *142  0061
+8F *143  006E
+90 *144  0074
+91 *145  0020
+92 *146  0074
+93 *147  006F
+94 *148  0020
+95 *149  0062
+96 *150  0065
+97 *151  0020
+98 *152  0063
+99 *153  006F
+9A *154  006E
+9B *155  0076
+9C *156  0065
+9D *157  0072
+9E *158  0074
+9F *159  0065
+A0 *160  0064
+A1 *161  0020
+A2 *162  0074
+A3 *163  006F
+A4 *164  0020
+A5 *165  0075
+A6 *166  0070
+A7 *167  0070
+A8 *168  0065
+A9 *169  0072
+AA *170  0063
+AB *171  0061
+AC *172  0073
+AD *173  0065
+AE *174  0020
+AF *175  003A
+B0 *176  0020
+B1 *177  0000
+B2 *178  ========= end of uppercase.mas ==========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ toUpperCase               A           4  
+ for                       A           1F 
+ and                       13          11 
+ convert                   17          15 
+ incre                     1C          12  16 
+ fin                       20          F  
+ address                   21          C   1A 
+ string                    22          2   7   A  
+ index                     72          B   1C  1E 
+ char                      73          E   14  17 
+ @1                        74          1D 
+ @32                       75          18 
+ @97                       76          10 
+ @122                      77          13 
+ msg                       78          0  
+
+Input file   = uppercase.mas
+Output file  = uppercase.mac
+List file    = uppercase.lst 
+Number base  = decimal
+Label status = case sensitive

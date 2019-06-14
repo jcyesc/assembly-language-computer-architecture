@@ -1,0 +1,61 @@
+         
+         ld   x1
+         st      x
+         add     x2
+
+         sub  x
+         sub 
+         ldr  x
+         str  x
+         addr x
+         subr x
+         ldc  x
+         ja   _a1
+_a1:     jzop a2
+a2:      jn   a@3
+
+a@3:     jz   a4
+a4:      jnz  a5$
+a5$:     call $a6
+         ja   @a7
+$a6:     ret  
+@a7:     push  
+         pop   
+         ldi  
+         sti  
+         swap  
+         dloc +255
+         aloc 0
+         uout  
+         ldc  m1
+         sout
+         ldc  m2
+         sin 
+         sout
+         ldc  m1
+         sout  
+         hin   
+         hout
+         ldc  m1
+         sout  
+         ain   
+         aout
+         ldc  m1
+         sout  
+         din   
+         dout  
+         ldc  10
+         aout
+         bkpt  
+         halt  
+x:       dw    +5
+  x1:    dw    -1
+ x2 :    dw    32767
+x3       :dw    65535
+x4:      dw    -32768
+m1:      dw    10
+         dw    65
+         dw    10
+
+         dw    0
+m2:      dw    0

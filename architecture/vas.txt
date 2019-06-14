@@ -1,0 +1,265 @@
+                                                 vas.txt
+
+                    How to Use vas Version 6.1
+
+Quick Start 
+
+     vas (Vertical microcode ASsembler) translates the symbolic 
+vertical microcode described in 
+
+  ASSEMBLY LANGUAGE AND COMPUTER ARCHITECTURE USING C++ AND JAVA
+           by Anthony J. Dos Reis, Course Technology, 2004
+
+to binary microcode.  The output file produced can then be used 
+with sim.  
+
+     To invoke vas, enter 
+
+     vas
+
+vas then prompts the user for the name of the input file 
+containing the source program (i.e., the program to be 
+translated).  Enter an input file name and/or other desired 
+command line arguments (any number of items per input line).  If 
+an input file name entered has no extension, ".vas" is appended 
+to it.  After an input file name is entered, vas translates the 
+source program and outputs its binary form to a file whose name 
+is 
+
+     <infilename_less_extension>.ver
+  
+The ".ver" extension is used to designate files containing 
+vertical microcode in binary form. 
+
+     Each line of the source program should be in the following 
+format (square brackets surround optional items): 
+
+ [<label>  :] [<opcode_name> [<operand>] [<operand>]]  [/<comment>]
+
+<label> may start in any column.  <label> may be any sequence of 
+letters, digits, "@", "$", and "_" that does not start with a 
+digit 0 to 9.  <comment> may be any sequence of characters.  
+Zero, one, or two <operand> fields should be specified, depending 
+on the instruction.  At least one space should separate the 
+<opcode_name> and <operand> fields.  Spaces are optional to the 
+left and right of the colon following <label>.  A semicolon may 
+be used in place of the "/" at the start of a comment.  
+Completely blank lines and lines with only "<label> :" are 
+allowed. 
+
+
+Command Line Arguments
+
+     All command line arguments are optional, can be specified in 
+any order, must have no embedded spaces, and must be separated by 
+at least one space. 
+
+     All command line arguments, except <infilename>, must have a 
+leading "/" or "-". 
+
+     All command line arguments are case insensitive, except for 
+filenames on systems with case-sensitive filenames. 
+
+     The format of the command line is
+
+vas <infilename> /h /dec /i /l<lstfilename> /c<cfgfilename> /o<outfilename>
+                 /? /hex /s /n
+
+If <infilename> is specified on the command line, then vas will 
+not prompt the user for additional input.  In response to a 
+prompt, the user can enter <infilename> and/or other command line 
+arguments.  Prompting ends whenever the user enters <infilename>.  
+If <infilename> has no extension, then ".vas" is appended to it. 
+If <infilename> starts with a pathname that starts with "/", then 
+substitute "//" for the leading "/" in the pathname when entering 
+<infilename>.  
+
+/h or /? displays a help screen.
+
+If /dec is specified, a number specifying a memory address in the 
+source program is treated as decimal, unless it ends with an "h" 
+or "H", in which case it is treated as hexadecimal.  If /hex is 
+specified, a number is treated as hex, unless it ends with a "t" 
+or "T" ("t" stands for base ten), in which case it is treated as 
+a decimal.  If neither /dec nor /hex is specified, then the 
+default setting is used (see the section "Default Settings" 
+below).
+
+If /i is specified, label processing is case insensitive.  If /s 
+is specified, label processing is case sensitive.  If neither /i 
+nor /s is specified, then the default setting is used (see the 
+section "Default Settings" below). 
+
+If /l is specified, a list file is generated.  If /n is specified, 
+a list file is not generated.  If neither /l nor /n is specified, 
+then the default setting is used (see the section "Default 
+Settings" below).  A list file name can optionally follow /l.  If 
+a list file name is specified without an extension, then ".vst" 
+is appended to it.   If the /l argument is specified without a 
+filename, then the filename used is 
+
+     <infilename_less_extension>.vst
+
+Each line in a list file is truncated, if necessary, to avoid 
+wraparound on an 80 column display. 
+
+The /c argument is used to specify a configuration file.  If a 
+configuration file name is specified without an extension, ".cfg" 
+is appended to it.  A configuration file provides vas with the 
+register-name/register-number correspondence.  The configuration 
+file should be in the same format as that used by sim.  See 
+sim.txt for more information on configuration files.  If the /c 
+argument is not specified, vas will use the configuration file 
+whose name is 
+
+     <infilename_less_extension>.cfg
+
+if it exists.  If it does not exist, vas uses its default 
+configuration (which corresponds to s.cfg).
+                                     
+The /o argument is used to specify the name of the output file 
+(i.e., the file to which the binary microcode is written).  If 
+<outfilename> has no extension, then ".ver" is appended to it.  
+If the /o argument is omitted, then <outfilename> defaults to 
+
+     <infilename_less_extension>.ver
+
+
+Register Names and Numbers
+
+     Registers should be specified using their names that appear 
+in the configuration file.  If the configuration file does not 
+specify a name for a register, the register name defaults
+to is hex number without any leading zeros.
+
+
+Instructions
+
+   0    add    rc ra rb  Add                rc  =  ra + rb; set sz;           
+   1    sub    rc ra rb  Subtract           rc  =  ra - rb; set sz;
+   2    mult   rc ra rb  Multiply           rc  =  ra * rb; set sz;
+   3    and    rc ra rb  Bitwise and        rc  =  ra & rb; set sz;
+   4    flip   rc ra     Flip bits          rc  =  ~ra; set sz;
+   5    move   rc ra     Move register      rc  =  ra; set sz;
+   6    left   rc ra     Left shift         rc  =  ra << 1; set sz;
+   7    right  rc ra     Right shift        rc  =  ra >> 1; set sz;
+   8    mar    rb        Load mar           mar = rb;
+   9    sz     ra        Set sz             set sz (with ra);
+   A    ba     addr      Branch always      mpc = addr;            
+   B    bn     addr      Branch if neg      if (s) mpc = addr;
+   C    bz     addr      Branch if zero     if (z) mpc = addr;
+   D    rd               Read               mdr = mem[mar];
+   E    wr               Write              mem[mar] = mdr;
+
+
+An additional register can be specified in the shift 
+instructions.  This extra register is assembled into the B field 
+of the microinstruction.  If a microcode file has one or more 
+shift operations with an additional register greater than 0, then 
+sim will activate the barrel shifter when it loads that 
+microcode.  Caution: when the barrel shifter is active, the 
+one-register shift microinstruction shifts 0 positions (because 
+its B field contains 0, and register 0 contains 0).  For example, 
+
+     right ac ac
+
+is assembled into the same instruction as
+
+     right ac ac 0
+
+It shifts one position when the one-position shifter is active, 
+but it shifts zero positions when the barrel shifter is active. 
+
+
+Search Path for Configuration File
+
+     If a directory is specified by the /c argument, vas searches 
+for the configuration file in that directory.  Otherwise, vas 
+searches for the configuration file in the current directory and 
+in the directory specified by the H1DIR environment variable, if 
+any, in that order. 
+
+     If the /c argument is not used, vas searches for a 
+configuration file in the directory containing the input file, 
+and the directory specified by the H1DIR environment variable, if 
+any, in that order.  It searches for a file whose name is 
+
+     <infilename_less_extension>.cfg
+
+
+Problem with a Leading "/" in Command Line Arguments on Non-
+Microsoft Systems
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with EITHER "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems can cause a 
+problem.  For example, suppose you want to specify an input file 
+on the command line.  Recall that an input file argument is not 
+preceded by an argument marker.  For example in, 
+
+    sim a /ms
+
+the argument "a" (which specifies the input file a.mac) does NOT 
+have a preceding "/" or "-".  "/ms", on the other hand, has the 
+argument marker "/".  "/ms" is interpreted as the "/m" argument 
+followed by the secondary argument "s".  Now suppose the input 
+file you want to specify on the command line is 
+
+     /abc.x
+
+This denotes the abc.x file in the root directory "/".  
+Unfortunately, all the programs in the H1 Software Package will 
+interpret a leading "/" as an argument marker rather than as the 
+root directory.  Thus, 
+
+     /abc.x
+
+on the command line is incorrectly interpreted as the argument 
+
+     /a 
+
+followed by the secondary argument
+
+     bc.x
+
+This problem does not occur on Microsoft systems because they use 
+"\" rather than "/" as the filename separator, and, thus, there 
+is never any confusion with the argument marker "/". 
+
+You will probably rarely run into this problem because full 
+pathnames are rarely needed when using the programs in the H1 
+Software Package.  However, if the problem does occur, it can 
+easily be circumvented: simply use "//" to represent the root.  
+For example, if 
+
+     //abc.x
+
+appears on a command line, it is interpreted as the input file
+
+     /abc.x
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 
+
+
+Default Settings
+
+     vas is shipped with the following default settings:
+
+     number base:       decimal
+     label status:      case sensitive
+     list file status:  list on
+     message status:    messages on (i.e., non-error/non-warning
+                        console messages are displayed) 
+
+These settings, however, can be changed with the mod program.  For 
+information on the mod program, see mod.txt.

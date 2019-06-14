@@ -1,0 +1,45 @@
+;---------------------------------------------------------------------
+; Translate the program 7.49 to assembly language.
+;---------------------------------------------------------------------
+
+;--------------------------
+; void f(int *p)
+;--------------------------
+
+f:	ldr	1	; cout << *p << endl;
+	ldi
+	dout
+	ldc	'\n'
+	aout
+	
+	ret		; return to the calling function
+
+;-------------------------
+; void g(int *p)
+;-------------------------
+
+g:	ldr	1	; f(p);
+	push
+	call	f
+	dloc	1
+
+	ret		; return to the calling function
+
+;--------------------------
+; main()
+;--------------------------
+
+main:	ldc	x	; g(&x);
+	push
+	call	g
+	dloc	1
+
+	halt		; end of the program
+
+	end main
+
+
+; GLOBAL VARIABLES
+
+x:	dw	3
+

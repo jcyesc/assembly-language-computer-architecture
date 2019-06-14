@@ -1,0 +1,7 @@
+	; t2.mas
+q:	dw	6
+b:	dw	a + 10
+x:	dw	q
+	public	x
+	extern	a
+	end	q

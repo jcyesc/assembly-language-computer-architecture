@@ -1,0 +1,93 @@
+;------------------------------------------------------------------------------------
+; Create a library that contains everything in fmult15.lib, as well as a function
+; that computes fourth powers. Write and run an assembly language program that
+; computes and displays the value of :
+;
+;	(x*x*x*x) - (x*x) + 6 
+;
+; for x = 0, 1, 2, 3, 4
+;
+; This module uses the library fmult15.lib and the start up code called sup.mas.
+; 
+;-------------------------------------------------------------------------------------
+
+;----------------------------------------------------------------
+; int polynomio(int x)
+;
+;   Function that calculates the next equation:
+;
+;	(x*x*x*x) - (x*x) + 6
+;----------------------------------------------------------------
+
+polynomio:
+	aloc	1	; temporal variable
+	ldr	2
+	push
+	call	square
+	dloc	1
+	str	0	; save the result return by square (x*x)
+	push
+	call	square
+	dloc	1
+	subr	0	
+	add	@6
+	
+	dloc	1	; release the memory for the temporal variable
+	ret
+
+;-----------------------------------------------------------------
+; int main()
+;	Evalue the function represented by polynomio for the 
+;	values x = 0, 1, 2, 3, 4
+;-----------------------------------------------------------------
+
+main:	; This is implemented better using a cycle.
+	ldc	0		; cout << polynomio(0) << endl;
+	push
+	call	polynomio
+	dloc	1
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	1		; cout << polynomio(1) << endl;
+	push
+	call	polynomio
+	dloc	1
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	2		; cout << polyomio(2) << endl;
+	push
+	call	polynomio
+	dloc	1
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	3		; cout << polynomio(3) << endl;
+	push
+	call	polynomio
+	dloc	1
+	dout
+	ldc	'\n'
+	aout
+
+	ldc	4
+	push
+	call	polynomio
+	dloc	1
+	dout
+	ldc	'\n'
+	aout
+
+	ret
+
+; Global variables
+@6:	dw	6
+
+public	main
+public	polynomio
+extern	square
+

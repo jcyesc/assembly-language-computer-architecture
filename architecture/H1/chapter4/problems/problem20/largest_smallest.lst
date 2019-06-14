@@ -1,0 +1,307 @@
+Machine-level Assembler Version 6.1    Sat Dec 27 13:35:32 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;----------------------------------------------------------
+               ; Version	: 1.0
+               ; Created	: 26-december-2008
+               ; Author	: Juan Carlos Yescas
+               ; Description	:
+               ;
+               ;	Program that reads in 10 decimal numbers and 
+               ;	displays the largest and smallest.
+               ;
+               ;----------------------------------------------------------
+               
+               main:
+0  *0    807C  	ldc     msg		; load the address of msg
+1  *1    FFF7  	sout  			; String output
+2  *2    E079  	call    printLine	; call printLine
+               	
+               capture:
+3  *3    808E  	ldc     numbers		; load the address of numbers(array)
+4  *4    209C  	add     index		; add index to the address of numbers
+5  *5    1098  	st  	address		; store the current address
+6  *6    FFFC  	din			; decimal input
+7  *7    F300  	push			; push the value in the stack
+8  *8    0098  	ld	address		; load address
+9  *9    F200  	sti			; store in the address that points "address" the content 
+A  *10   009C  	ld	index		; load index
+B  *11   209A  	add	@1		; increment index
+C  *12   109C  	st      index		; store the value of index
+D  *13   309B  	sub	@10		; subtract 10 to index to verify if we finish the capt
+E  *14   D003  	jnz     capture		; if it's no ZERO jump to capture
+               	
+F  *15   E079  	call	printLine	; call printLine
+10 *16   E037  	call	sort		; call sort
+               	
+               	; the largest number is the last position (10) and the smallest
+               	; SMALLEST
+11 *17   801E  	ldc	smallest	; load the addres of the smallest
+12 *18   FFF7  	sout			; string output
+13 *19   808E  	ldc	numbers		; load the address of numbers
+14 *20   F100  	ldi			; load the content that is in the address pointed by ac
+15 *21   FFFD  	dout			; decimal output
+               	
+               	; LARGEST
+16 *22   E079  	call 	printLine	; call printLine
+17 *23   802B  	ldc	largest		; load the address of the largest number
+18 *24   FFF7  	sout			; string output
+19 *25   808E  	ldc	numbers		; load the address of numbers
+1A *26   209D  	add	@9		; add 9 to the address of numbers to get the largest
+1B *27   F100  	ldi			; load the content that is in the address pointed by ac
+1C *28   FFFD  	dout			; decimal input
+               	
+1D *29   FFFF  	halt			; end of the program
+               
+1E *30   0053  smallest:	dw 	"Smallest -> "
+1F *31   006D
+20 *32   0061
+21 *33   006C
+22 *34   006C
+23 *35   0065
+24 *36   0073
+25 *37   0074
+26 *38   0020
+27 *39   002D
+28 *40   003E
+29 *41   0020
+2A *42   0000
+2B *43   004C  largest:	dw	"Largest -> "
+2C *44   0061
+2D *45   0072
+2E *46   0067
+2F *47   0065
+30 *48   0073
+31 *49   0074
+32 *50   0020
+33 *51   002D
+34 *52   003E
+35 *53   0020
+36 *54   0000
+               
+               ;----------------------------------------------------------
+               ; sort()
+               ;
+               ; Function that is in charge to sort all the numbers in the
+               ; array called numbers.
+               ;
+               ; The algorith that is used is the bubble sort.
+               ;----------------------------------------------------------
+               sort:
+37 *55   8000  	ldc     0		; load zero to initializate i
+38 *56   106A  	st	i		; initialize i to zero
+               for_ex: 			; OUTER FOR
+39 *57   006A  	ld	i		; load i
+3A *58   309D  	sub	@9		; subtract 9 to verify if we end the iteration
+3B *59   C064  	jz	end_sort	; if ZERO, jump end_sort
+               
+3C *60   8000  	ldc	0		; load zero to initializate j
+3D *61   106B  	st	j		; initialize j to zero
+               for_in:				; INNER FOR
+3E *62   006B  	ld	j		; load j
+3F *63   309D  	sub	@9		; subtract 9 to j to verify if the cycle is ended
+40 *64   C060  	jz	incr_i		; if ZERO, jump to incr_i
+               	
+41 *65   808E  	ldc	numbers		; load the address of numbers
+42 *66   206B  	add	j		; add j to the address of numers
+43 *67   1068  	st	x_add		; store the address of numbers
+44 *68   209A  	add	@1		; add 1 to the address of numbers
+45 *69   1069  	st	y_add		; store the address of numbers + 1
+               
+               	; load the value that is in the address y_add to y
+46 *70   0069  	ld	y_add		; load the value of y_add, that is an address
+47 *71   F100  	ldi			; load the value that is in the address
+48 *72   1067  	st	y		; store the value in y
+               	
+               	; load the value that is in the address x_add to x
+49 *73   0068  	ld	x_add		; load the value of x_add, that is an address
+4A *74   F100  	ldi			; load the value that is in the address
+4B *75   1066  	st	x		; store the value in x
+               		
+4C *76   3067  	sub	y		; subtract x-y
+4D *77   A053  	jzop	interchange	; if it's zero or positive, jump to interchang
+4E *78   904F  	ja	incr_j		; jump to incr_j
+               	
+               incr_j:
+               	; increment j		
+4F *79   009A  	ld	@1		; load 1
+50 *80   206B  	add	j		; add 1 to j
+51 *81   106B  	st	j		; store the value of j
+52 *82   903E  	ja	for_in		; jump to for_in
+               
+               interchange:
+53 *83   0068  	ld	x_add		; load the address that is in x_add
+54 *84   F100  	ldi			; load the content that is in the address
+55 *85   1065  	st	tmp		; store the address in tmp
+56 *86   0069  	ld	y_add		; load the addres that is in y_add
+57 *87   F100  	ldi			; load the content that is in the address
+58 *88   F300  	push			; push te value in the stack
+59 *89   0068  	ld	x_add		; load the address that is in  x_add
+5A *90   F200  	sti			; store the value that is in the stack in the address tha
+5B *91   0065  	ld	tmp		; load the value of tmp
+5C *92   F300  	push			; push the value in the stack
+5D *93   0069  	ld	y_add		; load the address that is in y_add
+5E *94   F200  	sti			; store the value that is in the stack in the address tha
+5F *95   904F  	ja	incr_j		; jump to incr_j
+               
+               incr_i:
+60 *96   009A  	ld	@1		; load 1
+61 *97   206A  	add	i		; add 1 to i
+62 *98   106A  	st	i		; store the new value of i
+63 *99   9039  	ja	for_ex		; jump to for_ex
+               	
+               end_sort:	
+64 *100  F000  	ret			; return to the caller
+               
+65 *101  0000  tmp:	dw 	0
+66 *102  0000  x:	dw	0
+67 *103  0000  y: 	dw	0
+68 *104  0000  x_add:  dw	0
+69 *105  0000  y_add:	dw	0
+6A *106  0000  i:	dw  	0
+6B *107  0000  j:	dw  	0
+               
+               ;----------------------------------------------------------
+               ; printNumbers()
+               ;
+               ; Function that prints the 10 numbers that are in the array
+               ; numbers.
+               ;---------------------------------------------------------
+               
+               printNumbers:
+6C *108  8000  	ldc	0	; load zero to initialize index
+6D *109  109C  	st	index	; store zero in index
+               	
+               printN:	
+6E *110  808E  	ldc     numbers	; load the address of numbers
+6F *111  209C  	add	index	; add index to the address
+70 *112  F100  	ldi		; load the value that is contented in the address
+71 *113  FFFD  	dout		; print the value
+72 *114  E079  	call	printLine ; call printLine
+73 *115  009C  	ld	index	; load index
+74 *116  209A  	add	@1	; add 1 to index
+75 *117  109C  	st	index	; store index
+76 *118  309B  	sub	@10	; substract 10 to index to figure out if we finish to p
+77 *119  D06E  	jnz	printN	; if the result is no zero, jump to printN
+78 *120  F000  	ret		; return to the caller
+               
+               ;-------------------------------------------------------------
+               ; printLine()
+               ;
+               ; Print a line feed
+               ;-------------------------------------------------------------
+               printLine:
+79 *121  800A  	ldc  '\n'	; load the character '\n'
+7A *122  FFFB  	aout		; ASCII output
+7B *123  F000  	ret		; return to the caller
+               
+               ;------------------------------------
+               ; VARIABLES
+               ;------------------------------------
+7C *124  0057  msg:	 dw   "Write ten numbers"
+7D *125  0072
+7E *126  0069
+7F *127  0074
+80 *128  0065
+81 *129  0020
+82 *130  0074
+83 *131  0065
+84 *132  006E
+85 *133  0020
+86 *134  006E
+87 *135  0075
+88 *136  006D
+89 *137  0062
+8A *138  0065
+8B *139  0072
+8C *140  0073
+8D *141  0000
+8E *142  0000  numbers: dw   10 dup 0
+98 *152  0000  address: dw   0
+99 *153  000A  counter: dw   10
+9A *154  0001  @1:	 dw   1
+9B *155  000A  @10:	 dw   10
+9C *156  0000  index:   dw   0
+9D *157  0009  @9:	 dw   9
+9E *158  0008  @8:	 dw   8
+9F *159  0055  msg_unsorted:	dw	"Unsorted numbers"
+A0 *160  006E
+A1 *161  0073
+A2 *162  006F
+A3 *163  0072
+A4 *164  0074
+A5 *165  0065
+A6 *166  0064
+A7 *167  0020
+A8 *168  006E
+A9 *169  0075
+AA *170  006D
+AB *171  0062
+AC *172  0065
+AD *173  0072
+AE *174  0073
+AF *175  0000
+B0 *176  0053  msg_sorted:	dw	"Sorted numbers"
+B1 *177  006F
+B2 *178  0072
+B3 *179  0074
+B4 *180  0065
+B5 *181  0064
+B6 *182  0020
+B7 *183  006E
+B8 *184  0075
+B9 *185  006D
+BA *186  0062
+BB *187  0065
+BC *188  0072
+BD *189  0073
+BE *190  0000
+BF *191  ========= end of largest_smallest.mas ===================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ capture                   3           E  
+ smallest                  1E          11 
+ largest                   2B          17 
+ sort                      37          10 
+ for_ex                    39          63 
+ for_in                    3E          52 
+ incr_j                    4F          4E  5F 
+ interchange               53          4D 
+ incr_i                    60          40 
+ end_sort                  64          3B 
+ tmp                       65          55  5B 
+ x                         66          4B 
+ y                         67          48  4C 
+ x_add                     68          43  49  53  59 
+ y_add                     69          45  46  56  5D 
+ i                         6A          38  39  61  62 
+ j                         6B          3D  3E  42  50  51 
+ printNumbers              6C         
+ printN                    6E          77 
+ printLine                 79          2   F   16  72 
+ msg                       7C          0  
+ numbers                   8E          3   13  19  41  6E 
+ address                   98          5   8  
+ counter                   99         
+ @1                        9A          B   44  4F  60  74 
+ @10                       9B          D   76 
+ index                     9C          4   A   C   6D  6F 
+                                       73  75 
+ @9                        9D          1A  3A  3F 
+ @8                        9E         
+ msg_unsorted              9F         
+ msg_sorted                B0         
+
+Input file   = largest_smallest.mas
+Output file  = largest_smallest.mac
+List file    = largest_smallest.lst 
+Number base  = decimal
+Label status = case sensitive

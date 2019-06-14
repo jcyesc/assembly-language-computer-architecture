@@ -1,0 +1,10 @@
+cat file fmain.cat
+0  *0    8002  main:	ldc	2	; pass poly 2
+1  *1    F300  	push
+2  *2    E000  	call	poly
+3  *3    F601  	dloc	1
+4  *4    FFFD  	dout		;output is 15 x 2 squared = 60
+5  *5    800A  	ldc	'\n'
+6  *6    FFFB  	aout
+7  *7    FFFF  	halt
+8  *8    ========= end of fmain.mas ==============================

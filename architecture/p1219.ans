@@ -1,0 +1,19 @@
+; #9131
+;Display should look exactly like this (with data from test
+;cases replacing numbers):
+;Enter a decimal number
+;12
+;Binary equivalent = 0000000000001100
+n
+o
+ln
+g
+12
+o
+g
+32767
+o
+g
+0
+SD
+q

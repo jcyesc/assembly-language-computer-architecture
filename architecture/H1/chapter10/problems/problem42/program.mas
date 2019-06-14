@@ -1,0 +1,94 @@
+;-------------------------------------------------------------------------------------------------
+;10.42 Write and run an assembly language program that determines and outputs the length
+;of a string(not including the null character) given on the command line when sim is invoked.
+;-------------------------------------------------------------------------------------------------
+
+;---------------------------------------------------------
+; int length(char *s)
+;	Function that calculates the length of the string.
+;		int length(char *s) {
+;			int tmp =0;
+;		while(*s != null) {
+;				s++;
+;				tmp++;					
+;			}
+;		}
+;---------------------------------------------------------
+
+@length$pc:
+		aloc	1	;	int tmp = 0;
+		ldc		0
+		str		0
+		
+_while:
+		ldr		2	;	while(*s != null)	
+		ldi
+		jz		_end_length
+		
+		ldr		2	;	s++;
+		add		@1
+		str		2
+
+		ldr		0	; tmp++;
+		add		@1
+		str		0
+		
+		ja		_while
+
+_end_length:	
+		ldr		0
+		dloc	1
+		ret
+
+;-----------------------------------------
+; int main(int argc, char **argv)
+;-----------------------------------------
+main:
+		ldr		1	; count = argc;
+		st		@count
+_whi2:
+		ld		@count
+		jz		_end_m
+		
+		ldr		2	; cout << argv[i] << " - " << length(argv[i];
+		ldi
+		sout
+		ldc		@msg
+		sout
+		ldr		2
+		ldi
+		push
+		call	@length$pc
+		dloc	1
+		dout
+		ldc		'\n'
+		aout
+		
+		ldr		2		; argv++
+		add		@1
+		str		2
+		
+		ld		@count	; count++
+		sub		@1
+		st		@count
+		
+		ja		_whi2
+		
+		ldc		@msg
+		push
+		call	@length$pc
+		dloc	1
+		dout
+		ldc		'\n'
+		aout
+	
+_end_m:
+		ret
+
+; Global Variables
+@1:		dw		1
+@msg:	dw		" -> "
+@count:	dw		0
+
+public 	main
+public	@length$pc

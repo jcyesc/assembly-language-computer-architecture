@@ -1,0 +1,25 @@
+// Program 7.46
+
+// The C++ program is this case is little endian.
+
+// The C++ program is this case is little endian.
+
+#include <iostream>
+
+using namespace std;
+
+long x, *p;
+int *q, *r;
+
+int main()
+{
+   p = &x;
+   *p = 2;
+   q = (int *)p;
+   r = q + 1;
+   cout << *q << endl;
+   cout << *r << endl;
+
+   return 0;
+}
+

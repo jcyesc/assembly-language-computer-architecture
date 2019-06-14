@@ -1,0 +1,47 @@
+; Program 8.20 translated to assembly language
+
+;------------------
+; int fp(int x)
+;------------------
+
+@fp$i:	ldr	1	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+	ldr	1	; return x;
+	
+	ret
+
+;-------------------
+; main()
+;-------------------
+
+main:
+	ldc	3	; y = fp(3)
+	push
+	call	@fp$i
+	dloc	1
+	st	y
+	
+	ldc	@fp$i
+	st	p
+	
+	ld	@call	;  y = p(3);
+	add	p	; add the address to the call instruction
+	st	* + 3	; store call into dw below
+	ldc	3	; create x parameter containing 3
+	push
+	dw	0	; execute manufactured call
+	dloc	1	; remove parameter
+	st	y	; store returned value in y
+
+	halt
+	end main
+
+; GLOBAL VARIABLES
+
+y:	dw	0
+p:	dw	0	; int (*p)(in);	p is a pointer to a function that is passed an int
+			; and returns and int.
+
+@call:	call	0

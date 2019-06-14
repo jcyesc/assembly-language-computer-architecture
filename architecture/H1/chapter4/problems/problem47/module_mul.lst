@@ -1,0 +1,236 @@
+Machine-level Assembler Version 6.1    Sun Jan  4 20:04:06 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version 	: 1.0
+               ; Created	: 4-December-2009
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Program that consists of four modules: main,
+               ;		  input, mult and output. main should call input, mult
+               ;		  and output, and then halt. input should prompt for and
+               ;		  read in two positive decimal numers. mult should multiply
+               ;		  the two decimal numbers read in by input by means of a loop
+               ;		  repeatedly adds. output should output the product computed 
+               ;		  mult. It's asumed that the product will fit into 16 bits.
+               ;		  The program must HANDLE both POSITIVE and NEGATIVE numbers.
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    E027  	call input		; call to input
+1  *1    E005  	call define_sign	; call to define_sign
+2  *2    E030  	call mult		; call to mult
+3  *3    E039  	call output		; callt to output
+               
+4  *4    FFFF  	halt			; end of the program
+               
+               ;---------------------------------------------------------------
+               ; define_sign()
+               ; 
+               ;	Function that defines the sign of the result
+               ;		
+               ;		+ * + = +
+               ;		+ * - or - * + = -
+               ;		- * - = +
+               ;	
+               ;	And also makes the numbers positive
+               ;---------------------------------------------------------------
+               
+               define_sign:
+5  *5    0049  	ld	number1		; load the value of number1
+6  *6    B008  	jn	neg_n1		; if NEGATIVE, jump to neg_n1
+7  *7    9010  	ja   	num2		; Jump always to num2
+               
+               ; IT  MAKES THE NUMBER1 POSITIVE
+8  *8    8001  neg_n1:	ldc	1		; load 1 to establish the sign to NEGATIVE
+9  *9    1024  	st	sign1		; store the 1 in the variable sign1
+A  *10   0049  	ld	number1		; Now we make the number1 positive
+B  *11   2049  	add	number1		; add number1 to number1
+C  *12   1026  	st	tmp		; store the result in tmp
+D  *13   0049  	ld	number1		; load number1
+E  *14   3026  	sub	tmp		; subtract tmp ( -number - (-number1 + -number1) = num
+F  *15   1049  	st	number1		; store the value of the POSITIVE number in number1
+               	
+10 *16   004A  num2:	ld	number2		; load the value of number2
+11 *17   B013  	jn	neg_n2		; if NEGATIVE jump to neg_n2
+12 *18   901B  	ja	def_sign	; jump always to def_sign
+               
+               ; IT MAKES THE NUMBER2 POSITIVE
+13 *19   8001  neg_n2:	ldc	1		; load the value of 1
+14 *20   1025  	st	sign2		; establish the value of sign2 to 1 (NEGATIVE)
+15 *21   004A  	ld	number2		; load the value of number2
+16 *22   204A  	add	number2		; add number2 to number2
+17 *23   1026  	st	tmp		; store the vaue in tmp
+18 *24   004A  	ld	number2		; load number2
+19 *25   3026  	sub	tmp		; subtract tmp ( -number2 - ( -number2 + -number2) = n
+1A *26   104A  	st	number2		; store the POSITIVE number in number2
+               
+               def_sign:
+1B *27   0024  	ld	sign1		; load the value of sign1
+1C *28   2025  	add	sign2		; load the value of sign2
+1D *29   106E  	st	result_sign	; store the result in result_sign
+1E *30   C023  	jz	end_ds		; The result of sign is POSITVE
+1F *31   306C  	sub	@1		; subtract 1 to see if the sign is NEGATIVE
+20 *32   C023  	jz	end_ds		; The result of sign is NEGATIVE
+               	; if we're here, that means the sign is POSITIVE ( NEGATIVE * N
+21 *33   8000  	ldc	0		; load 0 to ac
+22 *34   106E  	st	result_sign	; store the value of ac in result_sign
+               	
+23 *35   F000  end_ds:	ret		; return to the caller
+               
+24 *36   0000  sign1:	dw	0	; 0 POSITIVE, 1 NEGATIVE
+25 *37   0000  sign2:	dw	0	; 0 POSITIVE, 1 NEGATIVE
+26 *38   0000  tmp:	dw	0	
+               
+               ;---------------------------------------------------------------
+               ; input()
+               ;
+               ;	Input the values to number1 and number2.
+               ;---------------------------------------------------------------
+               input:
+27 *39   804C  	ldc	msg	; load the address of msg
+28 *40   FFF7  	sout		; string output
+29 *41   FFFC  	din		; decimal input
+2A *42   1049  	st	number1 ; store the value of ac in number1
+2B *43   804C  	ldc	msg	; load the address of msg
+2C *44   FFF7  	sout		; string output
+2D *45   FFFC  	din		; decimal input
+2E *46   104A  	st	number2	; store the value of ac in number2
+2F *47   F000  	ret		; return to the caller
+               
+               ;---------------------------------------------------------------
+               ; mult()
+               ;
+               ;	Multiply number1 with number2 by adding number2 n times, depen
+               ; 	of the value of number1.
+               ;---------------------------------------------------------------
+               
+               mult:	
+30 *48   004B  for:	ld	result		; load the value of result
+31 *49   204A  	add	number2		; add number2 to result
+32 *50   104B  	st	result		; store the new value in result
+               	
+33 *51   0049  	ld	number1		; load the value of number1
+34 *52   306C  	sub	@1		; subtract 1 to number1
+35 *53   1049  	st	number1		; store the new value in number1
+36 *54   B038  	jn	end_mult	; if the subtract is negative ( 0 - 1) jump to end_
+37 *55   D030  	jnz	for		; if NOT ZERO, jump to for
+               
+               end_mult:
+38 *56   F000  	ret			; return to the caller
+               
+               ;---------------------------------------------------------------
+               ; output()
+               ;
+               ;	Show the result of the multiplication
+               ;---------------------------------------------------------------
+               
+               output:
+39 *57   800A  	ldc	'\n'		; load the value of '\n'
+3A *58   FFFB  	aout			; string output
+3B *59   805D  	ldc	msg_result	; load the address of msg_result
+3C *60   FFF7  	sout			; string output
+3D *61   006E  	ld	result_sign	; load the value of result_sign
+3E *62   C040  	jz	positive
+3F *63   9043  	ja	negative
+               
+               positive:
+40 *64   802B  	ldc	'+'		; load the value of '+'
+41 *65   FFFB  	aout			; ASCII output
+42 *66   9046  	ja	print_r		; jump always to print_r
+               
+               negative:
+43 *67   802D  	ldc	'-'		; load the value of '-'
+44 *68   FFFB  	aout			; ASCII output
+45 *69   9046  	ja	print_r		; jump always to print_r
+               
+46 *70   004B  print_r:ld	result		; load the value of result
+47 *71   FFFD  	dout			; decimal output
+48 *72   F000  	ret			; return to the caller
+               
+               ;-----------------------
+               ; VARIABLES
+               ;-----------------------
+               
+49 *73   0000  number1:	dw	0
+4A *74   0000  number2:	dw	0
+4B *75   0000  result:		dw	0
+4C *76   0057  msg:		dw	"Write a number "
+4D *77   0072
+4E *78   0069
+4F *79   0074
+50 *80   0065
+51 *81   0020
+52 *82   0061
+53 *83   0020
+54 *84   006E
+55 *85   0075
+56 *86   006D
+57 *87   0062
+58 *88   0065
+59 *89   0072
+5A *90   0020
+5B *91   0000
+5C *92   0000  counter:	dw	0
+5D *93   0054  msg_result:	dw	"The result is "
+5E *94   0068
+5F *95   0065
+60 *96   0020
+61 *97   0072
+62 *98   0065
+63 *99   0073
+64 *100  0075
+65 *101  006C
+66 *102  0074
+67 *103  0020
+68 *104  0069
+69 *105  0073
+6A *106  0020
+6B *107  0000
+6C *108  0001  @1:		dw	1
+6D *109  0002  @2:		dw	2
+6E *110  0000  result_sign:	dw	0
+6F *111  ========= end of module_mul.mas =========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ define_sign               5           1  
+ neg_n1                    8           6  
+ num2                      10          7  
+ neg_n2                    13          11 
+ def_sign                  1B          12 
+ end_ds                    23          1E  20 
+ sign1                     24          9   1B 
+ sign2                     25          14  1C 
+ tmp                       26          C   E   17  19 
+ input                     27          0  
+ mult                      30          2  
+ for                       30          37 
+ end_mult                  38          36 
+ output                    39          3  
+ positive                  40          3E 
+ negative                  43          3F 
+ print_r                   46          42  45 
+ number1                   49          5   A   B   D   F  
+                                       2A  33  35 
+ number2                   4A          10  15  16  18  1A 
+                                       2E  31 
+ result                    4B          30  32  46 
+ msg                       4C          27  2B 
+ counter                   5C         
+ msg_result                5D          3B 
+ @1                        6C          1F  34 
+ @2                        6D         
+ result_sign               6E          1D  22  3D 
+
+Input file   = module_mul.mas
+Output file  = module_mul.mac
+List file    = module_mul.lst 
+Number base  = decimal
+Label status = case sensitive

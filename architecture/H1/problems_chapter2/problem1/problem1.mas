@@ -1,0 +1,17 @@
+; PROGRAM THAT ADDS SEVERAL NUMBERS
+
+	ld  n1	
+	add n2
+	add n3
+	add n4
+	add n5
+	st result
+	halt
+
+; Data area
+n1:	dw 4	; first number
+n2:	dw -35  ; second number
+n3:	dw 16	; third number
+n4:	dw 555	; fourth number
+n5:	dw -8	; fifth number
+result: dw 0	; result number

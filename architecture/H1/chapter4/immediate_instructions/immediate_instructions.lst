@@ -1,0 +1,35 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 11:59:28 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+0  *0    0007  	ld   w	; loads 2
+1  *1    1008  	st   x
+2  *2    8007  	ldc  w	; loads 7, the address of w
+3  *3    1009  	st   y
+4  *4    8001  	ldc  1	; loadas the constant 1
+5  *5    100A  	st   z
+6  *6    FFFF  	halt
+7  *7    0002  w:	dw   2
+8  *8    0000  x:	dw   0
+9  *9    0000  y:	dw   0
+A  *10   0000  z:	dw   0
+               
+B  *11   ========= end of immediate_instructions.mas =============
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ w                         7           0   2  
+ x                         8           1  
+ y                         9           3  
+ z                         A           5  
+
+Input file   = immediate_instructions.mas
+Output file  = immediate_instructions.mac
+List file    = immediate_instructions.lst 
+Number base  = decimal
+Label status = case sensitive

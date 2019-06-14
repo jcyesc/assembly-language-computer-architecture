@@ -1,0 +1,78 @@
+                                                 ascii.txt
+
+ASCII Summary
+
+Hex Decimal              Hex Decimal          Hex Decimal
+                                        
+ 20  32   <blank>         41  65     A         61  97     a
+ 21  33     !             42  66     B         62  98     b
+ 22  34     "             43  67     C         63  99     c
+ 23  35     #             44  68     D         64  100    d
+ 24  36     $             45  69     E         65  101    e
+ 25  37     %             46  70     F         66  102    f
+ 26  38     &             47  71     G         67  103    g
+ 27  38     '             48  72     H         69  104    h
+ 28  40     (             49  73     I         69  105    i
+ 29  41     )             4A  74     J         6A  106    j
+ 2A  42     *             4B  75     K         6B  107    k
+ 2B  43     +             4C  76     L         6C  108    l
+ 2C  44     ,             4D  77     M         6D  109    m
+ 2D  45     -             4E  78     N         6E  110    n
+ 2E  46     .             4F  79     O         6F  111    o
+ 2F  47     /             50  80     P         70  112    p
+ 30  48     0             51  81     Q         71  113    q
+ 31  49     1             52  82     R         72  114    r
+ 32  50     2             53  83     S         73  114    s
+ 33  51     3             54  84     T         74  116    t
+ 34  52     4             55  85     U         75  117    u
+ 35  53     5             56  86     V         76  118    v
+ 36  54     6             57  87     W         77  119    w
+ 37  55     7             58  88     X         78  120    x
+ 38  56     8             59  89     Y         79  121    y
+ 39  57     9             5A  90     Z         7A  122    z
+ 3A  58     :             5B  91     [         7B  123    {
+ 3B  59     ;             5C  92     \         7C  124    |
+ 3C  60     <             5D  93     ]         7D  125    }
+ 3D  61     =             5E  94     ^         7E  126    ~
+ 3E  62     >             5F  95     _            
+ 3F  63     ?             60  96     `  
+ 40  64     @                           
+
+Control Characters
+
+     Hex   Decimal Abbreviation    Meaning        
+
+     00       0       NUL          Nul
+     01       1       SOH          Start of header
+     02       2       STX          Start of text
+     03       3       ETX          End of text
+     04       4       EOT          End of transmission
+     05       5       ENQ          Enquiry
+     06       6       ACK          Acknowledge
+     07       7       BEL          Bell                             
+     08       8       BS           Backspace                        
+     09       9       HT           Horizontal tab                   
+     0A       10      LF           Line feed (i.e., newline)
+     0B       11      VT           Vertical tab                     
+     0C       12      FF           Form feed (i.e., new page)
+     0D       13      CR           Carriage return
+     OE       14      SO           Shift out
+     0F       15      SI           Shift in
+     10       16      DLE          Data link escape
+     11       17      DC1          Device control 1
+     12       18      DC2          Device control 2
+     13       19      DC3          Device control 3
+     14       20      DC4          Device control 4
+     15       21      NAK          Negative Acknowledge
+     16       22      SYN          Synchronous idle
+     17       23      ETB          End of transmission block
+     18       24      CAN          Cancel
+     19       25      EM           End of medium
+     1A       26      SUB          Substitute
+     1B       27      ESC          Escape
+     1C       28      FS           File separator
+     1D       29      GS           Group separator
+     1E       30      RS           Record separator
+     1F       31      US           Unit separator
+     7F      127      DEL          Delete
+

@@ -1,0 +1,17 @@
+;----------------------------------------------------------------------------
+; 10.22 Show the ".mob" file that corresponds to the following program.
+; Use the same format that pic uses.
+;----------------------------------------------------------------------------
+
+	extern	sub
+	ldc	0
+	push
+	ldc	msg
+	call	sub
+	call	sub
+	halt
+
+	msg:	dw	"Programming is fun"
+	end	0
+
+

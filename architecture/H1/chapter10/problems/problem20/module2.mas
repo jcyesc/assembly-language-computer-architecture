@@ -1,0 +1,4 @@
+	public	x
+	public	y
+y:	dw	0
+x:	dw	-1

@@ -1,0 +1,11 @@
+                                                 mycopy.txt
+
+Quick Start
+
+     mycopy performs a binary copy of the first file specified on 
+the command line to the second file.  It is used by the atest and 
+ltest batch/script files.
+
+     The command line format is
+
+     myfc <infilename1> <outfilename2>

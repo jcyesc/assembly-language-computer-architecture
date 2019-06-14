@@ -1,0 +1,162 @@
+Machine-level Assembler Version 6.1    Sun Jan  4 20:35:40 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Version 	: 1.0
+               ; Created	: 4-December-2009
+               ; Author	: Juan Carlos Yescas
+               ; Description	: Program that consists of four modules: main,
+               ;		  input, div and output. main should call input, div
+               ;		  and output, and then halt. input should prompt for and
+               ;		  read in two positive decimal numers. div should divide
+               ;		  the two decimal numbers read in by input by means of a loop
+               ;		  repeatedly subtracts. output should output the result compu
+               ;		  div.
+               ;---------------------------------------------------------------
+               
+               main:
+0  *0    E004  	call input
+1  *1    E00D  	call div
+2  *2    E016  	call output
+               
+3  *3    FFFF  	halt
+               
+               ;---------------------------------------------------------------
+               ; input()
+               ;
+               ;	Input the values to number1 and number2. (number1 / number2)
+               ;---------------------------------------------------------------
+               input:
+4  *4    8020  	ldc	msg	; load the address of msg
+5  *5    FFF7  	sout		; string output
+6  *6    FFFC  	din		; decimal input
+7  *7    101D  	st	number1 ; store the value of ac in number1
+8  *8    8020  	ldc	msg	; load the address of msg
+9  *9    FFF7  	sout		; string output
+A  *10   FFFC  	din		; decimal input
+B  *11   101E  	st	number2	; store the value of ac in number2
+C  *12   F000  	ret		; return to the caller
+               
+               ;---------------------------------------------------------------
+               ; div()
+               ;
+               ;	Divide number1 with number2 by subtracting number2 n times, de
+               ; 	of the value of number1.
+               ;---------------------------------------------------------------
+               
+               div:	
+D  *13   001D  for:	ld	number1		; load the value of number1
+E  *14   301E  	sub	number2		; subtract number2 to number1
+F  *15   101D  	st	number1		; store the value in number1
+10 *16   B015  	jn	end_div		; if NEGATIVE, jump to end of the division
+11 *17   001F  	ld	result		; load the value of result
+12 *18   2052  	add	@1		; add 1 to result
+13 *19   101F  	st	result		; store the value of ac in result
+14 *20   900D  	ja	for		; jump always to for
+               end_div:
+15 *21   F000  	ret			; return to the caller
+               
+               ;---------------------------------------------------------------
+               ; output()
+               ;
+               ;	Show the result of the multiplication
+               ;---------------------------------------------------------------
+               
+               output:
+16 *22   800A  	ldc	'\n'		; load the value of '\n'
+17 *23   FFFB  	aout			; string output
+18 *24   8031  	ldc	msg_result	; load the address of msg_result
+19 *25   FFF7  	sout			; string output
+1A *26   001F  	ld	result		; load the value of result
+1B *27   FFFD  	dout			; decimal output
+1C *28   F000  	ret			; return to the caller
+               
+               ;-----------------------
+               ; VARIABLES
+               ;-----------------------
+               
+1D *29   0000  number1:	dw	0
+1E *30   0000  number2:	dw	0
+1F *31   0000  result:		dw	0
+20 *32   0057  msg:		dw	"Write a number "
+21 *33   0072
+22 *34   0069
+23 *35   0074
+24 *36   0065
+25 *37   0020
+26 *38   0061
+27 *39   0020
+28 *40   006E
+29 *41   0075
+2A *42   006D
+2B *43   0062
+2C *44   0065
+2D *45   0072
+2E *46   0020
+2F *47   0000
+30 *48   0000  counter:	dw	0
+31 *49   0054  msg_result:	dw	"The result is number1/number2 : "
+32 *50   0068
+33 *51   0065
+34 *52   0020
+35 *53   0072
+36 *54   0065
+37 *55   0073
+38 *56   0075
+39 *57   006C
+3A *58   0074
+3B *59   0020
+3C *60   0069
+3D *61   0073
+3E *62   0020
+3F *63   006E
+40 *64   0075
+41 *65   006D
+42 *66   0062
+43 *67   0065
+44 *68   0072
+45 *69   0031
+46 *70   002F
+47 *71   006E
+48 *72   0075
+49 *73   006D
+4A *74   0062
+4B *75   0065
+4C *76   0072
+4D *77   0032
+4E *78   0020
+4F *79   003A
+50 *80   0020
+51 *81   0000
+52 *82   0001  @1:		dw	1
+               
+               
+53 *83   ========= end of module_div.mas =========================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ input                     4           0  
+ div                       D           1  
+ for                       D           14 
+ end_div                   15          10 
+ output                    16          2  
+ number1                   1D          7   D   F  
+ number2                   1E          B   E  
+ result                    1F          11  13  1A 
+ msg                       20          4   8  
+ counter                   30         
+ msg_result                31          18 
+ @1                        52          12 
+
+Input file   = module_div.mas
+Output file  = module_div.mac
+List file    = module_div.lst 
+Number base  = decimal
+Label status = case sensitive

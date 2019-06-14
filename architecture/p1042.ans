@@ -1,0 +1,14 @@
+; #2b1c
+; Length of the argv[1] string should be displayed.
+;Display should look exactly like this:
+;Length = 5
+n
+o
+a3900t
+dw "hello" ; set up command line arguments
+
+o#
+ln
+g
+SD
+q

@@ -1,0 +1,57 @@
+;---------------------------------------------------------------------
+;  Version	: 1.0
+;  Created	: 31-december-2008
+;  Author	: Juan Carlos Yescas
+;  Description	: Program that reads in a string and displays its length
+;		  (not counting the null character)
+;---------------------------------------------------------------------
+
+main:
+	ldc	msg	; load the address of msg
+	sout		; string output
+
+	ldc	string	; load the address of string
+	sin		; string input
+
+	call	getLength	; call getLength
+	
+	ldc	'\n'	; load the value of '\n'
+	aout		; ASCII output
+	
+	ldc	msgLen 	; load the address of msgLen
+	sout		; string output
+	ld	length	; load the value of length
+	dout		; decimal output
+
+	halt		; end of the program
+
+;---------------------------------------------------------------------
+; getLength()
+;
+; Function that calculate the length of string. The length
+; is then store in the var "length". This function is going to
+; add 1 for each character that finds. If it finds ZERO or
+; NULL, that means we're in the final of the string.
+;---------------------------------------------------------------------
+
+getLength:
+for:    ldc     string          ; load the address of string
+        add     length          ; add length to string
+        ldi                     ; load the content that is in the address that points ac
+        jz      endLength       ; if the content is ZERO or NULL, jump to endLenght. 
+                                ; We're in the end of the string
+        ld      @1              ; load @1
+        add     length          ; add 1 to length
+        st      length          ; store the new value of length in length
+        ja      for	      	; jump always to getLength
+endLength:
+        ret                     ; return to the caller
+
+;----------------------------
+; VARIABLES
+;----------------------------
+@1:	dw	1
+string:	dw	80 dup 0
+length:	dw	0
+msg:	dw	"Write a string -> "
+msgLen:	dw	"The lenght is : "

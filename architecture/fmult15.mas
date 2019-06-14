@@ -1,0 +1,14 @@
+                         ;                       fmult15.mas
+mult15:  aloc   1        ; allocate local variable temp
+         ldr    2        ; get parameter (n)
+         addr   2        ; get 2n
+         str    0        ; save 2n in temp
+         addr   0        ; get 4n
+         str    0        ; save 4n in temp
+         addr   0        ; get 8n
+         str    0        ; save 8n in temp
+         addr   0        ; get 16n
+         subr   2        ; get 16n - n = 15n
+         dloc   1        ; deallocate local variable temp
+         ret             ; product returned in ac reg
+         public mult15

@@ -1,0 +1,166 @@
+                                                 k.txt
+
+Stack Instruction Set (k.hor, k.cfg)
+
+Opcode  Assembly   Name             Description
+(hex)    Form
+
+ 0     p    x   Push                mem[--sp] = mem[x];
+ 1     pc   x   Push constant       mem[--sp] = x;
+ 2     pr   s   Push relative       mem[--sp] = mem[bp + s];
+
+ 3     cora s   Convert rel addr    mem[--sp] = (bp + s)12;
+
+ 4     aspc s   Add to sp constant  sp = (sp + s)12;
+
+ 5     call x   Call                mem[--sp] = pc; pc = x;
+
+ 6     ja   x   Jump always         pc = x;
+ 7     jcnt x   Jump count          if (--ct) pc = x;
+ 8     jp   x   Jump positive       if (mem[sp++] > 0) pc = x;
+ 9     jn   x   Jump negative       if (mem[sp++] < 0) pc = x;
+ A     jz   x   Jump zero           if (mem[sp++] == 0) pc = x;
+ B     jnz  x   Jump nonzero        if (mem[sp++] != 0) pc = x;
+ C     jodd x   Jump odd            if (mem[sp++] % 2 == 1) pc = x;
+ D     jzon x   Jump zero or neg    if (mem[sp++] <= 0) pc = x;
+ E     jzop x   Jump zero or pos    if (mem[sp++) >= 0) pc = x;
+
+ F0    ret      Return              pc = mem[sp++];
+
+ F1    add      Add                 temp = mem[sp++];
+                                    mem[sp] = mem[sp] + temp;
+                                    cy = carry;
+
+ F2    sub      Subtract            temp = mem[sp++];
+                                    mem[sp] = mem[sp] - temp;
+
+ F3    stav     Store addr/value    temp = mem[sp++];
+                                    mem[mem[sp++]] = temp;
+
+ F4    stva     Store value/addr    temp = mem[sp++];
+                                    mem[temp] = mem[sp++];
+
+ F5    load     Load                mem[sp] = mem[mem[sp]];
+
+ F6    addc y   Add constant        mem[sp] = mem[sp] + y;
+                                    cy = carry;
+
+ F7    subc y   Subtract constant   mem[sp] = mem[sp] - y;
+
+ F8    dupe     Dupe top of stack   temp = mem[sp];
+                                    mem[--sp] = temp;
+
+ F9    esba     Estab base addr     mem[--sp] = bp; bp = sp12;
+
+ FA    reba     Restore base addr   sp = bp; bp = mem[sp++];
+
+ FB    zesp     Zero sp             sp = 0;
+
+ FC    scmp     Signed compare      temp1 = mem[sp++]; 
+                                    temp2 = mem[sp];
+                                    if (temp2 < temp1) mem[sp] = -1;
+                                    if (temp2 == temp1) mem[sp] = 0;
+                                    if (temp2 > temp1) mem[sp] = 1;
+
+ FD    ucmp     Unsigned compare    Same as scmp except
+                                    unsigned comparison
+                                
+ FE    rev      Reverse             temp1 = mem[sp++];
+                                    temp2 = mem[sp];
+                                    mem[sp--] = temp1;
+                                    mem[sp] = temp2; 
+                                     
+ FF0   shll z   Shift left logical  mem[sp] << z; (inject 0's)
+ FF1   shrl z   Shift right logical mem[sp] >> z; (inject 0's)
+ FF2   shra z   Shift right arith   mem[sp] >> z; (inject sign)
+
+ FF3   m        Shift-add multiply  temp = mem[sp++];
+                                    mem[sp] = mem[sp] * temp;
+
+ FF4   mult     Hardware multiply   temp = mem[sp++];
+                                    mem[sp] = mem[sp] * temp;
+
+ FF5   div      Divide              temp1 = mem[sp++];
+                                    temp2 = sp;
+                                    if (temp1 == 0) mem[--sp] = temp2;
+                                    else mem[sp] = mem[sp] / temp;
+
+ FF6   rem      Remainder           temp = mem[sp++];
+                                    if (temp == 0) mem[--sp] = ct;
+                                    else mem[sp] = mem[sp] % temp;
+
+ FF7   addy     Add with carry      temp = mem[sp++];
+                                    mem[sp] = mem[sp] + temp + carry; 
+                                    cy = carry;              
+
+ FF8   or       Bitwise incl or     mem[sp] = mem[sp++] | mem[sp];
+ FF9   xor      Bitwise excl or     mem[sp] = mem[sp++] ^ mem[sp];
+ FFA   and      Bitwise and         mem[sp] = mem[sp++] & mem[sp];
+ FFB   flip     Bitwise complement  mem[sp] = ~mem[sp];
+
+ FFC   cali     Call indirect       temp = mem[sp]; mem[sp] = pc;
+                                    pc = temp12;
+
+ FFD   sect     Set ct              ct = mem[sp++];
+       
+ FFE   rot      Rotate              Rotate up top 3 stack items
+
+ FFF0  psp      Push sp             temp = sp;
+                                    mem[--sp] = temp;
+
+ FFF1  bpbp     Bp to bp            bp = mem[bp];
+
+ FFF2  pobp     Pop bp              bp = mem[sp++];
+
+ FFF3  pbp      Push bp             mem[--sp] = bp;
+
+ FFF4  bcpy     Block copy          temp1 = mem[sp++];
+                                    temp2 = mem[sp++]; 
+                                    while (ct--)
+                                       mem[temp2++] = mem[temp1++];
+
+ FFF5  uout     Unsigned out        Output mem[sp++] as 
+                                    unsigned decimal number
+
+ FFF6  sin      String input        Input str to mem[sp++]
+ FFF7  sout     String output       Output str pointed to by mem[sp++]
+
+ FFF8  hin      Hex input           Input hex number to mem[--sp]
+ FFF9  hout     Hex output          Output number in mem[sp++]
+
+ FFFA  ain      ASCII input         Input ASCII char to mem[--sp]
+ FFFB  aout     ASCII output        Output ASCII char in mem[sp++]
+
+ FFFC  din      Decimal input       Input decimal number (signed 
+                                    or unsigned) to mem[--sp]
+ FFFD  dout     Decimal output      Output number in mem[sp++] as
+                                    a signed decimal number
+
+ FFFE  bkpt     Breakpoint          Trigger breakpoint
+ FFFF  halt     Halt                Trigger halt
+
+!-directive: k
+-----------------------------------------------------------------
+Instruction Fields
+
+  s:    12 rightmost bits of instruction, -4095 <= s <= 4095 (FFF hex)
+  x:    12 rightmost bits of instruction,     0 <= x <= 4095 (FFF hex)
+  y:    8  rightmost bits of instruction,     0 <= y <= 255  (FF hex)
+  z:    4  rightmost bits of instruction,     0 <= z <= 15   (F dec)
+
+-----------------------------------------------------------------
+Registers
+
+pc:    program counter register
+sp:    stack pointer register
+ct:    count register
+cy:    carry register
+bp:    base pointer register
+temp:  designates a work register within the CPU
+temp1: designates a work register within the CPU
+temp2: designates a work register within the CPU
+
+Note:  An item followed by "12" in the instruction set 
+       descriptions denotes the 12 rightmost bits of that item.  
+       Main memory references (i.e., wherever "mem[...]" appears) 
+       use only the 12 rightmost of the address specified. 

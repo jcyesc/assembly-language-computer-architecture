@@ -1,0 +1,85 @@
+Machine-level Assembler Version 6.1    Wed Dec 24 22:19:21 2008
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Write and run an assembly language program that displays
+               ;	1
+               ;	1 2
+               ;	1 2 3
+               ;	1 2 3 4
+               ;	1 2 3 4 5
+               ;	1 2 3 4 5 6
+               ;	1 2 3 4 5 6 7
+               ;	
+               
+               printPiramide:
+0  *0    0022  	ld    index		; Load the index that start in 1
+1  *1    F300  	push  			; Push index in the stack
+2  *2    E00D  	call  printLine		; Call printLine
+3  *3    F400  	pop			; Pop the value of index
+4  *4    2020  	add   @1		; Add 1 to index
+5  *5    1022  	st    index		; Store index
+6  *6    800A  	ldc   '\n'		; Load a line feed
+7  *7    FFFB  	aout			; Print an ASCII character
+8  *8    0021  	ld    contador		; Load contador
+9  *9    3020  	sub   @1		; Subtract 1 to contador
+A  *10   1021  	st    contador		; Store contador
+B  *11   D000  	jnz   printPiramide	; if ac is not zero, jump to printPiramide.
+C  *12   FFFF  	halt			; End of the program.
+               
+               ;--------------------------------------
+               ; printLine()
+               ;
+               ; receives the max number to print
+               ;--------------------------------------
+               printLine:
+D  *13   4001  	ldr  1			; Load the value in ac of mem[sp + x]
+E  *14   101F  	st   times
+               	; initialize variables
+F  *15   8001  	ldc  1
+10 *16   101C  	st   var		; var is initialized with 1
+               print:
+11 *17   001C  	ld   var		; load var
+12 *18   FFFD  	dout			; print the decimal in ac
+13 *19   2020  	add  @1			; add 1 to ac
+14 *20   101C  	st   var		; store the value of ac in var
+15 *21   801D  	ldc  blank		; load the address of blank
+16 *22   FFF7  	sout			; print the string
+17 *23   001F  	ld   times		; load the value of times
+18 *24   3020  	sub  @1			; subtract 1 to ac
+19 *25   101F  	st   times		; store the value of times
+1A *26   D011  	jnz  print		; if ac is not zero, jump to print
+1B *27   F000  	ret	
+               
+1C *28   0001  var:	   dw  1		; var to store the numbers to be printed
+1D *29   0020  blank:	   dw  " " 		; blank space
+1E *30   0000
+1F *31   0000  times:     dw  0		; parameter that is pass to the function print
+               
+20 *32   0001  @1:	   dw  1 
+21 *33   000A  contador:  dw  10		; max numbers to be printed
+22 *34   0001  index:	   dw  1		; store the quantity of numbers to be printed
+23 *35   ========= end of pyramid.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ printPiramide             0           B  
+ printLine                 D           2  
+ print                     11          1A 
+ var                       1C          10  11  14 
+ blank                     1D          15 
+ times                     1F          E   17  19 
+ @1                        20          4   9   13  18 
+ contador                  21          8   A  
+ index                     22          0   5  
+
+Input file   = pyramid.mas
+Output file  = pyramid.mac
+List file    = pyramid.lst 
+Number base  = decimal
+Label status = case sensitive

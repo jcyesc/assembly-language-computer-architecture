@@ -1,0 +1,18 @@
+; #8a62
+;Your display should look exactly like this (with data from the 
+;test cases replacing the numbers):
+;Enter number: 3
+;3 squared = 9
+n
+o
+ln
+g
+3
+o
+g
+1
+o
+g
+20
+SD
+q

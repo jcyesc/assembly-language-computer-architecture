@@ -1,0 +1,29 @@
+Machine-level Assembler Version 6.1    Wed May  6 23:20:45 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               	extern	x
+               	extern	y
+0  *0    0000  start:	ld	x
+1  *1    1FFF  	st	y - 1
+2  *2    9002  cat:	ja	cat
+               	end	start
+3  *3    ========= end of module1.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ start                     0           3  
+ cat                       2           2  
+ x                         ext         0   0  
+ y                         ext         0   1  
+
+Input file   = module1.mas
+Output file  = module1.mob
+List file    = module1.lst 
+Number base  = decimal
+Label status = case sensitive

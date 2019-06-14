@@ -1,0 +1,37 @@
+lin Version 6.1 Table Trace             Wed May  6 21:16:23 2009
+
+Tables constructed from user-specified modules:
+
+P Table      Address (hex*dec)         Symbol
+                   6*6                  x
+                   9*9                  y
+
+E Table      Address (hex*dec)         Symbol
+                   0*0                  x
+                   1*1                  y
+
+R Table empty
+
+S Table      Address (hex*dec)         Type
+                   0*0                  s
+===============================================================
+Text as transformed by E-entry and R-entry processing:
+
+Address           Before E           After  E        After E
+hex*dec           Before R           Before R        After R
+
+0  *0               0001       change> 0007            0007
+1  *1               2FFF       change> 2008            2008
+2  *2               FFFD               FFFD            FFFD
+3  *3               800A               800A            800A
+4  *4               FFFB               FFFB            FFFB
+5  *5               FFFF               FFFF            FFFF
+6  *6             x 0005               0005            0005
+7  *7               0006               0006            0006
+8  *8               0032               0032            0032
+9  *9             y 003C               003C            003C
+
+Output file  = main.mac
+Table file   = main.tab
+Cat file     = main.cat
+Label status = case sensitive

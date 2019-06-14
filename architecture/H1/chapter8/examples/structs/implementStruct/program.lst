@@ -1,0 +1,77 @@
+Machine-level Assembler Version 6.1    Sun Mar 22 08:59:25 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; Translate de program 8.14 to assembly language
+               
+               ;-------------------------------
+               ; void tests(Coordinate *ps)
+               ;-------------------------------
+               
+               @tests$p11Coordinates:
+0  *0    F502  	aloc	2	; Coordinates ls;
+               
+1  *1    8005  	ldc 5		; int li = 5;
+2  *2    F300  	push
+               
+               			; ls.y = 4;
+3  *3    8004  	ldc	4	; get relative address of ls.y
+4  *4    5002  	str	2	; store into ls.y
+               
+               			; ps->y = li;
+5  *5    4000  	ldr	0	; get li
+6  *6    F300  	push		; push it
+7  *7    8001  	ldc	1	; get offset of y field
+8  *8    6005  	addr	5	; add ps
+9  *9    F200  	sti		; assign li to ps -> y
+               
+A  *10   F603  	dloc	3	; deallocate locals
+B  *11   F000  	ret
+               
+               ;------------------------------
+               ; main()
+               ;------------------------------
+               
+C  *12   801B  main:	ldc	gs	; tests(&gs);
+D  *13   F300  	push
+E  *14   E000  	call	@tests$p11Coordinates
+F  *15   F601  	dloc	1
+               
+10 *16   001C  	ld	gs + 1	; cout << gs.y << endl;
+11 *17   FFFD  	dout
+12 *18   800A  	ldc	'\n'
+13 *19   FFFB  	aout
+               
+14 *20   8003  	ldc	3	; gs.y = 3
+15 *21   101C  	st	gs + 1
+               
+16 *22   001C  	ld	gs + 1	; cout << gs.y << endl;
+17 *23   FFFD  	dout
+18 *24   800A  	ldc	'\n'
+19 *25   FFFB  	aout
+               
+1A *26   FFFF  	halt
+               	
+               	end main
+               	
+               ; GLOBAL VARIABLES
+               
+1B *27   0000  gs:	dw	2 dup 0	
+1D *29   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @tests$p11Coordinates     0           E  
+ main                      C           1B 
+ gs                        1B          C   10  15  16 
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

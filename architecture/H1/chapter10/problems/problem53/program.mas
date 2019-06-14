@@ -1,0 +1,102 @@
+;--------------------------------------------------------------
+; 10.53 Translate the next C program to assembly languague.
+;
+;	#include <iostream>
+;	using namespace std;
+;	int x = 5;
+;	int y;
+;
+;	static void f(int a, int b)
+;	{
+;	    y = a + b + x;
+;	}
+;
+;	int main()
+;	{
+;	    int z = 10;
+;	    f(z, z + 3);
+;	    cout << "x  =  " << x << endl;
+;	    cout << "y =  " << y << endl;
+;	    cout << "z = " << z << endl;
+;	    return 0;
+;	}
+;--------------------------------------------------------------
+
+;------------------------------
+; static void f(int a, int b)
+;------------------------------
+
+@f$ii:
+		ldr		1	; y = a + b x;	
+		addr	2
+		add		x
+		st		y
+		
+		ret
+
+;------------------------
+; int main()
+;------------------------
+main:
+		ldc		10		; int z = 10;
+		aloc	1	
+		str		0
+		
+		ldr		0		; f(z, z + 3)
+		add		@3
+		push
+		ldr		1
+		push
+		call	@f$ii
+		dloc	2
+		
+		ldc		msg1	; cout << "x = " << x << endl;
+		sout
+		ld		x
+		dout
+		ldc		'\n'
+		aout
+		
+		ldc		msg2	; cout << "y = " << y << endl;
+		sout
+		ld		y
+		dout
+		ldc		'\n'
+		aout
+		
+		ldc		msg3	; cout << "z = " << z << endl;
+		sout
+		ldr		0
+		dout
+		ldc		'\n'
+		aout
+		
+		dloc	1		; release memory
+		ldc		0;	return 0;
+		ret
+
+; Global variables
+x:		dw		5	
+y:		dw		0
+@3:		dw		3
+msg1:	dw		"x = "
+msg2:	dw		"y = "
+msg3:	dw		"z = "
+	
+public main
+	
+
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+	

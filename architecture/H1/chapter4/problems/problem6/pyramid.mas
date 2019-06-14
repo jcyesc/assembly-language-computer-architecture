@@ -1,0 +1,56 @@
+; Write and run an assembly language program that displays
+;	1
+;	1 2
+;	1 2 3
+;	1 2 3 4
+;	1 2 3 4 5
+;	1 2 3 4 5 6
+;	1 2 3 4 5 6 7
+;	
+
+printPiramide:
+	ld    index		; Load the index that start in 1
+	push  			; Push index in the stack
+	call  printLine		; Call printLine
+	pop			; Pop the value of index
+	add   @1		; Add 1 to index
+	st    index		; Store index
+	ldc   '\n'		; Load a line feed
+	aout			; Print an ASCII character
+	ld    contador		; Load contador
+	sub   @1		; Subtract 1 to contador
+	st    contador		; Store contador
+	jnz   printPiramide	; if ac is not zero, jump to printPiramide.
+	halt			; End of the program.
+
+;--------------------------------------
+; printLine()
+;
+; receives the max number to print
+;--------------------------------------
+printLine:
+	ldr  1			; Load the value in ac of mem[sp + x]
+	st   times
+	; initialize variables
+	ldc  1
+	st   var		; var is initialized with 1
+print:
+	ld   var		; load var
+	dout			; print the decimal in ac
+	add  @1			; add 1 to ac
+	st   var		; store the value of ac in var
+	ldc  blank		; load the address of blank
+	sout			; print the string
+	ld   times		; load the value of times
+	sub  @1			; subtract 1 to ac
+	st   times		; store the value of times
+	jnz  print		; if ac is not zero, jump to print
+	ret	
+
+var:	   dw  1		; var to store the numbers to be printed
+blank:	   dw  " " 		; blank space
+times:     dw  0		; parameter that is pass to the function printLine();
+
+@1:	   dw  1 
+contador:  dw  10		; max numbers to be printed
+index:	   dw  1		; store the quantity of numbers to be printed

@@ -1,0 +1,65 @@
+;----------------------------------------------------------------
+; Translate the program 7.48 to assembly language
+;
+;   Note: It's necessary to remember that the * and ++ have the
+;	  same precedence and associativity from right to left.
+;----------------------------------------------------------------
+
+;----------------------------
+; void f(int *p)
+;----------------------------
+
+f:	ldr	1	; *p++;
+	ldi
+	ldr	1
+	add	@1
+	str	1
+
+	ld	x	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ldr	1	; *(p++);
+	add	@1
+	str	1
+	ldi
+
+	ld	x	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ldr	1	; (*p)++
+	ldi
+	add	@1	
+	push
+	ldr	2
+	sti
+	
+	ret
+
+;----------------------------
+; main()
+;----------------------------
+
+main:
+	ldc	x	; f(&x);
+	push
+	call	f
+	dloc	1
+
+	ld	x	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt
+
+	end main
+
+; GLOBAL VARIABLES
+
+x:	dw	1
+@1:	dw	1
+

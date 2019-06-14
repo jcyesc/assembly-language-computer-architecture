@@ -1,0 +1,6 @@
+; 4.29 What happens when the following program is executed:
+	
+	ldr	x
+	halt
+x:	dw	2
+

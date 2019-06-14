@@ -1,0 +1,25 @@
+void f()
+{
+   return;
+}
+void g()
+{
+   f();
+}
+void h()
+{
+   g();
+}
+void i()
+{
+   h();
+}
+void j()
+{
+   i();
+}
+int main()
+{
+   j();
+   return 0;
+}

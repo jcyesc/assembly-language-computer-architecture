@@ -1,0 +1,8 @@
+cat file module1.cat
+0  *0    0000  start:	ld	x
+1  *1    1FFF  	st	y - 1
+2  *2    9002  cat:	ja	cat
+3  *3    ========= end of module1.mas ============================
+3  *3    0000  y:	dw	0
+4  *4    FFFF  x:	dw	-1
+5  *5    ========= end of module2.mas ============================

@@ -1,0 +1,6 @@
+	ldc   23  ; load ac with 23
+	dout	  ; output 23 to display
+	add   @1  ; add 1 to ac
+	dout	  ; output 24 to display
+	halt
+@1:	dw    1

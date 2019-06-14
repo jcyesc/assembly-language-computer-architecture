@@ -1,0 +1,26 @@
+Machine-level Assembler Version 6.1    Thu Jan  1 20:55:56 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ; 4.29 What happens when the following program is executed:
+               	
+0  *0    4002  	ldr	x
+1  *1    FFFF  	halt
+2  *2    0002  x:	dw	2
+               
+3  *3    ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ x                         2           0  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

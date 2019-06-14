@@ -1,0 +1,105 @@
+Machine-level Assembler Version 6.1    Fri Apr  3 23:11:45 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; Translate the program 8.68 to assembly language.
+               ;---------------------------------------------------------------
+               
+               ;------------------------
+               ; void f(int x)
+               ;------------------------
+               
+0  *0    4001  @f$i:	ldr	1	; if(x == 0)
+1  *1    D005  	jnz	next
+               	
+2  *2    801B  	ldc	hello	; cout << "hello\n";
+3  *3    FFF7  	sout
+4  *4    F000  	ret		; return to the caller	
+               
+5  *5    8022  next:	ldc	good	; cout << "good\n";
+6  *6    FFF7  	sout
+               
+7  *7    4001  	ldr	1	; f(x - 1);
+8  *8    3034  	sub	@1
+9  *9    F300  	push
+A  *10   E000  	call	@f$i
+B  *11   F601  	dloc	1
+               
+C  *12   8028  	ldc	bad	; cout << "bad\n";
+D  *13   FFF7  	sout
+               	
+E  *14   4001  	ldr	1	; f(x -1);
+F  *15   3034  	sub	@1
+10 *16   F300  	push
+11 *17   E000  	call	@f$i
+12 *18   F601  	dloc	1
+               
+13 *19   802D  	ldc	so	; cout << "so so\n";
+14 *20   FFF7  	sout
+               
+15 *21   F000  	ret		; return to the caller
+               
+               ;-------------------------
+               ; int main()
+               ;-------------------------
+               
+16 *22   8003  main:	ldc	3	; f(3);
+17 *23   F300  	push
+18 *24   E000  	call	@f$i
+19 *25   F601  	dloc	1
+               
+1A *26   FFFF  	halt		; end of the program
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+1B *27   0068  hello:	dw	"hello\n"
+1C *28   0065
+1D *29   006C
+1E *30   006C
+1F *31   006F
+20 *32   000A
+21 *33   0000
+22 *34   0067  good:	dw	"good\n"
+23 *35   006F
+24 *36   006F
+25 *37   0064
+26 *38   000A
+27 *39   0000
+28 *40   0062  bad:	dw	"bad\n"
+29 *41   0061
+2A *42   0064
+2B *43   000A
+2C *44   0000
+2D *45   0073  so:	dw	"so so\n"
+2E *46   006F
+2F *47   0020
+30 *48   0073
+31 *49   006F
+32 *50   000A
+33 *51   0000
+34 *52   0001  @1:	dw	1
+35 *53   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ @f$i                      0           A   11  18 
+ next                      5           1  
+ main                      16          1B 
+ hello                     1B          2  
+ good                      22          5  
+ bad                       28          C  
+ so                        2D          13 
+ @1                        34          8   F  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive

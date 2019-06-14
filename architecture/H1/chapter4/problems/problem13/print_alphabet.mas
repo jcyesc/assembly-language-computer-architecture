@@ -1,0 +1,45 @@
+; Program that displays the ASCII codes in decimal and hex for the
+; characters 'A' to 'Z'.
+
+for:
+	; print ASCII
+	ld   letter		; load letter
+	aout			; ASCII output
+	call printBlank		; call printBlank
+	
+	; print deciml
+	ld   letter		; load letter
+	dout 			; decimal output
+	call printBlank		; call printBlank
+	
+	; print hexadecimal
+	ld   letter		; load letter
+	hout			; hexadecimal output
+	call printBlank		; call printBlank
+	
+	ldc  '\n'		; load a line feed
+	aout			; ASCII output
+	
+	ld   letter		; load letter
+	add  @1			; add one to ac, to continue with the nex letter
+	st   letter		; store letter
+
+	ld   end		; load end
+	sub  letter		; subtract end - letter
+	jzop for		; if the result is zero or grater than zero, jump to for
+	halt			; End of the program
+
+;--------------------------
+; printBlank()
+;
+; Function to print a blank space
+printBlank:
+	ldc   blank		; load the address of blank
+	sout 			; print the string
+	ret			; return to the caller
+
+letter:	dw  'A'
+end:    dw  'Z'
+blank:	dw  " "
+@1:	dw  1
+

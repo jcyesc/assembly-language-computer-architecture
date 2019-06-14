@@ -1,0 +1,49 @@
+;------------------------------------------------------------
+; Translate the program 7.50 to assembly language
+;------------------------------------------------------------
+
+;-------------------------
+; void f(int x)
+;------------------------- 
+
+f:	ldr	1	; x++;
+	add	@1
+	str	1
+
+	ldr	1	; cout << x << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	ret		; return to the calling function
+
+;---------------------------
+; main()
+;---------------------------
+
+main:	ldc	5	; f(x + y + 5);
+	add	y
+	add	x
+	push
+	call	f
+	dloc	1
+
+	ld	x	; cout << x << " " << y << endl;
+	dout
+	ldc	msg
+	sout
+	ld	y
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+
+	end main
+
+; GLOBAL VARIABLES
+x:	dw	1
+y:	dw	2
+@1:	dw	1
+msg:	dw	" "
+

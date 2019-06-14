@@ -1,0 +1,64 @@
+;---------------------------------------------------------------
+; Translate program 7.45 to assembly language
+;---------------------------------------------------------------
+
+;--------------------------
+; void f()
+;--------------------------
+
+f:	aloc	1	; int x, y = 2;
+	ldc	2
+	push
+	
+	ldc	10	; x = 10;
+	str	1
+	
+			; { start of the block
+	aloc	1	; int x, y = 4;
+	ldc	4
+	push
+
+	ldc	5	; x = 5;
+	str	1	
+
+	ldc	msg_x	; cout << "x = " << x << " y = " << y << endl;
+	sout
+	ldr	1
+	dout
+	ldc	msg_y	
+	sout
+	ldr	0
+	dout
+	ldc	'\n'
+	aout
+	dloc	2
+			; }  end of the block	
+
+	ldc	msg_x	; cout << "x = " << x << " y = " << y << endl;
+	sout
+	ldr	1
+	dout
+	ldc	msg_y	
+	sout
+	ldr	0
+	dout
+	ldc	'\n'
+	aout
+	dloc	2
+
+	ret		; return to the calling function
+	
+;------------------------
+; main()
+;------------------------
+
+main:	call f		; f();	
+	
+	halt		; end of the program
+
+	end main
+
+; GLOBAL VARIABLES
+msg_x:	dw	"x = "
+msg_y:	dw	" y = "
+

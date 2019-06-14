@@ -1,0 +1,357 @@
+                                                 has.txt
+
+                    How to Use has Version 6.1
+
+Quick Start 
+
+     has (Horizontal microcode ASsembler) translates the symbolic 
+horizontal microcode described in 
+
+  ASSEMBLY LANGUAGE AND COMPUTER ARCHITECTURE USING C++ AND JAVA
+           by Anthony J. Dos Reis, Course Technology, 2004
+
+to binary microcode.  The output file produced can then be used 
+with sim.  
+
+     To invoke has, enter 
+
+     has
+
+has then prompts the user for the name of the input file 
+containing the symbolic microcode to be translated.  Enter the 
+input file name and/or other desired command line arguments (any 
+number of items per input line).  If the input file name entered 
+has no extension, ".has" is appended to it.  As command line 
+arguments are entered, has continues to prompt for more arguments 
+until an input file name it entered. 
+
+     has outputs a file named
+
+     <infilename_less_extension>.hor
+
+The ".hor" extension is used to designate files containing 
+horizontal microcode in binary form. 
+
+     Each line of the source program should be in the following
+format (the square brackets surround optional items):
+
+[<label> :]   [<symbolic_microinstruction>]  [/ <comment>]
+
+<label> may start in any column.  <label> may be any sequence of 
+letters, digits, "@", "$", and "_" that does not start with a 
+digit 0 to 9.  <comment> may be any sequence of characters.  
+Spaces are optional to the left and right of the colon following 
+<label>.  Unlike the input files for mas and vas, a semicolon may 
+NOT be used in place of "/" at the start of a comment.  Blank 
+lines and lines with only "<label> :" are allowed. 
+
+
+Command Line Arguments
+
+     All command line arguments are optional, can be specified in 
+any order, must have no embedded spaces, and must be separated by 
+at least one space. 
+
+     All command line arguments, except <infilename>, must have a 
+leading "/" or "-". 
+
+     All command line arguments are case insensitive, except for 
+file names on systems with case-sensitive file names. 
+
+     The format of the command line is
+
+has <infilename> /h /dec /i /l<lstfilename> /c<cfgfilename> /o<outfilename>
+                 /? /hex /s /n
+
+If <infilename> is specified on the command line, then has will 
+not prompt the user for additional input.  In response to a 
+prompt, the user can enter <infilename> and/or other command line 
+arguments.  Prompting ends whenever the user enters <infilename>.  
+If <infilename> has no extension, then ".has" is appended to it. 
+If <infilename> starts with a pathname that starts with "/", then 
+substitute "//" for the leading "/" in the pathname when entering 
+<infilename>.  
+
+/h or /? displays a help screen.
+
+If /dec is specified, a number specifying a memory address in the 
+source program is treated as decimal, unless it ends with an "h" 
+or "H", in which case it is treated as hexadecimal.  If /hex is 
+specified, a number is treated as hex, unless it ends with a "t" 
+or "T" ("t" stands for base ten), in which case it is treated as 
+a decimal.  If neither /dec nor /hex is specified, then the 
+default setting is used (see the section "Default Settings" 
+below).
+
+If /i is specified, labels are case insensitive.  If /s is
+specified, labels are case sensitive.  If neither /i nor /s
+is specified, then the default setting is used (see the section
+"Default Settings" below).
+
+If /l is specified, a list file is generated.  If /n is specified, 
+a list file is not generated.  If neither /l nor /n is specified, 
+then the default setting is used (see the section "Default 
+Settings" below).  A list file name can optionally follow /l.  If 
+a list file name is specified without an extension, then ".hst" 
+is appended to it.  If the /l argument are specified without a 
+file name, then the file name used is 
+
+     <infilename_less_extension>.hst
+
+Each line in a list file is truncated, if necessary, to avoid 
+wraparound on an 80 column display. 
+
+The /c argument is used to specify a configuration file.  If a 
+configuration file name is specified without an extension, ".cfg" 
+is appended to it.  A configuration file provides has with the 
+register-name/register-number correspondence.  The configuration 
+file should be in the same format as that used by sim.  See 
+sim.txt for more information on configuration files.  If the /c 
+argument is not specified, has will use the configuration file 
+whose name is 
+
+     <infilename_less_extension>.cfg
+
+if it exists.  If it does not exist, has uses its default 
+configuration (which corresponds to s.cfg). 
+
+The /o argument is used to specify the name of the output file 
+(i.e., the file to which the binary microcode is written).  If 
+<outfilename> is specified without an extension, then ".hor" is 
+appended to it.  If the /o argument is omitted, then 
+<outfilename> defaults to 
+
+     <infilename_less_extension>.hor
+
+
+Operators
+
+     Operators may appear in either the infix or prefix 
+positions.  Parentheses surrounding the operands, and commas 
+separating the operands are optional.  Spaces are required 
+only if their omission would result in ambiguity.  For example,
+
+     pc = add( pc, 1 ) ;
+
+can be written as
+
+     pc=add(pc,1);
+
+or as
+
+     pc=add pc 1;
+
+but not as
+
+     pc = addpc1;
+
+     No more than one of the following operators can be specified 
+in a single microinstruction: 
+
+     Addition is specified with "+" or "add".  For example, 
+
+          pc = pc + 1;
+          pc = add(pc, 1);
+
+     Subtraction is specified with "-" or "sub".  For example, 
+
+          ac = ac - f;
+          ac = sub(ac, f);
+
+     Multiplication is specified with "*" or "mult".  For 
+     example, 
+
+          ac = ac * f;
+          ac = mult(ac, f);
+
+     Bitwise complementation is specified with "~" or "flip".  
+     For example, 
+
+          ac = ~b;
+          ac = flip(b);
+
+     Bitwise AND is specified with "&" or "and".  For example:
+
+          ac = mdr & xmask;
+          ac = and(mdr, xmask);
+
+     Left shift is specified with "left" or "<<".  For example:
+
+          dc = <<ir;
+          dc = left(ir);
+
+     Right shift is specified with "right" or ">>".  For example:
+
+          ac = >>ac;
+          ac = right(ac);
+
+An additional register can be specified for shift operations. 
+For example,
+
+     ac = right(ac, ir);
+
+This extra register is assembled into the B field of the 
+microinstruction.  If a microcode file has one or more 
+microinstructions specifying a shift operation whose B field is  
+greater than 0, then sim will automatically activate the barrel 
+shifter when it loads that microcode.  Caution: when the barrel 
+shifter is active, the standard shift microinstruction shifts 
+zero positions (i.e., it has no effect) because its B field 
+contains 0, and register 0 contains 0.  For example, 
+
+     ac = right(ac);
+
+is assembled to the same binary microinstruction as
+
+     ac = right(ac, 0);
+
+It shifts one position when the one-position shifter is active, 
+but it shifts zero positions when the barrel shifter is active. 
+
+                       
+sz
+
+The left side of an assignment can be "sz", in which case the
+right side is not loaded into any register.  It, however, is 
+routed straight through the ALU, causing the S and Z bits to be 
+set.  Thus, these bits can be tested with an if statement.
+For example:
+
+     sz = ac; if (s) goto loop;
+     sz = ac + 1; if (s) goto goodval;
+     sz = left(ac); if (z) goto gotzero;
+
+The effect of sz is to cause has to place 0 into the C register field.  
+Because register 0 is a read-only register, it will not be 
+loaded with a new value.  Thus, the following two instructions
+are equivalent:
+
+     sz = ac; if (s) goto loop;
+     0 = ac;  if (s) goto loop;
+
+
+if
+
+     The condition tested can be either S (which is true if the 
+sign bit of the ALU output is 1) or Z (which is true if the ALU 
+output is zero).  Parentheses around the condition are optional.
+
+
+goto
+
+The target of a goto can be either a label or an absolute 
+address.
+
+
+Register Names and Numbers
+
+     Registers should be specified using their names that appear 
+in the configuration file.  If the configuration file does not 
+specify a name for a register, the register name defaults
+to is hex number without any leading zeros.
+
+
+Register-to-field Mapping
+
+     has places registers into microinstructions fields as 
+required by the data path of H1.  For example, in the 
+instruction, 
+
+     pc = pc + 1; mar = pc;
+
+pc must be in the B field (so it can reach the mar).  Thus, has 
+assigns pc to the B field even though it is the left operand in 
+"pc + 1". 
+
+
+Search Path for Configuration File
+
+     If a directory is specified by the /c argument, has searches 
+for the configuration file in that directory.  Otherwise, has 
+searches for the configuration file in the current directory and 
+in the directory specified by the H1DIR environment variable, if 
+any, in that order. 
+     If the /c argument is not used, has searches for a 
+configuration file in the directory containing the input file, 
+and the directory specified by the H1DIR environment variable, in 
+that order.  It searches for a file whose name is 
+
+     <infilename_less_extension>.cfg
+
+
+Problem with a Leading "/" in Command Line Arguments on Non-
+Microsoft Systems
+
+     Command line arguments typically start with "/" on Microsoft 
+systems, and with "-" on other systems.  For the sake of 
+uniformity, all the programs in the H1 Software Package allow a 
+command line argument to start with EITHER "/" or "-" on any of 
+the supported platforms.  Unfortunately, allowing "/" to start a 
+command line argument on non-Microsoft systems can cause a 
+problem.  For example, suppose you want to specify an input file 
+on the command line.  Recall that an input file argument is not 
+preceded by an argument marker.  For example in, 
+
+    sim a /ms
+
+the argument "a" (which specifies the input file a.mac) does NOT 
+have a preceding "/" or "-".  "/ms", on the other hand, has the 
+argument marker "/".  "/ms" is interpreted as the "/m" argument 
+followed by the secondary argument "s".  Now suppose the input 
+file you want to specify on the command line is 
+
+     /abc.x
+
+This denotes the abc.x file in the root directory "/".  
+Unfortunately, all the programs in the H1 Software Package will 
+interpret a leading "/" as an argument marker rather than as the 
+root directory.  Thus, 
+
+     /abc.x
+
+on the command line is incorrectly interpreted as the argument 
+
+     /a 
+
+followed by the secondary argument
+
+     bc.x
+
+This problem does not occur on Microsoft systems because they use 
+"\" rather than "/" as the filename separator, and, thus, there 
+is never any confusion with the argument marker "/". 
+
+You will probably rarely run into this problem because full 
+pathnames are rarely needed when using the programs in the H1 
+Software Package.  However, if the problem does occur, it can 
+easily be circumvented: simply use "//" to represent the root.  
+For example, if 
+
+     //abc.x
+
+appears on a command line, it is interpreted as the input file
+
+     /abc.x
+
+Do NOT use "//" in place of "/" within a command line argument.
+For example, in the following invocation of sim,
+
+     sim a /m/mnt/floppy/s.hor
+
+the microcode file /mnt/floppy/s.hor is specified within the /m 
+command line argument.  Thus, "//" should NOT be used in place of 
+the leading "/" in "/mnt/floppy/s.hor". 
+
+
+Default Settings
+
+     has is shipped with the following default settings:
+
+     number base:       decimal
+     label status:      case sensitive
+     list file status:  list on
+     message status:    messages on (i.e., non-error/non-warning
+                        console messages are displayed) 
+
+These settings, however, can be changed with the mod program.  For 
+information on the mod program, see mod.txt.            

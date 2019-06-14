@@ -1,0 +1,52 @@
+;--------------------------------------------------------------------------------------
+; Version	: 1
+; Created	: 4-december-2009
+; Author	: Juan Carlos Yescas
+; Description	: Program that:
+;		   - Prompts for and reads in a decimal number
+;		   - Determines if the number of 1 bits in the binary equivalent
+;		     of the decimal number is even or odd.
+;
+;		  How is the problem going to be solve?
+;		     We're going to subtract 2 to the input number until 
+;		     we reach ZERO or a NEGATIVE NUMBER. If we reach ZERO,it is EVEN,
+;		     if we reach a NEGATIVE NUMBER, it's ODD.
+;
+; Restrictions:	 The program only accept positive numbers.
+;-------------------------------------------------------------------------------------	
+
+	ldc	msg	; load the address of msg
+	sout		; string output
+	
+	din		; decimal input	
+	st	number	; store the decimal number in the variable number.
+	
+for:	ld	number	; load the number	
+	sub	@2	; subtract 2 to the number
+	st	number	; store the number
+	jz	even	; if ZERO, jump even
+	jn	odd	; if NEGATIVE, jump odd
+	ja	for	; jump always to for
+
+even: 	ldc	msg_even ; load the address of msg_even
+	sout		; string output
+	ja	end	; jump always to end
+
+odd:	ldc	msg_odd	; load the address of msg_odd
+	sout		; string output
+	ja	end	; jump always to end
+
+end:	halt		; end of the program
+
+;---------------------
+; VARIABLES
+;---------------------
+
+number:	dw	0	; input number
+@_1:	dw	-1
+@2:	dw	2
+msg:	dw	"Input a number "
+msg_odd:dw	"ODD" 
+msg_even:dw	"EVEN"
+
+

@@ -1,0 +1,49 @@
+cat file Program.cat
+               polynomio:
+0  *0    F501  	aloc	1	; temporal variable
+1  *1    4002  	ldr	2
+2  *2    F300  	push
+3  *3    E000  	call	square
+4  *4    F601  	dloc	1
+5  *5    5000  	str	0	; save the result return by square (x*x)
+6  *6    F300  	push
+7  *7    E000  	call	square
+8  *8    F601  	dloc	1
+9  *9    7000  	subr	0	
+A  *10   202C  	add	@6
+B  *11   F601  	dloc	1	; release the memory for the temporal variable
+C  *12   F000  	ret
+               main:	; This is implemented better using a cycle.
+D  *13   8000  	ldc	0		; cout << polynomio(0) << endl;
+E  *14   F300  	push
+F  *15   E000  	call	polynomio
+10 *16   F601  	dloc	1
+11 *17   FFFD  	dout
+12 *18   800A  	ldc	'\n'
+13 *19   8001  	ldc	1		; cout << polynomio(1) << endl;
+14 *20   F300  	push
+15 *21   E000  	call	polynomio
+16 *22   F601  	dloc	1
+17 *23   FFFD  	dout
+18 *24   800A  	ldc	'\n'
+19 *25   8002  	ldc	2		; cout << polyomio(2) << endl;
+1A *26   F300  	push
+1B *27   E000  	call	polynomio
+1C *28   F601  	dloc	1
+1D *29   FFFD  	dout
+1E *30   800A  	ldc	'\n'
+1F *31   8003  	ldc	3		; cout << polynomio(3) << endl;
+20 *32   F300  	push
+21 *33   E000  	call	polynomio
+22 *34   F601  	dloc	1
+23 *35   FFFD  	dout
+24 *36   800A  	ldc	'\n'
+25 *37   8004  	ldc	4
+26 *38   F300  	push
+27 *39   E000  	call	polynomio
+28 *40   F601  	dloc	1
+29 *41   FFFD  	dout
+2A *42   800A  	ldc	'\n'
+2B *43   F000  	ret
+2C *44   0006  @6:	dw	6
+2D *45   ========= end of Program.mas ============================

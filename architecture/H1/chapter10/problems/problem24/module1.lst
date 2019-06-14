@@ -1,0 +1,30 @@
+Machine-level Assembler Version 6.1    Thu May  7 00:10:46 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------------------------------------------------
+               ; 10.24 Suppose the following two modules are assembled and link
+               ; in the order given. Show the contents of the ".mac" file that 
+               ; produced. Use the same format that pic uses.
+               ;---------------------------------------------------------------
+               
+               	extern	a
+               	public	b
+0  *0    0000  b:	dw	a
+1  *1    ========= end of module1.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ b                         0           0  
+ a                         ext         0   0  
+
+Input file   = module1.mas
+Output file  = module1.mob
+List file    = module1.lst 
+Number base  = decimal
+Label status = case sensitive

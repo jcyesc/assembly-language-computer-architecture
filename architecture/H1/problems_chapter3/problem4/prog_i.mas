@@ -1,0 +1,3 @@
+	ld   5/2
+	halt
+x:	dw   3 dup 5

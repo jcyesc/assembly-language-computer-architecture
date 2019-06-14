@@ -1,0 +1,4 @@
+        a:  dw   c
+        b:  dw   c - 1
+        c:  dw   1
+            halt

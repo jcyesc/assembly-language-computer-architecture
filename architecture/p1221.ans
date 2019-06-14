@@ -1,0 +1,24 @@
+; #f5e3
+;Assume number inputed is unsigned.
+;Throw away remainder.
+;Display should look exactly like this (with data from test
+;cases replacing numbers):
+;Enter unsigned decimal number
+;20
+;3/4 of this number = 15
+n
+o
+ln
+g
+20
+o
+g
+1
+o
+g
+19
+o
+g
+4099
+SD
+q

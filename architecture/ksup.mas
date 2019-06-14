@@ -1,0 +1,115 @@
+           !k                                    ksup.mas
+           ; stack start-up code
+;===========================================================
+loc0:      dw   'K'        ; to test for null pointer assignment
+
+;          initialize sp register
+start_up:  zesp
+
+;          test if clptr has reached the end of the command line
+getarg:    p    clptr      ; test for null char
+           load
+           jz   alldone    ; jump if null char
+
+;          check if too many args--max = 20
+           p    argc       ; get current count
+           pc   20
+           sub
+           jnz  * + 4
+           pc   errmsg1    ; display error message
+           sout
+           ja   done
+
+;          move contents of clptr into next avail slot in vector
+           p    vectorptr  ; make entry into vector
+           p    clptr
+           stav
+
+;          move clptr to end of current argument
+getchar:   p    clptr      ; get next char in command line
+           load
+           jz   endarg     ; jump if null char
+           p    clptr
+           load
+           pc   ' '
+           sub  
+           jz   endarg     ; jump if space
+           pc   clptr      ; move command line ptr to next char
+           p    clptr     
+           pc   1
+           add
+           stav
+           ja   getchar
+
+;          terminate argument with null character
+endarg:    p    clptr      ; terminate arg with null char
+           pc   0         
+           stav
+
+;          increment count in argc
+           pc   argc
+           p    argc
+           pc   1
+           add
+           stav
+
+;          prepare for the next argument
+
+;          move vectorptr to next slot in vector
+           pc   vectorptr  ; move vectorptr
+           p    vectorptr  
+           pc   1
+           add
+           stav
+
+;          move clptr to beginning of next arg
+nextarg:   pc   clptr
+           p    clptr      ; find start of next arg
+           pc   1
+           add
+           stav
+           p    clptr                                            
+           load
+           pc   ' '
+           sub
+           jz   nextarg
+           ja   getarg     ; now process next arg
+
+;===========================================================
+alldone:   aspc -1         ; allocate return area
+;          pass argv (the address of vector) and argc args to main
+           pc   vector     ; push address of vector
+           p    argc       ; push value of argc
+           call main
+           aspc 2          ; remove parameters
+           pc   retcode    ; push address of retcode
+           stva            ; store return value in retcode
+;===========================================================
+;          final housekeeping code
+
+;          check if word at loc0 still has 'K'
+testloc0:  p     loc0   
+           pc    'K'
+           sub
+           jz    done      ; if still there, jump to done
+           p    testloc0   ; start-up code at loc 0?
+           jz   atloc0     ; if yes, display null ptr message
+           pc   errmsg2    ; if not, display other message
+           ja   outmsg
+atloc0:    pc   errmsg3
+outmsg:    sout
+
+done:      p    retcode    ; ret code at top of main memory
+           halt
+;===========================================================
+;          constants and variables
+clptr:     dw   3900       ; address of command line
+vectorptr: dw   vector     ; address of vector
+argc:      dw   0          ; count of the number of arguments
+vector:    dw   20 dup 0   ; array of char ptrs to arguments
+retcode:   dw   0
+errmsg1:   dw   "\nToo many command line arguments\n"
+errmsg2:   dw   "\nStart-up code corrupted\n"
+errmsg3:   dw   "\nNull pointer assignment\n"
+           extern main
+           end start_up     

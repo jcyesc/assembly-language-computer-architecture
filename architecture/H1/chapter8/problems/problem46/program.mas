@@ -1,0 +1,46 @@
+;--------------------------------------------------------
+; Translate the program 8.46 to assembly language.
+;--------------------------------------------------------
+
+;---------------------------------
+; void g(int &y)
+;---------------------------------
+
+@g$ri:	ldc	4	; y = 4;
+	push
+	ldr	2
+	sti		; mem[ac] = mem[sp++];
+
+	ret		; return to the caller
+
+;---------------------------------
+; void f(int &x)
+;---------------------------------
+
+@f$ri:	ldr	1	; g(x);
+	push
+	call	@g$ri
+	dloc	1	
+
+	ret		; return to the caller
+
+;---------------------------------
+; int main()
+;---------------------------------
+
+main:	ldc	a	; f(a);
+	push
+	call	@f$ri
+	dloc	1
+
+	ld	a	; cout << a << endl;
+	dout
+	ldc	'\n'
+	aout
+
+	halt		; end of the program
+	end main
+
+; GLOBAL VARIABLES
+
+a:	dw	3

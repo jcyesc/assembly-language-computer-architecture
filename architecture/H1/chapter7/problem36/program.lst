@@ -1,0 +1,83 @@
+Machine-level Assembler Version 6.1    Mon Mar  9 23:27:28 2009
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;-----------------------------------------------------
+               ; Translate the program 7.36 to assembly language
+               ;-----------------------------------------------------
+               
+               ;-------------------------------
+               ; void f(int x)
+               ;-------------------------------
+               
+0  *0    4001  f:	ldr   1		; ++x
+1  *1    2019  	add   @1
+               
+2  *2    F000  	ret
+               
+               ;-------------------------------
+               ; main()
+               ;-------------------------------
+               
+3  *3    0018  main:	ld    x		; f(++x)
+4  *4    2019  	add   @1
+5  *5    1018  	st    x
+6  *6    F300  	push
+7  *7    E000  	call  f
+8  *8    F601  	dloc  1
+               
+9  *9    0018  	ld    x		; cout << x << endl;
+A  *10   FFFD  	dout		
+B  *11   800A  	ldc   '\n'
+C  *12   FFFB  	aout	
+               
+D  *13   0018  	ld    x		; f(x++)
+E  *14   F300  	push
+F  *15   2019  	add   @1
+10 *16   1018  	st    x
+11 *17   E000  	call  f
+12 *18   F601  	dloc  1		
+               
+13 *19   0018  	ld    x		; cout << x << endl;
+14 *20   FFFD  	dout
+15 *21   800A  	ldc   '\n'
+16 *22   FFFB  	aout
+               	
+17 *23   FFFF  	halt
+               	end main
+               
+               ; GLOBAL VARIABLES
+               
+18 *24   0063  x:	dw	99
+19 *25   0001  @1:	dw	1
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+               
+1A *26   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ f                         0           7   11 
+ main                      3           18 
+ x                         18          3   5   9   D   10 
+                                       13 
+ @1                        19          1   4   F  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive
