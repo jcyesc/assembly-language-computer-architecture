@@ -1,0 +1,8 @@
+sub:	ld		x
+		add		y
+done:	ret
+y:		dw		34
+total:	dw		0
+		public	sub
+		public	total
+		extern	x

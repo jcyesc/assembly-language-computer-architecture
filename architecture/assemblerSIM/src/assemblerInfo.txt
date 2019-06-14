@@ -1,0 +1,9 @@
+Writting an Assembler
+
+The aim of the project is to build a simple Assembler for SIM. This program doesn't have the total functionality of the
+real Assembler but it intends to give a clear insight of how Assembler and Linker works.
+
+This assembler takes the Specitication of the book:
+
+Assembly Language And Computer Architecture Using C++ And Java
+	Chapter Eleven: Implementing an Assembler and a Linker Using C++ or Java

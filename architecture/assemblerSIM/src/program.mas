@@ -1,0 +1,35 @@
+;---------------------
+; main()
+;---------------------
+
+main:	ld		z	; sum(x, y, z);
+		push
+		ld		y
+		push
+		ld		x
+		push
+		call	sum
+		dloc	3
+		
+		dout
+		ldc		'\n'
+		aout
+		halt
+		
+;------------------------------
+; int sum(int x, int y, int z)
+;------------------------------
+
+sum:	ldr		1	; int r = x + y + z;
+		addr	2	
+		addr	3
+		
+		ret
+	
+;----------------------
+; GLOBAL VARIABLES
+;----------------------
+
+x:	dw 	9
+y:	dw	-10
+z:	dw	11

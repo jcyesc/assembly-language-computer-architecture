@@ -1,0 +1,59 @@
+Machine-level Assembler Version 6.1    Sun Mar 28 16:59:06 2010
+
+  LOC    OBJ   SOURCE
+hex*dec
+
+               ;---------------------
+               ; main()
+               ;---------------------
+               
+0  *0    0012  main:	ld		z	; sum(x, y, z);
+1  *1    F300  		push
+2  *2    0011  		ld		y
+3  *3    F300  		push
+4  *4    0010  		ld		x
+5  *5    F300  		push
+6  *6    E00C  		call	sum
+7  *7    F603  		dloc	3
+               		
+8  *8    FFFD  		dout
+9  *9    800A  		ldc		'\n'
+A  *10   FFFB  		aout
+B  *11   FFFF  		halt
+               		
+               ;------------------------------
+               ; int sum(int x, int y, int z)
+               ;------------------------------
+               
+C  *12   4001  sum:	ldr		1	; int r = x + y + z;
+D  *13   6002  		addr	2	
+E  *14   6003  		addr	3
+               		
+F  *15   F000  		ret
+               	
+               ;----------------------
+               ; GLOBAL VARIABLES
+               ;----------------------
+               
+10 *16   0009  x:	dw 	9
+11 *17   FFF6  y:	dw	-10
+12 *18   000B  z:	dw	11
+13 *19   ========= end of program.mas ============================
+
+
+         Symbol/Cross-Reference Table
+
+Symbol                   Address     References
+                          (hex)       (hex)
+
+ main                      0          
+ sum                       C           6  
+ x                         10          4  
+ y                         11          2  
+ z                         12          0  
+
+Input file   = program.mas
+Output file  = program.mac
+List file    = program.lst 
+Number base  = decimal
+Label status = case sensitive
